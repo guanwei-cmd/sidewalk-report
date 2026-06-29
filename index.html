@@ -313,7 +313,7 @@ footer a{color:#e7b86a;}
   <div class="ftitle">孩子的上學路：校園周邊人行道普及率，最高與最低差了七倍</div>
   <div class="fsub">各縣市健檢報告自報之「校園周邊人行道普及率」。定義與盤點範圍未必一致，數字僅反映各縣市自我評估——但落差之大，已足以說明問題。</div>
   <div class="chartcard"><div id="chart-campus"></div></div>
-  <div class="fsrc">資料來源：桃園、臺南、苗栗、新竹縣《行人安全環境總健檢及行動改善方案》。原始檔見文末〔2〕。</div>
+  <div class="fsrc">資料來源：桃園、臺南、苗栗、宜蘭、嘉義縣、屏東、新竹縣《行人安全環境總健檢及行動改善方案》。各縣定義與盤點範圍未必一致。原始檔見文末〔2〕。</div>
 </div>
 
 <!-- ============ PART 3：寬度 ============ -->
@@ -321,22 +321,22 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">參 · 一個人，能不能並肩走過</div>
   <h2 class="sec rv">不是有沒有，而是夠不夠寬</h2>
   <p class="rv">普及率回答「有沒有」，但走起來舒不舒服，要看「多寬」。法規寫得清楚：人行道淨寬原則不得小於 1.5 公尺；連最寬鬆的例外，也不得小於 0.9 公尺。</p>
-  <p class="rv">內政部國土管理署開放了一份全國人行道圖資，逐段記錄每條人行道的寬度。我下載了 2024 年 12 月版，把臺北、新北、桃園共 <b>42,242 段</b>人行道依寬度切成三級；再從臺南市、新竹市自家的開放平台補進兩市——<b>五個城市、逾 4.8 萬段</b>人行道，用同一套方法切。結果出乎意料：最繁華的臺北，反而最窄；南部與新竹的人行道，明顯寬得多。</p>
+  <p class="rv">內政部國土管理署開放了一份全國人行道圖資，逐段記錄每條人行道的寬度與淨寬。我下載了 2024 年 12 月版，把全台二十二縣市、共 <b>88,545 段</b>人行道，用同一套寬度級距切開——這是同一份資料、同一把尺量出來的全國比較。結果出乎意料：最繁華的臺北，反而是最窄的都會之一；臺中、高雄、臺南、嘉義，反倒有六成五上下的人行道寬在 2.5 公尺以上。</p>
 </section>
 
 <div class="figure rv">
   <div class="ftitle">人行道寬度級距：誰的人行道走得開？</div>
-  <div class="fsub">五個城市、同一套寬度級距，以人行道長度加權。切換「寬度」與「淨寬」——淨寬扣掉電箱、路樹、招牌後，才是真正能走的空間。</div>
+  <div class="fsub">全台 22 縣市、同一份國土署圖資、同一套寬度級距，以人行道長度加權。切換「寬度」與「淨寬」——淨寬扣掉電箱、路樹、招牌後，才是真正能走的空間。標 ＊ 者段數較少（&lt;300 段），覆蓋可能不完整、僅供參考。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-width"></div>
     <div id="chart-width"></div>
     <div class="legend" id="leg-width"></div>
   </div>
-  <div class="fsrc">資料來源：北、新北、桃＝國土管理署「市區道路人行安全地理資訊系統」開放資料（2024-12，dataset 58791）；臺南市＝臺南市工務局（dataset 121008，202106）；新竹市＝新竹市養工處（dataset 86540）。三者皆逐段彙整寬度（SW_WTH）、淨寬（SWW_WTH）、長度（SW_LENG），腳本與結果見文末〔3〕。</div>
+  <div class="fsrc">資料來源：國土管理署「市區道路人行安全地理資訊系統」開放資料全國圖資（2024-12，政府資料開放平臺 dataset 58791，分北北桃與其餘 19 縣市兩檔）。逐段彙整寬度（SW_WTH）、淨寬（SWW_WTH）、長度（SW_LENG），以長度加權；淨寬比例之分母為有填淨寬之路段。全 22 縣市共 88,545 段。腳本與結果見文末〔3〕。</div>
 </div>
 
 <section class="wrap">
-  <p class="rv">臺北市有 <b>21.7%</b> 的人行道寬度不到 1.25 公尺；新北市更有 <b>65.4%</b> 的淨寬不到法定的 1.5 公尺——北部兩大都會，是名副其實的窄。對照之下，臺南有三分之二（<b>66.3%</b>）的人行道寬在 2.5 公尺以上、新竹市更達 <b>72.8%</b>，兩市淨寬不足 1.5 公尺的比例都只有一成八上下。同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南卻可能寬到種得下一排行道樹。一個全國「普及率」數字，蓋掉的正是這種城市之間天差地別的人行品質。</p>
+  <p class="rv">臺北市有 <b>21.7%</b> 的人行道寬度不到 1.25 公尺、超過半數（<b>54%</b>）的淨寬不到法定的 1.5 公尺；新北市淨寬不足的比例更高達 <b>64.6%</b>——北部兩大都會，是名副其實的窄。對照之下，臺南、臺中、高雄都有六成五上下的人行道寬在 2.5 公尺以上，新竹市更達 <b>73%</b>，且臺南、新竹市淨寬不足 1.5 公尺的比例都只有一成八、九。同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南卻可能寬到種得下一排行道樹。一個全國「普及率」數字，蓋掉的正是這種城市之間天差地別的人行品質。</p>
 </section>
 
 <!-- ============ PART 4：標線型 + 資料齊全度 ============ -->
@@ -349,7 +349,7 @@ footer a{color:#e7b86a;}
 </section>
 
 <section class="wrap">
-  <p class="rv">標線型只是其中一例。把鏡頭拉到「逐段、可機器讀取」的人行道圖資，全台二十二個縣市裡，真正公開的不到四分之一：國土管理署的全國統一圖資，至今只涵蓋臺北、新北、桃園三市；臺南、新竹市另在自家平台公開，欄位格式卻還各不相同（臺南沿用國土署九欄、新竹市自訂四十一欄）。加起來，僅五個縣市能逐段分析人行道的寬度與淨寬。其餘十七縣市，要嘛只剩一份健檢報告 PDF，要嘛連這個都查不到。<b>資料不是不存在，而是散落、破碎、對不起來——而對不起來的資料，幾乎等於沒有資料。</b></p>
+  <p class="rv">而這份圖資的「看得見」與「看不見」，恰好劃出一條界線。它其實逐段記錄了全台二十二縣市每條人行道的寬度與淨寬——上一章那張全國寬度比較，正是這麼來的；換句話說，「多寬」，國家看得見。它看不見的，是「型別」與「定義」：同一份資料分不出標線型與實體，各縣市的普及率又各用各的分母、彼此對不起來。<b>國家手上從來不是沒有資料，缺的是一套讓資料對得起來、能拿來問責的共同定義與標準。</b></p>
 </section>
 
 <section class="wrap">
@@ -448,7 +448,7 @@ footer a{color:#e7b86a;}
     <ol>
       <li>〔1〕立法院預算中心《內政部所屬（國土管理署及所屬等）115 年度預算評估報告》——「賡續辦理永續提升人行安全計畫」乙節，表 1「110 年至 114 年 7 月底我國市區道路及人行道長度一覽表」。資料來源國土管理署。<br>原始檔：<code>原始資料/全國普及率/立法院預算中心_115年度永續提升人行安全計畫預算評估報告.pdf</code></li>
       <li>〔2〕各縣市《行人安全環境總健檢及行動改善方案》（臺北、新北、桃園、臺中、臺南、新竹縣、新竹市、彰化、苗栗、南投、基隆、宜蘭、嘉義市、嘉義縣、屏東、花蓮、金門，113–114 年，共 17 份）、《高雄市道路新闢人行道分年分期建設計畫》、雲林縣交通工務局「市區道路人行道普及率」開放資料、《114 年澎湖縣道路交通安全執行計畫》。臺東縣報告尚未完成（預計 115/3）、連江縣未尋獲公開文件。<br>原始檔：<code>原始資料/縣市健檢報告/</code>、<code>原始資料/預算與改善方案/</code></li>
-      <li>〔3〕人行道逐段圖資（寬度級距）：①國土管理署「市區道路人行安全地理資訊系統」開放資料，政府資料開放平臺 <a href="https://data.gov.tw/dataset/58791">dataset 58791</a>（SIDEWALK_202412，北北桃）；②臺南市工務局 <a href="https://data.gov.tw/dataset/121008">dataset 121008</a>（202106）；③新竹市養工處 <a href="https://data.gov.tw/dataset/86540">dataset 86540</a>。本專題以 <code>aggregate_width.py</code>、<code>aggregate_more_cities.py</code> 逐段彙整寬度（SW_WTH）、淨寬（SWW_WTH）、長度（SW_LENG）。<br>原始檔：<code>原始資料/人行道寬度GIS/</code>、<code>原始資料/各縣市人行道開放資料/</code>、<code>原始資料/人行道寬度級距_*.csv</code><br>地圖：<a href="https://sidewalk.nlma.gov.tw/sidewalk/">sidewalk.nlma.gov.tw</a></li>
+      <li>〔3〕人行道逐段圖資（寬度級距）：國土管理署「市區道路人行安全地理資訊系統」開放資料全國圖資，政府資料開放平臺 <a href="https://data.gov.tw/dataset/58791">dataset 58791</a>（SIDEWALK_202412，分 Part 1 北北桃與 Part 2 其餘 19 縣市兩檔，全 22 縣市共 88,545 段）。本專題逐段彙整寬度（SW_WTH）、淨寬（SWW_WTH）、長度（SW_LENG），以長度加權切級距；淨寬比例之分母為有填淨寬之路段。臺南市、新竹市另在自家平台公開同類資料（<a href="https://data.gov.tw/dataset/121008">dataset 121008</a>、<a href="https://data.gov.tw/dataset/86540">86540</a>），數值與全國圖資交叉驗證一致。臺東、苗栗、花蓮、金門、連江段數較少（&lt;300 段），覆蓋可能不完整。<br>原始檔：<code>原始資料/人行道寬度GIS/</code>、<code>原始資料/各縣市人行道開放資料/</code><br>地圖：<a href="https://sidewalk.nlma.gov.tw/sidewalk/">sidewalk.nlma.gov.tw</a></li>
       <li>〔4〕行政院「永續提升人行安全計畫」政策頁、交通部公路局計畫頁、內政部新聞稿；立法院《改善標線型人行道相關法制問題研析》；眼底城事〈考評成績的校正回歸，解密開放資料中的人行道〉。</li>
     </ol>
     <div class="meta">
@@ -490,11 +490,28 @@ const KEYPLACE=[
   {k:'校園周邊',v:10.73},{k:'醫療院所',v:11.33},{k:'政府機關',v:21.73},{k:'大眾運輸場站',v:25.89},
 ];
 const WIDTH=[
-  {city:'臺北市',total:1400.17,w:[21.7,35.4,42.8],net15:54.2},
-  {city:'桃園市',total:1091.59,w:[6.5,42.2,51.3],net15:42.6},
-  {city:'新北市',total:1055.26,w:[6.8,59.7,33.5],net15:65.4},
-  {city:'臺南市',total:668.05,w:[0.6,33.1,66.3],net15:18.4},
-  {city:'新竹市',total:525.36,w:[5.5,21.6,72.8],net15:19.5},
+  {city:'臺東縣',total:68.64,w:[2.2,20.9,77.0],net15:18.9,n:141,thin:true},
+  {city:'新竹市',total:532.57,w:[5.2,21.8,73.0],net15:19.3,n:1421},
+  {city:'嘉義市',total:157.72,w:[1.0,26.9,72.1],net15:31.8,n:1467},
+  {city:'嘉義縣',total:263.02,w:[1.5,30.5,68.0],net15:38.4,n:943},
+  {city:'臺南市',total:677.09,w:[0.6,33.0,66.5],net15:18.1,n:4588},
+  {city:'高雄市',total:1448.10,w:[1.3,32.9,65.8],net15:41.1,n:13443},
+  {city:'臺中市',total:1955.88,w:[0.5,35.2,64.3],net15:38.2,n:14154},
+  {city:'宜蘭縣',total:218.70,w:[1.8,37.0,61.1],net15:17.5,n:1035},
+  {city:'新竹縣',total:276.05,w:[3.5,43.1,53.4],net15:52.5,n:2528},
+  {city:'屏東縣',total:197.78,w:[3.7,43.1,53.3],net15:10.2,n:617},
+  {city:'苗栗縣',total:110.08,w:[4.5,42.7,52.8],net15:18.5,n:235,thin:true},
+  {city:'南投縣',total:159.20,w:[3.2,44.0,52.8],net15:43.6,n:922},
+  {city:'彰化縣',total:264.44,w:[8.1,40.5,51.3],net15:47.4,n:1555},
+  {city:'桃園市',total:1091.59,w:[6.5,42.2,51.3],net15:42.3,n:10198},
+  {city:'澎湖縣',total:64.44,w:[4.2,47.6,48.2],net15:50.1,n:847},
+  {city:'雲林縣',total:255.31,w:[10.5,42.8,46.7],net15:44.4,n:1496},
+  {city:'花蓮縣',total:177.32,w:[2.6,53.0,44.5],net15:22.4,n:267,thin:true},
+  {city:'臺北市',total:1400.17,w:[21.7,35.4,42.8],net15:54.2,n:18060},
+  {city:'基隆市',total:168.63,w:[15.8,44.5,39.7],net15:46.6,n:437},
+  {city:'新北市',total:1055.26,w:[6.8,59.7,33.5],net15:64.6,n:13984},
+  {city:'金門縣',total:42.17,w:[16.0,52.8,31.2],net15:33.9,n:103,thin:true},
+  {city:'連江縣',total:71.21,w:[30.8,62.9,6.4],net15:68.6,n:104,thin:true},
 ];
 const COUNTIES=[
   '臺北市','新北市','桃園市','臺中市','臺南市','高雄市','基隆市','新竹市','新竹縣','苗栗縣',
@@ -632,11 +649,11 @@ let widthMode='w';
 const WCOL=[C.red,C.amber,C.teal];const WLAB=['寬度 ＜1.25m','1.25 ~ 2.5m','≥ 2.5m'];
 function drawWidth(){
   const box=document.getElementById('chart-width');box.innerHTML='';
-  const W=860,rowH=86,m={t:10,r:30,b:14,l:74};const H=m.t+m.b+WIDTH.length*rowH;
+  const W=860,rowH=60,m={t:10,r:30,b:14,l:80};const H=m.t+m.b+WIDTH.length*rowH;
   const s=svg(W,H);const fw=W-m.l-m.r;
   WIDTH.forEach((d,i)=>{
-    const yy=m.t+i*rowH+18;
-    s.appendChild(txt(m.l-12,yy+22,d.city,{'text-anchor':'end',class:'cityname'}));
+    const yy=m.t+i*rowH+12;
+    s.appendChild(txt(m.l-12,yy+16,d.city+(d.thin?' ＊':''),{'text-anchor':'end',class:'cityname'}));
     s.appendChild(txt(m.l-12,yy+40,d.total.toLocaleString()+' km',{'text-anchor':'end',fill:C.muted,'font-size':11}));
     if(widthMode==='w'){
       let acc=0;
@@ -645,7 +662,7 @@ function drawWidth(){
         const r=mk('rect',{x:x0,y:yy,width:Math.max(0,w),height:34,fill:WCOL[j],opacity:.92});
         s.appendChild(r);
         if(v>=7)s.appendChild(txt(x0+w/2,yy+22,v.toFixed(1)+'%',{'text-anchor':'middle',fill:'#fff','font-weight':600,'font-size':12.5}));
-        bind(r,`<b>${d.city}</b><br>${WLAB[j]}<br>占人行道長 <b>${v}%</b><br>≈ ${(d.total*v/100).toFixed(0)} km`);
+        bind(r,`<b>${d.city}</b>${d.thin?' ＊資料較少':''}<br>${WLAB[j]}<br>占人行道長 <b>${v}%</b><br>≈ ${(d.total*v/100).toFixed(0)} km　·　逐段 ${d.n.toLocaleString()} 段`);
         acc+=v;
       });
     }else{
@@ -655,7 +672,7 @@ function drawWidth(){
       requestAnimationFrame(()=>{r.style.transition='width .7s ease';r.setAttribute('width',Math.max(2,w));});
       const rest=mk('rect',{x:m.l,y:yy,width:fw,height:34,fill:'none',stroke:C.line,rx:2});s.appendChild(rest);
       s.appendChild(txt(m.l+w+10,yy+22,d.net15+'%',{'font-weight':700,fill:C.red_d,'font-size':14}));
-      bind(r,`<b>${d.city}</b><br>淨寬 ＜1.5m（法定標準）<br>占人行道長 <b>${d.net15}%</b>`);
+      bind(r,`<b>${d.city}</b>${d.thin?' ＊資料較少':''}<br>淨寬 ＜1.5m（法定標準）<br>占人行道長 <b>${d.net15}%</b>　·　逐段 ${d.n.toLocaleString()} 段`);
     }
   });
   box.appendChild(s);
