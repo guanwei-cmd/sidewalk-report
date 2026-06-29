@@ -614,7 +614,7 @@ function drawCity(){
   box.appendChild(s);
 }
 function buildCityCtl(){
-  const c=document.getElementById('ctl-city');
+  const c=document.getElementById('ctl-city');c.innerHTML='';
   [['off','官方公布數字'],['uni','改用同一把尺（道路總長）']].forEach(([k,t],i)=>{
     const b=document.createElement('button');b.className='btn'+(cityMode===k?' on red':'');b.textContent=t;
     b.onclick=()=>{cityMode=k;buildCityCtl();drawCity();};c.appendChild(b);
