@@ -348,19 +348,9 @@ footer a{color:#e7b86a;}
   <p class="rv">而立法院的研析也確認：全國並沒有各縣市標線型人行道里程的公開統計。一種被大量鋪設、被高度質疑的設施，在國家的資料裡，從被定義的那一刻起就是隱形的——這正是「看不見，就無法治理」最具體的一個切片。</p>
 </section>
 
-<div class="figure rv">
-  <div class="ftitle">22 個縣市，真正有開放逐段資料的不到四分之一</div>
-  <div class="fsub">全國統一圖資只涵蓋北、新北、桃三市；臺南、新竹市另在自家平台公開，但欄位格式各不相同（臺南沿用國土署 9 欄、新竹市自訂 41 欄）。其餘十七縣市，要嘛只有健檢報告 PDF，要嘛什麼都查不到。資料不是不存在，而是散落、破碎、對不起來。</div>
-  <div class="chartcard">
-    <div id="grid-county" class="cgrid"></div>
-    <div class="legend" style="margin-top:20px">
-      <span><i style="background:var(--teal)"></i>有開放逐段資料（統一圖資或自有平台）</span>
-      <span><i style="background:#fff;border:1px solid var(--ink)"></i>僅有健檢報告 PDF</span>
-      <span><i style="background:#faf7f0;border:1px dashed var(--line2)"></i>本專題未取得公開資料</span>
-    </div>
-  </div>
-  <div class="fsrc">判定依據：統一圖資＝出現於國土署 dataset 58791（202412）；自有平台＝該市另在政府資料開放平臺公開逐段人行道資料（臺南 121008、新竹市 86540）；健檢報告＝本專題實際取得之 PDF。原始檔見文末〔2〕〔3〕。此圖反映「資料可取得性」，非各縣市實際施政良窳。</div>
-</div>
+<section class="wrap">
+  <p class="rv">標線型只是其中一例。把鏡頭拉到「逐段、可機器讀取」的人行道圖資，全台二十二個縣市裡，真正公開的不到四分之一：國土管理署的全國統一圖資，至今只涵蓋臺北、新北、桃園三市；臺南、新竹市另在自家平台公開，欄位格式卻還各不相同（臺南沿用國土署九欄、新竹市自訂四十一欄）。加起來，僅五個縣市能逐段分析人行道的寬度與淨寬。其餘十七縣市，要嘛只剩一份健檢報告 PDF，要嘛連這個都查不到。<b>資料不是不存在，而是散落、破碎、對不起來——而對不起來的資料，幾乎等於沒有資料。</b></p>
+</section>
 
 <section class="wrap">
   <blockquote class="rv">數字與體驗之間的落差，從來不只是施工進度的問題；它是「我們選擇看見什麼、又怎麼計算它」的問題。</blockquote>
@@ -510,9 +500,6 @@ const COUNTIES=[
   '臺北市','新北市','桃園市','臺中市','臺南市','高雄市','基隆市','新竹市','新竹縣','苗栗縣',
   '彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','屏東縣','宜蘭縣','花蓮縣','臺東縣','澎湖縣','金門縣','連江縣'
 ];
-const GIS=['臺北市','新北市','桃園市'];          // 全國統一圖資(國土署 dataset 58791)
-const OWNDATA=['臺南市','新竹市'];                // 各縣市自有開放平台(欄位格式不一)
-const REPORT=['臺北市','新北市','桃園市','臺中市','臺南市','新竹縣','新竹市','彰化縣','苗栗縣','南投縣','高雄市'];
 const BUDGET={
   ministry:[{k:'內政部',v:260,c:'#cf4636'},{k:'交通部',v:140,c:'#2c6e6a'}],
   years:[{k:'113 年',v:14.95},{k:'114 年',v:48.37},{k:'115 年案',v:37.64}],
@@ -682,20 +669,6 @@ function buildWidthCtl(){
   [['w','人行道寬度（三級距）'],['net','淨寬不足標準的比例']].forEach(([k,t])=>{
     const b=document.createElement('button');b.className='btn'+(widthMode===k?' on red':'');b.textContent=t;
     b.onclick=()=>{widthMode=k;buildWidthCtl();drawWidth();};c.appendChild(b);
-  });
-}
-
-/* ===================== 4. county availability grid ===================== */
-function drawGrid(){
-  const g=document.getElementById('grid-county');g.innerHTML='';
-  COUNTIES.forEach(c=>{
-    const div=document.createElement('div');
-    const hasG=GIS.includes(c),hasO=OWNDATA.includes(c),hasR=REPORT.includes(c);
-    const hasData=hasG||hasO;
-    div.className='chip'+(hasData?' gis':'')+(hasR?' rep':'')+(!hasData&&!hasR?' none':'');
-    let s = hasG?'統一圖資':(hasO?'自有平台':(hasR?(c==='高雄市'?'建設計畫':'健檢報告'):'未取得'));
-    div.innerHTML=`${c}<small>${s}</small>`;
-    g.appendChild(div);
   });
 }
 
@@ -906,7 +879,7 @@ function diBindGlobal(){
 function init(){
   drawGuess();buildGuessCtl();diBindGlobal();
   drawNational();buildCityCtl();drawCity();drawKeyplace();drawCampus();
-  buildWidthCtl();drawWidth();drawGrid();buildBudgetCtl();drawBudget();drawYears();drawProgress();drawUndispatched();
+  buildWidthCtl();drawWidth();buildBudgetCtl();drawBudget();drawYears();drawProgress();drawUndispatched();
 }
 init();
 window.addEventListener('resize',()=>{/* svg is responsive via viewBox; redraw bars for crispness */});
