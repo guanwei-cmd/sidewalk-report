@@ -75,6 +75,46 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .sharebtns .btn{flex:1;text-align:center;min-width:90px;}
 .sharehint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;text-align:center;}
 
+/* ---------- age-calculator hero ---------- */
+.herocalc{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:84px 22px 54px;position:relative;}
+.herocalc .tag{font-size:12.5px;letter-spacing:.36em;color:var(--red);font-weight:700;margin-bottom:22px;}
+.herocalc h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(29px,5.8vw,56px);line-height:1.2;margin:0 0 14px;max-width:18ch;}
+.herocalc h1 .hl{color:var(--red);}
+.herocalc .dek{font-size:clamp(15px,2.2vw,19px);color:var(--ink-soft);max-width:34ch;line-height:1.85;margin:0 auto 32px;}
+.calcbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:16.5px;color:var(--ink-soft);}
+.calcbar select,.calcbar input{font-family:inherit;font-size:16px;padding:9px 13px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);}
+.calcbar select{cursor:pointer;}
+.calcresult{margin:36px auto 0;max-width:600px;font-size:19px;line-height:1.95;color:var(--ink-soft);
+  opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s;min-height:4px;}
+.calcresult.show{opacity:1;transform:none;}
+.calcresult .k{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(46px,11vw,76px);color:var(--red);display:block;line-height:1.02;margin:.06em 0;}
+.calcresult .sub{font-size:15px;color:var(--muted);display:block;margin-top:8px;}
+.herocalc .cue{margin-top:42px;font-size:11.5px;letter-spacing:.28em;color:var(--faint);}
+.herocalc .cue::after{content:"";display:block;width:1px;height:30px;background:var(--line2);margin:10px auto 0;animation:cue 1.8s ease-in-out infinite;}
+
+/* ---------- scrollytelling (sticky chart + stepped captions) ---------- */
+.scrolly{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:38px;max-width:1080px;margin:30px auto 10px;padding:0 24px;}
+.scrolly .sticky{position:sticky;top:88px;height:min(74vh,560px);align-self:start;display:flex;flex-direction:column;justify-content:center;
+  background:#fffdf8;border:1px solid var(--line);border-radius:6px;padding:22px 20px;
+  box-shadow:0 1px 0 rgba(0,0,0,.02),0 18px 40px -34px rgba(0,0,0,.4);}
+.scrolly .sticky .cap{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.5;}
+.steps .step{min-height:84vh;display:flex;align-items:center;}
+.steps .step:first-child{min-height:56vh;}
+.steps .step:last-child{min-height:64vh;}
+.steps .step .box{background:rgba(255,253,248,.6);border:1px solid var(--line);border-left:4px solid var(--line2);
+  border-radius:0 8px 8px 0;padding:20px 24px;transition:.35s ease;}
+.steps .step.active .box{border-left-color:var(--red);background:#fffdf8;box-shadow:0 14px 34px -30px rgba(0,0,0,.5);}
+.steps .step .box .n{font-family:"Noto Serif TC",serif;color:var(--red);font-weight:700;font-size:12.5px;letter-spacing:.2em;margin-bottom:6px;}
+.steps .step .box p{margin:.15em 0 0;font-size:18px;line-height:1.9;color:var(--ink-soft);}
+.steps .step .box b{color:var(--red-d);font-weight:700;}
+@media(max-width:760px){
+  .scrolly{grid-template-columns:1fr;gap:0;}
+  .scrolly .sticky{top:50px;height:44vh;margin-bottom:6px;}
+  .steps .step{min-height:76vh;}
+  .steps .step:first-child{min-height:20vh;}
+}
+
 /* ---------- HERO ---------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   padding:90px 24px 60px;text-align:center;position:relative;overflow:hidden;}
@@ -246,31 +286,21 @@ footer a{color:#e7b86a;}
   <a href="#ch6"><span class="tick"></span><span class="lab"><b>陸</b>給讀者的檢驗清單</span></a>
 </nav>
 
-<!-- ============ HERO ============ -->
-<header class="hero" id="top">
-  <svg class="motif" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g stroke="#ddd6c7" stroke-width="2" fill="none" opacity="0.9">
-      <line x1="0" y1="640" x2="1200" y2="640"/>
-      <line x1="0" y1="700" x2="1200" y2="700"/>
-    </g>
-    <g fill="#e6dfce">
-      <rect x="60" y="650" width="46" height="44"/><rect x="120" y="650" width="46" height="44"/>
-      <rect x="180" y="650" width="46" height="44"/><rect x="240" y="650" width="46" height="44"/>
-      <rect x="300" y="650" width="46" height="44"/><rect x="360" y="650" width="46" height="44"/>
-      <rect x="420" y="650" width="46" height="44"/><rect x="480" y="650" width="46" height="44"/>
-      <rect x="540" y="650" width="46" height="44"/><rect x="600" y="650" width="46" height="44"/>
-      <rect x="660" y="650" width="46" height="44"/><rect x="720" y="650" width="46" height="44"/>
-      <rect x="780" y="650" width="46" height="44"/><rect x="840" y="650" width="46" height="44"/>
-      <rect x="900" y="650" width="46" height="44"/><rect x="960" y="650" width="46" height="44"/>
-      <rect x="1020" y="650" width="46" height="44"/><rect x="1080" y="650" width="46" height="44"/>
-    </g>
-    <g fill="#cf4636" opacity="0.85"><rect x="300" y="650" width="46" height="44"/><rect x="660" y="650" width="46" height="44"/></g>
-  </svg>
+<!-- ============ HERO：年齡計算機 ============ -->
+<header class="herocalc" id="top">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
-  <h1 class="serif">每年不到 <span class="hl">1%</span><br>台灣人行道的<br>緩慢與失真</h1>
-  <p class="dek">全國市區人行道普及率三年只爬升 2.61 個百分點。<br>但真正的問題是——這個數字，能不能比較？</p>
-  <div class="byline">資料整理與檢驗 · <b>2026 年 6 月</b>　|　原始資料皆附於文末可供查核</div>
-  <div class="scrollcue">向下捲動</div>
+  <h1 class="serif">照這個速度，你家的人行道<br>補到<span class="hl">先進國家水準</span>，你幾歲？</h1>
+  <p class="dek">先進城市的人行道普及率多在<b>八成</b>以上。台灣全國平均，每年只增加 0.87 個百分點。</p>
+  <div class="calcbar">
+    <span>我住在</span>
+    <select id="hc-city" aria-label="選擇縣市"></select>
+    <span>，今年</span>
+    <input type="number" id="hc-age" min="1" max="99" value="25" aria-label="你的年齡">
+    <span>歲。</span>
+    <button class="btn on red" id="hc-go">算給我看</button>
+  </div>
+  <div class="calcresult" id="hc-out" aria-live="polite"></div>
+  <div class="cue">往下看，為什麼會這樣</div>
 </header>
 
 <main>
@@ -316,15 +346,21 @@ footer a{color:#e7b86a;}
 <section class="wrap part" id="ch1">
   <div class="chapnum rv">壹 · 一條太平的曲線</div>
   <h2 class="sec rv">八千公里的人行道，與兩萬公里的道路</h2>
-  <p class="rv">先看分子與分母。民國 113 年底，全國市區道路總長 <b>21,666 公里</b>，其中鋪設人行道的長度是 <b>8,511 公里</b>。把後者除以前者，就是官方口中的「市區人行道普及率」。</p>
-  <p class="rv">這條線爬得很慢。更值得注意的是底下那條暗紅色的線——四年來，淨寬不足法定最低標準的人行道，長期維持在人行道總長的<b>兩成</b>上下。換句話說，我們不只蓋得慢，已經蓋好的，每五公里就有一公里太窄。</p>
+  <p class="rv">民國 113 年底，全國市區道路總長 <b>21,666 公里</b>，鋪了人行道的只有 <b>8,511 公里</b>。後者除以前者，就是官方口中的「普及率」。往下捲，看它三年來怎麼走。</p>
 </section>
 
-<div class="figure rv">
-  <div class="ftitle">全國市區人行道普及率，幾乎是一條平的線</div>
-  <div class="fsub">民國 110–113 年底。普及率＝人行道總長 ÷ 市區道路總長。將游標移到任一年查看數字。</div>
-  <div class="chartcard"><div id="chart-national"></div></div>
-  <div class="fsrc">資料來源：內政部國土管理署提供，立法院預算中心《內政部所屬 115 年度預算評估報告》表 1。原始檔見文末〔1〕。</div>
+<div class="scrolly" id="sty-nat">
+  <div class="sticky">
+    <div id="chart-national"></div>
+    <div class="cap">民國 110–113 年底。普及率＝人行道總長 ÷ 市區道路總長。<br>資料來源：內政部國土管理署／立法院預算中心《115 年度預算評估報告》表 1。原始檔見文末〔1〕。</div>
+  </div>
+  <div class="steps" id="steps-nat">
+    <div class="step" data-step="0"><div class="box"><div class="n">民國 110</div><p>故事的起點：全國市區人行道普及率 <b>36.68%</b>。</p></div></div>
+    <div class="step" data-step="1"><div class="box"><div class="n">110 → 113</div><p>三年過去。行政院喊「行人優先」、編了 <b>四百億</b>——曲線卻幾乎沒動。</p></div></div>
+    <div class="step" data-step="2"><div class="box"><div class="n">三年的成績</div><p>停在 <b>39.29%</b>。三年只增加 <b>2.61 個百分點</b>，平均每年不到 1%。</p></div></div>
+    <div class="step" data-step="3"><div class="box"><div class="n">已經蓋好的呢？</div><p>還有約 <b>兩成</b> 人行道淨寬不足最低標準——每五公里，就有一公里太窄。</p></div></div>
+    <div class="step" data-step="4"><div class="box"><div class="n">而「目標」</div><p>「一半道路都有人行道」還在 <b>50%</b> 那條線上，遙遙無期。</p></div></div>
+  </div>
 </div>
 
 <section class="wrap">
@@ -1126,9 +1162,72 @@ function sortGap(){
 }
 
 /* ===================== init + scroll fx ===================== */
+/* ===== age calculator (hero) ===== */
+const CALC_CITY=[['全國平均',39.29],['臺北市',72.1],['臺中市',71.88],['宜蘭縣',56.58],['桃園市',54.64],['嘉義市',49.62],['臺南市',39.19],['彰化縣',35.83],['基隆市',33.59],['苗栗縣',30.61],['新竹市',28.6],['南投縣',27.05],['新竹縣',22.59],['屏東縣',19.7],['花蓮縣',18.93],['嘉義縣',17.5],['金門縣',11.4],['澎湖縣',7.7]];
+const CALC_PACE=0.87, CALC_BASE=113, CALC_NOW=115;
+function initCalc(){
+  const sel=document.getElementById('hc-city');if(!sel)return;
+  CALC_CITY.forEach(([n,v])=>{const o=document.createElement('option');o.value=v;o.textContent=n;sel.appendChild(o);});
+  const go=()=>{
+    const cur=parseFloat(sel.value),age=parseInt(document.getElementById('hc-age').value)||0;
+    const name=sel.options[sel.selectedIndex].textContent;
+    const out=document.getElementById('hc-out');out.classList.add('show');
+    if(cur>=80){out.innerHTML=`<b>${name}</b> 帳面上已達八成（${cur}%）——但別忘了，這個數字用的是哪一把尺，本身就是問題。`;return;}
+    const roc80=Math.round(CALC_BASE+(80-cur)/CALC_PACE),roc50=Math.round(CALC_BASE+(50-cur)/CALC_PACE);
+    const w80=Math.max(0,roc80-CALC_NOW),w50=Math.max(0,roc50-CALC_NOW);
+    const sec = cur>=50
+      ? `<span class="sub">你的城市連一半都過了（${cur}%）——但要邁向八成，仍是 ${w80} 年後的事。</span>`
+      : `<span class="sub">就算只求「一半」，也要等到民國 ${roc50} 年（你 ${age+w50} 歲）。</span>`;
+    out.innerHTML=`在 <b>${name}</b>（目前 ${cur}%），補到「八成道路有人行道」還要<span class="k">${w80} 年</span>那是民國 <b>${roc80}</b> 年，你會是 <b>${age+w80} 歲</b>。${sec}`;
+  };
+  document.getElementById('hc-go').onclick=go;
+  document.getElementById('hc-age').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+
+/* ===== 壹 全國走勢 scrollytelling ===== */
+function drawNat1(state){
+  const box=document.getElementById('chart-national');if(!box)return;box.innerHTML='';
+  const W=460,H=380,m={t:26,r:46,b:38,l:44};
+  const s=svg(W,H);
+  const yrs=NATIONAL.map(d=>d.year),rate=NATIONAL.map(d=>d.rate),sub=NATIONAL.map(d=>d.subPct);
+  const x=i=>m.l+i*((W-m.l-m.r)/3), y=v=>m.t+(1-v/100)*(H-m.t-m.b);
+  for(let g=0;g<=100;g+=25){s.appendChild(mk('line',{x1:m.l,x2:W-m.r,y1:y(g),y2:y(g),stroke:C.line,'stroke-dasharray':'2 4'}));
+    s.appendChild(txt(m.l-10,y(g)+4,g+'%',{'text-anchor':'end',fill:C.muted,'font-size':11}));}
+  yrs.forEach((yr,i)=>s.appendChild(txt(x(i),H-14,'民國'+yr,{'text-anchor':'middle',fill:C.muted,'font-size':11})));
+  if(state>=4){s.appendChild(mk('line',{x1:m.l,x2:W-m.r,y1:y(50),y2:y(50),stroke:C.teal,'stroke-dasharray':'6 4','stroke-width':1.5}));
+    s.appendChild(txt(W-m.r,y(50)-8,'目標 50%',{'text-anchor':'end',fill:C.teal,'font-size':11,'font-weight':600}));}
+  if(state>=3){let ds=`M ${x(0)} ${y(sub[0])}`;for(let i=1;i<4;i++)ds+=` L ${x(i)} ${y(sub[i])}`;
+    s.appendChild(mk('path',{d:ds,fill:'none',stroke:C.red_d,'stroke-width':2.4,'stroke-dasharray':'5 3',opacity:.85}));
+    s.appendChild(txt(x(0)+6,y(sub[0])+18,'淨寬不足 ~2成',{fill:C.red_d,'font-size':11,'font-weight':600}));}
+  const upto=state>=1?4:1;
+  let d=`M ${x(0)} ${y(rate[0])}`;for(let i=1;i<upto;i++)d+=` L ${x(i)} ${y(rate[i])}`;
+  s.appendChild(mk('path',{d,fill:'none',stroke:C.red,'stroke-width':3.5,'stroke-linejoin':'round'}));
+  for(let i=0;i<upto;i++)s.appendChild(mk('circle',{cx:x(i),cy:y(rate[i]),r:5,fill:'#fffdf8',stroke:C.red,'stroke-width':3}));
+  s.appendChild(txt(x(0)+8,y(rate[0])-12,'36.68%',{fill:C.red_d,'font-size':12,'font-weight':700}));
+  if(state>=1)s.appendChild(txt(x(3)-6,y(rate[3])-12,'39.29%',{'text-anchor':'end',fill:C.red_d,'font-size':12,'font-weight':700}));
+  if(state>=2){s.appendChild(mk('line',{x1:x(3)+16,x2:x(3)+16,y1:y(36.68),y2:y(39.29),stroke:C.ink,'stroke-width':1}));
+    s.appendChild(txt(x(3)+22,(y(36.68)+y(39.29))/2,'+2.61',{fill:C.ink,'font-size':11,'font-weight':700}));}
+  box.appendChild(s);
+}
+
+/* ===== generic scrollytelling controller ===== */
+function initScrolly(stepsId,render){
+  const steps=document.querySelectorAll('#'+stepsId+' .step');if(!steps.length)return;
+  let cur=-1;render(0);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){const st=+e.target.dataset.step;
+      steps.forEach(x=>x.classList.toggle('active',x===e.target));
+      if(st!==cur){cur=st;render(st);}
+    }
+  }),{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(el=>io.observe(el));
+}
+
 function init(){
+  initCalc();
   drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
-  drawNational();buildCityCtl();drawCity();buildKeyplaceCtl();drawKeyplace();buildCampusCtl();drawCampus();
+  initScrolly('steps-nat',drawNat1);
+  buildCityCtl();drawCity();buildKeyplaceCtl();drawKeyplace();buildCampusCtl();drawCampus();
   buildWidthCtl();drawWidth();buildBudgetCtl();drawBudget();drawYears();drawProgress();drawUndispatched();
   buildGapCtl();sortGap();
 }
