@@ -107,6 +107,15 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .scrolly .wleg{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:12.5px;color:var(--ink-soft);}
 .scrolly .wleg span{display:inline-flex;align-items:center;gap:6px;}
 .scrolly .wleg i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+/* 探索控制列：敘事走完才交棒給讀者 */
+.scrolly .explore{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;
+  max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;pointer-events:none;}
+.scrolly .explore.show{max-height:120px;opacity:1;pointer-events:auto;}
+.scrolly .explore .elabel{font-size:12.5px;color:var(--muted);margin-right:2px;}
+.scrolly .explore .ebtn{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:var(--paper2);
+  border:1px solid var(--line2);border-radius:999px;padding:5px 13px;cursor:pointer;transition:.15s;}
+.scrolly .explore .ebtn:hover{border-color:var(--ink);}
+.scrolly .explore .ebtn.on{background:var(--ink);color:#fff;border-color:var(--ink);}
 .scrolly .steps{position:relative;z-index:2;margin-top:-100vh;pointer-events:none;}
 .scrolly .step{min-height:95vh;}
 .scrolly .step:last-child{min-height:75vh;}
@@ -449,13 +458,14 @@ footer a{color:#e7b86a;}
     <div class="scap" id="cap-city"></div>
     <div class="gwrap"><div id="chart-city"></div></div>
     <div class="wleg" style="justify-content:center"><span><i style="background:#2c6e6a"></i>老實（道路總長）</span><span><i style="background:#e0a13c"></i>都計美化</span><span><i style="background:#cf4636"></i>創意膨風</span><span><i style="background:#a39c8e"></i>狀況外/矛盾</span></div>
+    <div class="explore" id="city-explore"></div>
     <div class="src">依各縣市《行人安全環境總健檢及行動改善方案》（113–114 年）等自報數字，顏色標示其分母口徑分類。⚠ 者原始資料有疑義。原始檔見文末〔2〕。</div>
   </div>
   <div class="steps">
     <div class="step" data-step="0" data-cap="<span class='n'>桃園市</span>桃園自報 <b>54.64%</b>，看起來是全國前段班。"></div>
     <div class="step" data-step="1" data-cap="<span class='n'>攤開 18 縣市</span>從澎湖 7.7% 到臺北 72.1%，落差巨大。但先別看高低——先看<b>顏色</b>。"></div>
     <div class="step" data-step="2" data-cap="<span class='n'>每個城市用不同的尺</span>青色是老實用道路總長算的、橙色只算都計/市區道路、紅色用自訂分母膨風。<b>把數字做高的，幾乎都不是老實算的那群。</b>"></div>
-    <div class="step" data-step="3" data-cap="<span class='n'>改用同一把尺</span>全部還原成「道路總長」——桃園崩到 <b>11.69%</b>、臺南砍半到 20.78%、新竹縣反而升到 45.18%。<b>這些數字根本不是同一把尺量的。</b>"></div>
+    <div class="step" data-step="3" data-cap="<span class='n'>改用同一把尺</span>全部還原成「道路總長」——桃園崩到 <b>11.69%</b>、臺南砍半、新竹縣反升到 45.18%。<b>換你試試：</b>下方可自己排序、只看某一種算法。"></div>
   </div>
 </div>
 
@@ -1419,13 +1429,19 @@ function drawNat1(state){
   box.appendChild(s);
 }
 
-/* ===== generic scrollytelling controller（全寬大圖 + 變化圖說）===== */
+/* ===== generic scrollytelling controller（全寬大圖 + 變化圖說 + 末步交棒探索）===== */
 function initScrolly(rootId,render){
   const root=document.getElementById(rootId);if(!root)return;
   const steps=root.querySelectorAll('.step');if(!steps.length)return;
   const cap=root.querySelector('.scap');
+  const explore=root.querySelector('.explore');
+  const maxStep=Math.max(...[...steps].map(s=>+s.dataset.step));
   let cur=-1;
-  const set=(st,capHtml)=>{if(cap&&capHtml!=null)cap.innerHTML=capHtml;if(st!==cur){cur=st;render(st);}};
+  const set=(st,capHtml)=>{
+    if(cap&&capHtml!=null)cap.innerHTML=capHtml;
+    if(explore)explore.classList.toggle('show',st>=maxStep);  // 敘事走到最後一步→控制列浮現交棒
+    if(st!==cur){cur=st;render(st);}
+  };
   set(+steps[0].dataset.step||0, steps[0].dataset.cap||'');
   const io=new IntersectionObserver(es=>es.forEach(e=>{
     if(e.isIntersecting)set(+e.target.dataset.step, e.target.dataset.cap||'');
@@ -1441,7 +1457,14 @@ function hbars(boxId,opts,state){
   const alt = opts.altState!=null && state>=opts.altState;
   const vof=r=> alt ? (r.alt==null?r.v:r.alt) : r.v;
   const focusRow=opts.rows[opts.focus];
-  const list = state<=0 ? [focusRow] : [...opts.rows].sort((a,b)=>vof(b)-vof(a));
+  let list;
+  if(state<=0){ list=[focusRow]; }
+  else {
+    list=[...opts.rows];
+    if(opts.filter) list=list.filter(opts.filter);
+    const dir=opts.sortDir==='asc'?-1:1;
+    list.sort((a,b)=>dir*(vof(b)-vof(a)));
+  }
   const W=1160,rowH=(state<=0?110:36),m={t:12,r:72,b:26,l:opts.l||110};
   const H=m.t+m.b+list.length*rowH;
   const s=svg(W,H);const xw=v=>(v/max)*(W-m.l-m.r);
@@ -1464,13 +1487,31 @@ function hbars(boxId,opts,state){
   box.appendChild(s);
 }
 
-/* ===== 貳 縣市普及率（依分母口徑上色 → 同一把尺）===== */
+/* ===== 貳 縣市普及率（依分母口徑上色 → 同一把尺 → 交棒探索）===== */
+let cityState=0, cityExplore={sortDir:'desc',filter:null};
 function drawCitySty(state){
+  cityState=state;
+  const exploring = state>=3;  // 進入最終狀態後，控制列生效
   hbars('chart-city',{max:80,unit:'%',focus:CITY.findIndex(c=>c.city==='桃園市'),altState:3,
+    sortDir: exploring?cityExplore.sortDir:'desc',
+    filter: (exploring&&cityExplore.filter)?(r=>r.cat===cityExplore.filter):null,
     rowColor:(r,alt)=> alt ? (r.alt==null?C.line:C.red) : (CAT_INFO[r.cat]?CAT_INFO[r.cat].color:C.teal),
     rows:CITY.map(c=>({label:c.city,v:c.off,alt:c.uni,flag:c.flag,cat:c.cat,
       tip:`<b>${c.city}</b>　<span style="color:${CAT_INFO[c.cat].color}">${CAT_INFO[c.cat].name}</span><br>官方 ${c.off}%（分母：${c.base}）<br>${c.uni!=null?'同一把尺 → '+c.uni+'%':'無法換算'}<br><span style="opacity:.8">${c.note}</span>`}))
   },state);
+}
+function buildCityExplore(){
+  const box=document.getElementById('city-explore');if(!box)return;
+  const mk2=(txt,on,cb)=>{const b=document.createElement('button');b.className='ebtn'+(on?' on':'');b.textContent=txt;b.onclick=cb;return b;};
+  const render=()=>{box.innerHTML='';
+    box.appendChild(Object.assign(document.createElement('span'),{className:'elabel',textContent:'排序'}));
+    box.appendChild(mk2('降冪 ↓',cityExplore.sortDir==='desc',()=>{cityExplore.sortDir='desc';drawCitySty(3);render();}));
+    box.appendChild(mk2('升冪 ↑',cityExplore.sortDir==='asc',()=>{cityExplore.sortDir='asc';drawCitySty(3);render();}));
+    box.appendChild(Object.assign(document.createElement('span'),{className:'elabel',textContent:'　只看'}));
+    box.appendChild(mk2('全部',!cityExplore.filter,()=>{cityExplore.filter=null;drawCitySty(3);render();}));
+    [1,2,3,4].forEach(k=>box.appendChild(mk2(CAT_INFO[k].name,cityExplore.filter===k,()=>{cityExplore.filter=k;drawCitySty(3);render();})));
+  };
+  render();
 }
 /* ===== 貳 新竹縣重點場所 ===== */
 function drawKeyplaceSty(state){
@@ -1514,7 +1555,7 @@ function init(){
   initQuiz();initCalc();
   drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
   initScrolly('sty-nat',drawNat1);
-  initScrolly('sty-city',drawCitySty);
+  buildCityExplore();initScrolly('sty-city',drawCitySty);
   initScrolly('sty-keyplace',drawKeyplaceSty);
   initScrolly('sty-campus',drawCampusSty);
   initScrolly('sty-width',drawWidthSty);
