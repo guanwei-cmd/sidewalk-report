@@ -1207,12 +1207,21 @@ function drawNat1(state){
   if(state>=3){let ds=`M ${x(0)} ${y(sub[0])}`;for(let i=1;i<4;i++)ds+=` L ${x(i)} ${y(sub[i])}`;
     s.appendChild(mk('path',{d:ds,fill:'none',stroke:C.red_d,'stroke-width':2.4,'stroke-dasharray':'5 3',opacity:.85}));
     s.appendChild(txt(x(0)+6,y(sub[0])+18,'淨寬不足 ~2成',{fill:C.red_d,'font-size':11,'font-weight':600}));}
-  const upto=state>=1?4:1;
-  let d=`M ${x(0)} ${y(rate[0])}`;for(let i=1;i<upto;i++)d+=` L ${x(i)} ${y(rate[i])}`;
-  s.appendChild(mk('path',{d,fill:'none',stroke:C.red,'stroke-width':3.5,'stroke-linejoin':'round'}));
-  for(let i=0;i<upto;i++)s.appendChild(mk('circle',{cx:x(i),cy:y(rate[i]),r:5,fill:'#fffdf8',stroke:C.red,'stroke-width':3}));
-  s.appendChild(txt(x(0)+8,y(rate[0])-12,'36.68%',{fill:C.red_d,'font-size':12,'font-weight':700}));
-  if(state>=1)s.appendChild(txt(x(3)-6,y(rate[3])-12,'39.29%',{'text-anchor':'end',fill:C.red_d,'font-size':12,'font-weight':700}));
+  if(state===0){
+    // 先聚焦起點：脈動的 highlight focus 點
+    const halo=mk('circle',{cx:x(0),cy:y(rate[0]),r:14,fill:C.red,opacity:.16});
+    halo.appendChild(mk('animate',{attributeName:'r',values:'14;24;14',dur:'2.2s',repeatCount:'indefinite'}));
+    halo.appendChild(mk('animate',{attributeName:'opacity',values:'.22;.05;.22',dur:'2.2s',repeatCount:'indefinite'}));
+    s.appendChild(halo);
+    s.appendChild(mk('circle',{cx:x(0),cy:y(rate[0]),r:8,fill:C.red,stroke:'#fffdf8','stroke-width':3}));
+    s.appendChild(txt(x(0)+20,y(rate[0])+5,'起點 '+rate[0].toFixed(2)+'%',{fill:C.red_d,'font-size':15,'font-weight':700}));
+  }else{
+    let d=`M ${x(0)} ${y(rate[0])}`;for(let i=1;i<4;i++)d+=` L ${x(i)} ${y(rate[i])}`;
+    s.appendChild(mk('path',{d,fill:'none',stroke:C.red,'stroke-width':3.5,'stroke-linejoin':'round'}));
+    for(let i=0;i<4;i++)s.appendChild(mk('circle',{cx:x(i),cy:y(rate[i]),r:5,fill:'#fffdf8',stroke:C.red,'stroke-width':3}));
+    s.appendChild(txt(x(0)+8,y(rate[0])-12,rate[0].toFixed(2)+'%',{fill:C.red_d,'font-size':12,'font-weight':700}));
+    s.appendChild(txt(x(3)-6,y(rate[3])-12,'39.29%',{'text-anchor':'end',fill:C.red_d,'font-size':12,'font-weight':700}));
+  }
   if(state>=2){s.appendChild(mk('line',{x1:x(3)+16,x2:x(3)+16,y1:y(36.68),y2:y(39.29),stroke:C.ink,'stroke-width':1}));
     s.appendChild(txt(x(3)+22,(y(36.68)+y(39.29))/2,'+2.61',{fill:C.ink,'font-size':11,'font-weight':700}));}
   box.appendChild(s);
