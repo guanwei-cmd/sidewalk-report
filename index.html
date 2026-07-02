@@ -1421,31 +1421,114 @@ let bCounts={adult:1,wheel:1}, bCity='全國';
 function bNeed(){let s=0;for(const it of B_ITEMS)s+=(bCounts[it.k]||0)*it.w;return Math.round(s*100)/100;}
 function bPct(city,w){const a=SWCDF[city];if(!a)return null;if(w<=0)return 100;
   const idx=Math.min(50,Math.ceil(w*10-1e-6));return a[idx];}
-/* --- 人形圖（橫斷面，站在版上）--- */
+/* --- 人形插畫（橫斷面正面視角，雙色調扁平風；每個圖佔滿自己的寬度格）--- */
+const B_PAL={
+  adult:  ['#2c6e6a','#1f5350'],
+  kid:    ['#e0a13c','#b97e23'],
+  wheel:  ['#cf4636','#a8341f'],
+  stroller:['#7a6a8f','#5d4f70'],
+  dog:    ['#a9812f','#7c5c17'],
+  cane:   ['#4a4640','#1b1a18'],
+};
+function bShadow(g,cx,base,w){g.appendChild(mk('ellipse',{cx,cy:base+3,rx:w*0.42,ry:4.5,fill:'#1b1a18',opacity:.10}));}
+/* 站立人（正面）：頭、頸、肩斜軀幹、雙臂、雙腿 */
+function bPerson(g,cx,base,wpx,H,pal,opt={}){
+  const [c,d]=pal, sh=wpx*0.42;
+  const hr=H*0.13, headY=base-H+hr;
+  const legH=H*0.32, legW=Math.max(5,wpx*0.13);
+  const torsoTop=headY+hr*0.9, torsoBot=base-legH+4;
+  g.appendChild(mk('rect',{x:cx-legW-wpx*0.045,y:base-legH,width:legW,height:legH,rx:legW/2,fill:d}));
+  g.appendChild(mk('rect',{x:cx+wpx*0.045,y:base-legH,width:legW,height:legH,rx:legW/2,fill:d}));
+  g.appendChild(mk('path',{d:`M ${cx-sh} ${torsoTop+H*0.13}
+    Q ${cx-sh} ${torsoTop} ${cx-sh*0.45} ${torsoTop}
+    L ${cx+sh*0.45} ${torsoTop}
+    Q ${cx+sh} ${torsoTop} ${cx+sh} ${torsoTop+H*0.13}
+    Q ${cx+sh*0.93} ${torsoBot-H*0.05} ${cx+sh*0.6} ${torsoBot}
+    L ${cx-sh*0.6} ${torsoBot}
+    Q ${cx-sh*0.93} ${torsoBot-H*0.05} ${cx-sh} ${torsoTop+H*0.13} Z`,fill:c}));
+  const armW=Math.max(4.5,wpx*0.095), armT=torsoTop+H*0.13, armB=torsoBot-H*0.03;
+  g.appendChild(mk('rect',{x:cx-sh+armW*0.05,y:armT,width:armW,height:armB-armT,rx:armW/2,fill:d}));
+  if(!opt.noRightArm)g.appendChild(mk('rect',{x:cx+sh-armW*1.05,y:armT,width:armW,height:armB-armT,rx:armW/2,fill:d}));
+  g.appendChild(mk('rect',{x:cx-hr*0.34,y:headY+hr*0.55,width:hr*0.68,height:hr*0.75,fill:c}));
+  g.appendChild(mk('circle',{cx,cy:headY,r:hr,fill:c}));
+  return {torsoTop,armT,armB,sh};
+}
 function bFig(g,kind,x,base,wpx){
-  const cx=x+wpx/2, col={adult:C.teal,kid:C.amber,wheel:C.red,stroller:'#7a6a8f',dog:'#9a6a14',cane:C.ink}[kind]||C.ink;
+  const cx=x+wpx/2, pal=B_PAL[kind]||B_PAL.cane, [c,d]=pal;
   const gg=mk('g',{});g.appendChild(gg);
-  if(kind==='wheel'){
-    gg.appendChild(mk('circle',{cx:cx+wpx*0.12,cy:base-26,r:24,fill:'none',stroke:col,'stroke-width':6}));
-    gg.appendChild(mk('circle',{cx:cx-wpx*0.36,cy:base-11,r:9,fill:'none',stroke:col,'stroke-width':4}));
-    gg.appendChild(mk('rect',{x:cx-wpx*0.26,y:base-84,width:wpx*0.52,height:36,rx:8,fill:col}));
-    gg.appendChild(mk('circle',{cx:cx,cy:base-96,r:12,fill:col}));
-  }else if(kind==='stroller'){
-    gg.appendChild(mk('rect',{x:cx-wpx*0.42,y:base-58,width:wpx*0.84,height:30,rx:9,fill:col,opacity:.9}));
-    gg.appendChild(mk('circle',{cx:cx-wpx*0.3,cy:base-9,r:9,fill:col}));
-    gg.appendChild(mk('circle',{cx:cx+wpx*0.3,cy:base-9,r:9,fill:col}));
-    gg.appendChild(mk('line',{x1:cx+wpx*0.42,y1:base-58,x2:cx+wpx*0.52,y2:base-92,stroke:col,'stroke-width':5,'stroke-linecap':'round'}));
-    gg.appendChild(mk('circle',{cx:cx-wpx*0.05,cy:base-70,r:9,fill:col}));
-  }else if(kind==='dog'){
-    gg.appendChild(mk('rect',{x:cx-wpx*0.42,y:base-34,width:wpx*0.84,height:20,rx:10,fill:col}));
-    gg.appendChild(mk('circle',{cx:cx+wpx*0.46,cy:base-40,r:10,fill:col}));
-    [[-0.3],[0.3]].forEach(([f])=>gg.appendChild(mk('rect',{x:cx+f*wpx-3,y:base-16,width:6,height:16,fill:col})));
-    gg.appendChild(mk('path',{d:`M ${cx-wpx*0.42} ${base-32} q -10 -8 -6 -18`,fill:'none',stroke:col,'stroke-width':3}));
-  }else{
-    const h=kind==='kid'?92:140, hr=kind==='kid'?11:15;
-    gg.appendChild(mk('rect',{x:cx-wpx*0.36,y:base-h+hr*2,width:wpx*0.72,height:h-hr*2,rx:Math.min(wpx*0.3,22),fill:col}));
-    gg.appendChild(mk('circle',{cx:cx,cy:base-h+hr-2,r:hr,fill:col}));
-    if(kind==='cane')gg.appendChild(mk('line',{x1:cx+wpx*0.3,y1:base-h*0.55,x2:cx+wpx*0.62,y2:base,stroke:col,'stroke-width':4,'stroke-linecap':'round'}));
+  bShadow(gg,cx,base,wpx);
+  const HH=Math.max(122,Math.min(182,wpx*1.32));   // 身高隨格寬縮放，維持修長比例
+  if(kind==='adult'){ bPerson(gg,cx,base,wpx,HH,pal); }
+  else if(kind==='kid'){
+    const H=HH*0.72; bPerson(gg,cx,base,wpx,H,pal);
+    const hr=H*0.115, headY=base-H+hr;      // 雙馬尾
+    gg.appendChild(mk('circle',{cx:cx-hr*1.15,cy:headY+hr*0.15,r:hr*0.34,fill:d}));
+    gg.appendChild(mk('circle',{cx:cx+hr*1.15,cy:headY+hr*0.15,r:hr*0.34,fill:d}));
+  }
+  else if(kind==='cane'){
+    const H=HH, p=bPerson(gg,cx,base,wpx,H,pal,{noRightArm:true});
+    const hr=H*0.115, headY=base-H+hr;      // 墨鏡帶
+    gg.appendChild(mk('rect',{x:cx-hr*0.9,y:headY-hr*0.25,width:hr*1.8,height:hr*0.5,rx:hr*0.25,fill:'#1b1a18'}));
+    const hx=cx+p.sh*0.9, hy=p.armT+(p.armB-p.armT)*0.45;
+    gg.appendChild(mk('rect',{x:cx+p.sh-wpx*0.12,y:p.armT,width:Math.max(4.5,wpx*0.11),height:hy-p.armT+8,rx:4,fill:d}));
+    const tipX=cx+wpx*0.46, tipY=base;      // 白手杖＋紅尖
+    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:tipY,stroke:'#c9c0ad','stroke-width':6.5,'stroke-linecap':'round',opacity:.5}));
+    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:tipY,stroke:'#fffdf8','stroke-width':4.6,'stroke-linecap':'round'}));
+    const fx=hx+(tipX-hx)*0.82, fy=hy+(tipY-hy)*0.82;
+    gg.appendChild(mk('line',{x1:fx,y1:fy,x2:tipX,y2:tipY,stroke:'#cf4636','stroke-width':4.6,'stroke-linecap':'round'}));
+  }
+  else if(kind==='wheel'){
+    const wr=wpx*0.34, wy=base-wr;          // 兩大輪：輪圈+輻條+輪轂
+    [[-1],[1]].forEach(([s])=>{
+      const wx=cx+s*(wpx*0.5-wr*0.42);
+      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr,fill:'none',stroke:d,'stroke-width':6}));
+      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.55,fill:'none',stroke:d,'stroke-width':2,opacity:.55}));
+      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.14,fill:d}));
+      [0,60,120].forEach(a=>{const r1=wr*0.16,r2=wr*0.52,rad=a*Math.PI/180;
+        gg.appendChild(mk('line',{x1:wx+r1*Math.cos(rad),y1:wy+r1*Math.sin(rad),x2:wx+r2*Math.cos(rad),y2:wy+r2*Math.sin(rad),stroke:d,'stroke-width':2,opacity:.55}));
+        gg.appendChild(mk('line',{x1:wx-r1*Math.cos(rad),y1:wy-r1*Math.sin(rad),x2:wx-r2*Math.cos(rad),y2:wy-r2*Math.sin(rad),stroke:d,'stroke-width':2,opacity:.55}));});
+    });
+    const seatW=wpx*0.5, seatY=wy-wr*0.5;            // 全部依 wpx 係數化
+    const torsoH=wpx*0.28, hr=wpx*0.085, headY=seatY-torsoH-hr*0.9;
+    gg.appendChild(mk('path',{d:`M ${cx-seatW*0.42} ${seatY-torsoH}
+      Q ${cx-seatW*0.42} ${seatY-torsoH-hr*0.6} ${cx-seatW*0.22} ${seatY-torsoH-hr*0.6}
+      L ${cx+seatW*0.22} ${seatY-torsoH-hr*0.6}
+      Q ${cx+seatW*0.46} ${seatY-torsoH-hr*0.6} ${cx+seatW*0.46} ${seatY-torsoH+hr*0.4}
+      L ${cx+seatW*0.5} ${seatY} L ${cx-seatW*0.5} ${seatY} Z`,fill:c}));   // 坐姿軀幹含圓肩
+    gg.appendChild(mk('rect',{x:cx-hr*0.32,y:headY+hr*0.6,width:hr*0.64,height:hr*0.8,fill:c}));
+    gg.appendChild(mk('circle',{cx,cy:headY,r:hr,fill:c}));
+    gg.appendChild(mk('rect',{x:cx-seatW/2-4,y:seatY,width:seatW+8,height:Math.max(7,wpx*0.05),rx:4,fill:d}));
+    gg.appendChild(mk('rect',{x:cx-seatW/2-4,y:seatY+Math.max(11,wpx*0.075),width:seatW+8,height:Math.max(5,wpx*0.033),rx:3,fill:d,opacity:.85}));
+    gg.appendChild(mk('rect',{x:cx-seatW*0.32,y:base-Math.max(7,wpx*0.045),width:seatW*0.64,height:Math.max(5,wpx*0.033),rx:3,fill:d}));
+  }
+  else if(kind==='stroller'){
+    const bw=wpx*0.86, bx=cx-bw/2, bodyT=base-64, bodyH=34, wr2=9.5;
+    gg.appendChild(mk('line',{x1:bx+4,y1:base-wr2,x2:bx+bw*0.3,y2:bodyT+bodyH,stroke:d,'stroke-width':4}));
+    gg.appendChild(mk('line',{x1:bx+bw-4,y1:base-wr2,x2:bx+bw*0.7,y2:bodyT+bodyH,stroke:d,'stroke-width':4}));
+    [[bx+4],[bx+bw-4]].forEach(([wx])=>{gg.appendChild(mk('circle',{cx:wx,cy:base-wr2,r:wr2,fill:'none',stroke:d,'stroke-width':4}));
+      gg.appendChild(mk('circle',{cx:wx,cy:base-wr2,r:2.6,fill:d}));});
+    gg.appendChild(mk('rect',{x:bx,y:bodyT,width:bw,height:bodyH,rx:10,fill:c}));
+    gg.appendChild(mk('path',{d:`M ${bx} ${bodyT} Q ${bx} ${bodyT-40} ${cx} ${bodyT-40} L ${cx} ${bodyT} Z`,fill:d}));
+    gg.appendChild(mk('circle',{cx:cx+bw*0.18,cy:bodyT-10,r:9,fill:'#f2d9b8'}));
+    gg.appendChild(mk('path',{d:`M ${cx+bw*0.18-9} ${bodyT-13} a 9 9 0 0 1 18 0 z`,fill:d}));
+    gg.appendChild(mk('line',{x1:bx+bw*0.92,y1:bodyT-2,x2:bx+bw*1.02,y2:bodyT-46,stroke:d,'stroke-width':4,'stroke-linecap':'round'}));
+    gg.appendChild(mk('line',{x1:bx+bw*0.72,y1:bodyT-46,x2:bx+bw*1.02,y2:bodyT-46,stroke:d,'stroke-width':5,'stroke-linecap':'round'}));
+  }
+  else if(kind==='dog'){
+    const bw=wpx*0.8, bx=cx-bw/2, bodyY=base-30, bodyH=19;
+    gg.appendChild(mk('path',{d:`M ${bx} ${bodyY+bodyH*0.5} Q ${bx} ${bodyY} ${bx+bw*0.18} ${bodyY}
+      L ${bx+bw*0.78} ${bodyY} Q ${bx+bw} ${bodyY} ${bx+bw} ${bodyY+bodyH*0.55}
+      Q ${bx+bw} ${bodyY+bodyH} ${bx+bw*0.8} ${bodyY+bodyH} L ${bx+bw*0.15} ${bodyY+bodyH}
+      Q ${bx} ${bodyY+bodyH} ${bx} ${bodyY+bodyH*0.5} Z`,fill:c}));
+    [[0.14],[0.32],[0.62],[0.82]].forEach(([f],i)=>gg.appendChild(mk('rect',{x:bx+bw*f-2.6,y:base-13,width:5.2,height:13,rx:2.6,fill:i%2?d:c})));
+    const hx=bx+bw+2, hy=bodyY-6;
+    gg.appendChild(mk('circle',{cx:hx,cy:hy,r:10,fill:c}));
+    gg.appendChild(mk('rect',{x:hx+4,y:hy-1,width:10,height:7.5,rx:3.5,fill:c}));
+    gg.appendChild(mk('circle',{cx:hx+13.5,cy:hy+1,r:2.2,fill:d}));
+    gg.appendChild(mk('path',{d:`M ${hx-6} ${hy-8} q -6 4 -4 14 q 5 2 7 -2 z`,fill:d}));
+    gg.appendChild(mk('path',{d:`M ${bx+1} ${bodyY+2} q -9 -6 -7 -16`,fill:'none',stroke:c,'stroke-width':4.5,'stroke-linecap':'round'}));
+    gg.appendChild(mk('rect',{x:hx-8,y:hy+6,width:14,height:4,rx:2,fill:'#cf4636'}));
+    gg.appendChild(mk('path',{d:`M ${hx-1} ${hy+8} Q ${cx-wpx*0.5} ${base-88} ${cx-wpx*0.62} ${base-118}`,fill:'none',stroke:d,'stroke-width':2.4,opacity:.8}));
   }
 }
 function drawB(){
@@ -1454,7 +1537,7 @@ function drawB(){
   const W=880,H=252,base=H-46;
   const s=svg(W,H);
   const slabW=Math.max(need,0.8);
-  const pxm=Math.min(230,(W-140)/slabW);
+  const pxm=Math.min(200,(W-140)/slabW);
   const x0=(W-slabW*pxm)/2, x1=x0+slabW*pxm;
   // 車道兩側示意
   s.appendChild(mk('rect',{x:0,y:base+4,width:W,height:26,fill:'#2c2a26'}));
@@ -1471,10 +1554,15 @@ function drawB(){
   if(1.5<=slabW+0.001){const tx=x0+1.5*pxm;
     s.appendChild(mk('line',{x1:tx,x2:tx,y1:34,y2:base-6,stroke:C.teal,'stroke-dasharray':'4 4','stroke-width':1.5}));
     s.appendChild(txt(tx,44,'法定下限 1.5m',{'text-anchor':'middle',fill:C.teal,'font-size':10.5,'font-weight':600}));}
-  // 元素排排站
-  let cx=x0;
+  // 元素排排站（格位寬=真實寬度；圖形繪製寬設上限、置中於格內，格界以細線標示）
+  let cx=x0, slotI=0;
   for(const it of B_ITEMS){const n=bCounts[it.k]||0;
-    for(let i=0;i<n;i++){bFig(s,it.k,cx,base-6,it.w*pxm);cx+=it.w*pxm;}}
+    for(let i=0;i<n;i++){
+      const slot=it.w*pxm, wDraw=Math.min(slot,132);
+      if(slotI>0)s.appendChild(mk('line',{x1:cx,x2:cx,y1:base-2,y2:base+10,stroke:C.line2,'stroke-width':1.5}));
+      bFig(s,it.k,cx+(slot-wDraw)/2,base-6,wDraw);
+      cx+=slot;slotI++;
+    }}
   if(need===0)s.appendChild(txt(W/2,base-60,'← 按上方 ＋ 把人放上來',{'text-anchor':'middle',fill:C.muted,'font-size':14}));
   box.appendChild(s);
   // 結果
