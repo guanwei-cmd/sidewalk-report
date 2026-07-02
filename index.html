@@ -422,18 +422,19 @@ footer a{color:#e7b86a;}
 </div>
 
 <section class="wrap">
-  <p class="rv">而這不是新竹縣獨有的窘境。把幾個有公布「校園周邊人行道普及率」的縣市並排——即使各縣市的算法、範圍未必一致——你還是會看到一條從一成到近八成的落差。最該替孩子鋪好上學路的地方，全國始終沒有一條共同的底線。</p>
+  <p class="rv">而這不是新竹縣獨有的窘境。本專題逐份重查 22 縣市的健檢報告，<b>只有 12 個縣市交得出「校園周邊人行道普及率」</b>——其中基隆、嘉義市甚至只列了各校清單、沒算全市總數，是本專題自行加總 171 校與 90 校得出的。其餘 10 縣市，連這個數字都沒有。最該替孩子鋪好上學路的地方，全國始終沒有一條共同的底線。</p>
 </section>
 
 <div class="scrolly" id="sty-campus">
   <div class="sticky">
     <div class="scap" id="cap-campus"></div>
     <div class="gwrap"><div id="chart-campus"></div></div>
-    <div class="src">各縣市自報之「校園周邊人行道普及率」，定義與盤點範圍未必一致。資料來源：桃園、臺南、苗栗、宜蘭、嘉義縣、屏東、新竹縣健檢報告。原始檔見文末〔2〕。</div>
+    <div class="src">本專題逐份重查 22 縣市健檢報告：12 縣市有數字（標 ⚠ 者口徑特殊，游標可見說明；基隆、嘉義市為報告僅列各校、本專題自行加總），其餘 10 縣市（新北、臺中、彰化、高雄、雲林、花蓮、臺東、澎湖、金門、連江）連這個數字都沒有。定義與盤點範圍各縣不一。原始檔見文末〔2〕。</div>
   </div>
   <div class="steps">
     <div class="step" data-step="0" data-cap="<span class='n'>新竹縣</span>校園周邊人行道普及率 <b>10.73%</b>——十所學校門口，九所沒有完整人行道。"></div>
-    <div class="step" data-step="1" data-cap="<span class='n'>攤開各縣市</span>從一成到近八成，<b>最高與最低差了七倍</b>。孩子的上學路，全國始終沒有一條共同底線。"></div>
+    <div class="step" data-step="1" data-cap="<span class='n'>攤開 22 縣市</span>只有 <b>12 個</b>縣市交得出數字，最高與最低差了<b>七倍</b>；另外 10 個，連數字都沒有。"></div>
+    <div class="step" data-step="2" data-cap="<span class='n'>而且尺又不一樣</span>有的用長度、苗栗用<b>校數</b>、嘉義市把人行道<b>算雙向</b>、新竹市只算重點路廊——孩子的上學路，同樣沒有一把共同的尺。"></div>
   </div>
 </div>
 
@@ -890,16 +891,24 @@ function buildBudgetCtl(){
   if(budgetMode==='targets')addSortBtns(c,budgetSort,k=>{budgetSort=k;buildBudgetCtl();drawBudget();});
 }
 
-/* ===================== 2c. CAMPUS (cross-county) ===================== */
+/* ===================== 2c. CAMPUS (cross-county) =====================
+   22 縣市盤點結果（2026-07 逐份健檢報告重查）：12 縣市有數字、10 縣市無。
+   口徑各異——長度比/校數比/雙向計/300M/200M/僅重點路廊，本身就是「分母魔術」的又一例。 */
 const CAMPUS=[
-  {city:'桃園市',v:76},
-  {city:'臺南市',v:60},
-  {city:'苗栗縣',v:54.94},
-  {city:'宜蘭縣',v:40},
-  {city:'嘉義縣',v:23.71},
-  {city:'屏東縣',v:22},
-  {city:'新竹縣',v:10.73},
+  {city:'桃園市',v:76,   note:'全市各級學校321所，以周邊道路長度計'},
+  {city:'臺北市',v:68.6, note:'全市各級學校，表6總計 142,597M÷207,887M'},
+  {city:'嘉義市',v:67.76,note:'報告僅列各校未給合計；本專題自行加總90校。人行道以「雙向公尺」計，口徑偏高（個別學校甚至逾100%）',flag:'雙向計，與他縣單側口徑不可直接比較'},
+  {city:'臺南市',v:60,   note:'報告載「目前校園週邊道路人行道普及率達60%」'},
+  {city:'苗栗縣',v:54.94,note:'以「校數」計：162所中89所設有人行道，非長度比',flag:'以校數計，非道路長度比'},
+  {city:'南投縣',v:51.3, note:'「以本計畫作業範圍為限」之平均值',flag:'限本計畫作業範圍'},
+  {city:'宜蘭縣',v:40,   note:'約值，以本計畫作業範圍為限'},
+  {city:'基隆市',v:38.06,note:'報告僅列各校未給合計；本專題自行加總171校（周邊300M）：296,556M÷779,100M'},
+  {city:'新竹市',v:29.2, note:'僅「重點改善路廊」33所學校，非全市普查',flag:'僅重點改善路廊，非全市'},
+  {city:'嘉義縣',v:23.71,note:'各級學校周邊300M，26,115M÷111,851M'},
+  {city:'屏東縣',v:22,   note:'各級學校周邊，約值'},
+  {city:'新竹縣',v:10.73,note:'校園周邊200M，44,736M÷208,422M'},
 ];
+/* 無縣市層級校園數字：新北（僅分年改善校數目標）、臺中、彰化（僅全市值）、高雄（建設計畫無此統計）、雲林、花蓮（綱要）、臺東（報告未完成）、澎湖、金門、連江 */
 let campusSort='desc';
 function buildCampusCtl(){
   const c=document.getElementById('ctl-campus');if(!c)return;c.innerHTML='';
@@ -1302,7 +1311,8 @@ function drawKeyplaceSty(state){
 function drawCampusSty(state){
   hbars('chart-campus',{max:100,unit:'%',focus:CAMPUS.findIndex(d=>d.city==='新竹縣'),
     color:v=>v<15?C.red:(v<50?C.amber:C.teal),
-    rows:CAMPUS.map(d=>({label:d.city,v:d.v,tip:`<b>${d.city} · 校園周邊</b><br>普及率 ${d.v}%`}))
+    rows:CAMPUS.map(d=>({label:d.city,v:d.v,flag:d.flag,
+      tip:`<b>${d.city} · 校園周邊</b><br>普及率 <b>${d.v}%</b>${d.flag?'<br>⚠ '+d.flag:''}<br><span style="opacity:.8">${d.note}</span>`}))
   },state);
 }
 /* ===== 參 寬度（堆疊 + 淨寬）===== */
