@@ -116,6 +116,37 @@ a{color:var(--red-d);text-underline-offset:3px;}
   .scrolly .scap{font-size:16px;min-height:4em;}
 }
 
+/* ---------- pain-point quiz hero ---------- */
+.quiz{max-width:880px;margin:26px auto 0;padding:0 18px;}
+.quizgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:640px){.quizgrid{grid-template-columns:repeat(2,1fr);}}
+.qcard{background:#fffdf8;border:1.5px solid var(--line2);border-radius:10px;padding:18px 12px 15px;cursor:pointer;
+  text-align:center;transition:.2s;font-family:inherit;color:var(--ink);}
+.qcard:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 14px 30px -22px rgba(0,0,0,.45);}
+.qcard.sel{border-color:var(--red);background:#fdf3f1;box-shadow:0 14px 30px -22px rgba(207,70,54,.55);}
+.qcard .qi{font-size:30px;line-height:1;margin-bottom:9px;display:block;}
+.qcard .qt{font-size:14.5px;font-weight:500;line-height:1.5;display:block;}
+.quizout{max-width:640px;margin:26px auto 0;text-align:center;font-size:17.5px;line-height:1.9;color:var(--ink-soft);
+  opacity:0;transform:translateY(10px);transition:.5s;min-height:10px;}
+.quizout.show{opacity:1;transform:none;}
+.quizout .big{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(30px,6vw,44px);color:var(--red);display:block;line-height:1.25;margin:.15em 0;}
+.quizout .bar{height:10px;background:var(--paper2);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:14px auto 6px;max-width:420px;}
+.quizout .bar i{display:block;height:100%;background:var(--red);width:0;transition:width .9s cubic-bezier(.3,1,.4,1);border-radius:99px;}
+.quizout .go{display:inline-block;margin-top:14px;font-size:15px;font-weight:500;color:#fff;background:var(--red);
+  border-radius:999px;padding:10px 22px;text-decoration:none;transition:.2s;}
+.quizout .go:hover{background:var(--red-d);}
+.quizout .meta{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+/* ---------- 社群之聲 voice card ---------- */
+.voice{max-width:640px;margin:34px auto;padding:18px 22px 14px;background:#fffdf8;border:1px solid var(--line);
+  border-left:4px solid var(--amber);border-radius:0 8px 8px 0;}
+.voice p{margin:0;font-size:16.5px;line-height:1.85;color:var(--ink-soft);font-family:"Noto Serif TC",serif;}
+.voice p::before{content:"「";color:var(--amber);font-weight:700;}
+.voice p::after{content:"」";color:var(--amber);font-weight:700;}
+.voice .vmeta{margin-top:10px;font-size:12.5px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.voice .vmeta .tag{background:var(--paper2);border:1px solid var(--line2);border-radius:99px;padding:1px 10px;font-size:11.5px;}
+.voice .vmeta a{color:var(--red-d);text-decoration:none;border-bottom:1px dotted var(--red-d);}
+
 /* ---------- HERO ---------- */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   padding:90px 24px 60px;text-align:center;position:relative;overflow:hidden;}
@@ -287,12 +318,16 @@ footer a{color:#e7b86a;}
   <a href="#ch6"><span class="tick"></span><span class="lab"><b>陸</b>給讀者的檢驗清單</span></a>
 </nav>
 
-<!-- ============ HERO ============ -->
-<header class="hero" id="top">
+<!-- ============ HERO：痛點測驗 ============ -->
+<header class="hero" id="top" style="min-height:auto;padding-bottom:40px">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
-  <h1 class="serif">每年不到 <span class="hl">1%</span><br>台灣人行道的<br>緩慢與失真</h1>
-  <p class="dek">行政院喊「行人優先」、編了四百億，三年過去——<br>這條線，你覺得走到哪了？</p>
-  <div class="scrollcue">向下捲動，換你來畫</div>
+  <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">走在台灣的人行道上，<br>你最恨<span class="hl">哪一種</span>？</h1>
+  <p class="dek">先選一個。我們整理了 2019–2026 年間 60 則社群抱怨，<br>你的痛，有數字可以對照。</p>
+  <div class="quiz">
+    <div class="quizgrid" id="quizgrid"></div>
+    <div class="quizout" id="quizout" aria-live="polite"></div>
+  </div>
+  <div class="scrollcue" style="position:static;margin-top:44px">或直接向下捲動</div>
 </header>
 
 <main>
@@ -375,6 +410,10 @@ footer a{color:#e7b86a;}
 
 <section class="wrap">
   <blockquote class="rv">「全國市區人行道普及率成長幅度偏低，且部分道路之人行道淨寬不足最低標準，允宜研謀改善。」<cite>—— 立法院預算中心，115 年度預算評估報告</cite></blockquote>
+  <div class="voice rv">
+    <p>台灣為啥不蓋人行道？——因為蓋人行道，沒選票。</p>
+    <div class="vmeta"><span class="tag">PTT WomenTalk · 2024-08</span><span class="tag">情緒：剝奪感</span><a href="https://www.ptt.cc/bbs/WomenTalk/M.1722500270.A.D37.html" target="_blank" rel="noopener">原文</a></div>
+  </div>
 </section>
 
 <!-- ============ PART 2：分母的魔術 ============ -->
@@ -401,6 +440,10 @@ footer a{color:#e7b86a;}
 <section class="wrap">
   <p class="rv">秘密藏在分母裡。桃園市的分母只算「<b>可以施作人行道的道路</b>」，於是 54.64%——但桃園的市區道路其實長達 9,701 公里，用總長當分母，普及率<b>瞬間掉到約 11.7%</b>。臺南市玩的是<b>同一招，但更隱密</b>：分母叫「有人行道＋無人行道的道路」——一般人會想，有加無不就是全部道路嗎？不。這個分母只有 <b>2,466 公里</b>，臺南的道路總長其實是 <b>4,650 公里</b>——被認定「不可設置人行道」的近半路段，<b>在你看到數字之前就已經被移出分母</b>。966.5 公里的人行道除回道路總長，只剩 <b>20.78%</b>。桃園至少把篩選寫在標籤上，臺南的標籤讀起來就像沒篩選過。新竹縣則反其道而行，把道路長度乘以二（雙側）當分母，自報 22.59%——乘回來，同一把尺下其實是 <b>45.18%</b>。</p>
   <p class="rv">對照之下，<b>老老實實用「道路總長」當分母的縣市，數字都很誠實</b>：臺北 72.1%、彰化 35.83%、苗栗 30.61%、新竹市 28.6%、南投 27.05%。換句話說，真正把普及率「做高」的，正是那幾個動了分母的大都會。按下上方圖表的<b>「改用同一把尺」</b>，看看當桃園、臺南被迫使用「市區道路總長」這個共同分母時，數字如何崩塌——這不是誰造假，而是<b>當沒有統一定義，每個城市都會找到對自己最有利的算法</b>。</p>
+  <div class="voice rv">
+    <p>為什麼只有台北市有完整的人行道？</p>
+    <div class="vmeta"><span class="tag">Dcard · 約2022</span><span class="tag">情緒：城鄉剝奪感</span><a href="https://www.dcard.tw/f/freshman/p/239233088" target="_blank" rel="noopener">原文</a></div>
+  </div>
 </section>
 
 <!-- 重點場所 -->
@@ -462,6 +505,31 @@ footer a{color:#e7b86a;}
 
 <section class="wrap">
   <p class="rv">臺北市有 <b>21.7%</b> 的人行道寬度不到 1.25 公尺、超過半數（<b>54%</b>）的淨寬不到法定的 1.5 公尺；新北市淨寬不足的比例更高達 <b>64.6%</b>——北部兩大都會，是名副其實的窄。對照之下，臺南、臺中、高雄都有六成五上下的人行道寬在 2.5 公尺以上，新竹市更達 <b>73%</b>，且臺南、新竹市淨寬不足 1.5 公尺的比例都只有一成八、九。同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南卻可能寬到種得下一排行道樹。一個全國「普及率」數字，蓋掉的正是這種城市之間天差地別的人行品質。</p>
+  <div class="voice rv">
+    <p>電線桿就長在人行道正中央——我們缺的是把管線、電箱整合進「設施帶」的設計。</p>
+    <div class="vmeta"><span class="tag">Threads · 零死亡願景台南 · 2025-02</span><span class="tag">情緒：嘲諷</span><a href="https://www.threads.com/@vision.zero.tainan/post/DGTXRpKyIH5" target="_blank" rel="noopener">原文</a></div>
+  </div>
+</section>
+
+<!-- ============ 插曲：佔用型痛點（社群最大宗） ============ -->
+<section class="wrap part" id="occupied">
+  <h3 class="sub rv">帳面上有，你走不了</h3>
+  <p class="rv">寬度之外，還有一層官方數字完全沒碰的現實。我們把 2019 到 2026 年間 60 則關於人行道的社群抱怨逐則編碼，<b>最大宗的不是「沒有人行道」（9 則），而是「有人行道，但被佔走了」——機車騎上來（13 則）、汽車停上來（4 則）、騎樓被攤販雜物堵死（7 則），合計 24 則，占全部抱怨的四成</b>。</p>
+</section>
+
+<div class="wrap">
+  <div class="voice rv">
+    <p>佔用騎樓，檢舉四年搞不定——250 封檢舉信無效。</p>
+    <div class="vmeta"><span class="tag">PTT 雙和板 · 2024-02</span><span class="tag">情緒：無力感</span><a href="https://www.ptt.cc/bbs/ShuangHe/M.1707044476.A.B55.html" target="_blank" rel="noopener">原文</a></div>
+  </div>
+  <div class="voice rv">
+    <p>車停人行道，行人只能走馬路——明明旁邊就有停車格。</p>
+    <div class="vmeta"><span class="tag">Threads · 2025-02</span><span class="tag">情緒：憤怒</span><a href="https://www.threads.com/@sightiffick/post/DGIE-TdPG9j/" target="_blank" rel="noopener">原文</a></div>
+  </div>
+</div>
+
+<section class="wrap">
+  <p class="rv">而這一整層痛苦，在官方的普及率裡是<b>隱形的</b>。一條被機車停滿的人行道、一段被貨物堵死的騎樓，在統計上都算「有人行道」——39.29% 這個數字量的是「鋪了多少」，不是「走不走得了」。更關鍵的是：<b>「人行道被佔用的比例」，全國沒有任何統計</b>。60 則抱怨裡出現最多次的情緒不是憤怒，是無力感（22 則）——檢舉了沒人理、陳情了沒下文。當「被佔用」連一個數字都不是，它就永遠不會成為必須改善的 KPI。這正是下一章要說的：<b>看不見的，就無法治理</b>。</p>
 </section>
 
 <!-- ============ PART 4：標線型 + 資料齊全度 ============ -->
@@ -471,6 +539,10 @@ footer a{color:#e7b86a;}
   <p class="rv">這份專題原本想做一件事：從國土署的人行道地圖，把「標線型人行道」單獨抓出來——那是只用油漆畫在路邊、最便宜（每平方公尺約 1,650 元，實體的是 4,200 元）也最有爭議的一種。立法院的研析直言，它常被當成永久解方，沿線卻電桿、鋼索、號誌箱林立，走起來像「障礙賽道」。</p>
   <p class="rv"><b>但我抓不到。</b>翻遍國土署的全國圖資，每一段人行道只記了名稱、起迄、方向、寬度、淨寬、路緣斜坡數——<b>沒有任何欄位區分它是實體還是標線型</b>。我退而求其次，找出全國欄位最詳盡的新竹市開放資料：足足 41 欄，連鋪面材質都逐段記了「高壓混凝土磚、連鎖磚、金錢磚、抿石子……」二十多種。但即便細到這個地步，<b>裡頭依然沒有一個值叫「標線型」</b>。道理很簡單——標線型人行道只是畫在柏油路上的一道油漆，它沒有自己的鋪面；在資料庫裡，它要嘛被歸進「瀝青／柏油」，要嘛是一格空白，與真正鋪了磚的實體人行道，再也分不開。</p>
   <p class="rv">而立法院的研析也確認：全國並沒有各縣市標線型人行道里程的公開統計。一種被大量鋪設、被高度質疑的設施，在國家的資料裡，從被定義的那一刻起就是隱形的——這正是「看不見，就無法治理」最具體的一個切片。</p>
+  <div class="voice rv">
+    <p>標線型人行道劃設不到一年，就被塗銷改回停車格——綠色標線，是最容易被抹掉的一種人行道。</p>
+    <div class="vmeta"><span class="tag">PTT 新竹板 · 2023-06</span><span class="tag">情緒：憤怒</span><a href="https://www.ptt.cc/bbs/Hsinchu/M.1687913093.A.206.html" target="_blank" rel="noopener">原文</a></div>
+  </div>
 </section>
 
 <section class="wrap">
@@ -533,6 +605,11 @@ footer a{color:#e7b86a;}
 
 <section class="wrap">
   <p class="rv">工程目標寫得具體：到 116 年，要改善 263 公里人行道、整平 75 公里騎樓、排除 894 處人行障礙、改善 4,909 處路口。數字漂亮，但回到開頭那條曲線——三年只動了 2.61 個百分點。錢在放大，普及率卻幾乎不動，中間的損耗，正是這篇專題真正想標記的問題。</p>
+  <div class="voice rv">
+    <p>師大路人行道拓寬後，生意掉了三分之一——「一個便當上千，誰敢吃？」</p>
+    <div class="vmeta"><span class="tag">聯合報 · 2026-01</span><span class="tag">立場：店家</span><a href="https://udn.com/news/story/7323/9284448" target="_blank" rel="noopener">原文</a></div>
+  </div>
+  <p class="rv" style="font-size:15.5px;color:var(--muted)">值得記下的是：卡住工程的不只行政量能。人行道每一次拓寬，都是一次路權的重分配——店家怕生意、騎士怕沒車位、里長怕陳情。<b>這不是政府對人民的戰爭，是人民與人民之間的分配戰</b>，而缺乏可信數字的公共討論，只會讓最大聲的一方贏。</p>
 </section>
 
 <!-- ============ 資料缺口 ============ -->
@@ -540,6 +617,10 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">陸 · 給讀者的檢驗清單</div>
   <h2 class="sec rv">哪些找得到，哪些找不到</h2>
   <p class="rv">本專題堅持每個數字都能回溯到原始檔案。以下誠實標記每一類資料的取得狀態——找不到的，也一併告訴你。</p>
+  <div class="voice rv">
+    <p>還我真正的人行道——請統一道路主管機關。</p>
+    <div class="vmeta"><span class="tag">join.gov.tw 公共政策提案 · 2023</span><span class="tag">情緒：無力感</span><a href="https://join.gov.tw/idea/detail/afb88ade-b064-46ea-8d28-fe5afe75be1a" target="_blank" rel="noopener">原文</a></div>
+  </div>
 </section>
 
 <div class="figure rv">
@@ -553,6 +634,7 @@ footer a{color:#e7b86a;}
       <tr><td>各縣市「可比較」普及率</td><td><span class="pill no">不存在</span></td><td>各縣市分母定義不一，官方無統一可比數據</td></tr>
       <tr><td>各縣市人行道寬度級距</td><td><span class="pill part">5 市</span></td><td>北北桃（統一圖資）＋臺南、新竹市（自有平台）可逐段分析；其餘 17 縣市無逐段資料</td></tr>
       <tr><td>標線型人行道各縣市里程</td><td><span class="pill no">無公開統計</span></td><td>立法院研析確認；開放圖資亦無「型別」欄位</td></tr>
+      <tr><td>人行道遭佔用比例（機車/違停/騎樓）</td><td><span class="pill no">不存在</span></td><td>社群 60 則抱怨中佔用型達四成（本專題編碼），惟全國無任何「佔用率」統計；取締件數分散於各警局，無法還原空間分布</td></tr>
       <tr><td>各縣市預算分配總表</td><td><span class="pill no">無單一檔案</span></td><td>競爭型逐案核定，須自行彙整內政部核定名單</td></tr>
     </tbody>
   </table>
@@ -576,6 +658,7 @@ footer a{color:#e7b86a;}
       <li>〔2〕各縣市《行人安全環境總健檢及行動改善方案》（臺北、新北、桃園、臺中、臺南、新竹縣、新竹市、彰化、苗栗、南投、基隆、宜蘭、嘉義市、嘉義縣、屏東、花蓮、金門，113–114 年，共 17 份）、《高雄市道路新闢人行道分年分期建設計畫》、雲林縣交通工務局「市區道路人行道普及率」開放資料、《114 年澎湖縣道路交通安全執行計畫》。臺東縣報告尚未完成（預計 115/3）、連江縣未尋獲公開文件。<br>原始檔：<code>原始資料/縣市健檢報告/</code>、<code>原始資料/預算與改善方案/</code></li>
       <li>〔3〕人行道逐段圖資（寬度級距）：國土管理署「市區道路人行安全地理資訊系統」開放資料全國圖資，政府資料開放平臺 <a href="https://data.gov.tw/dataset/58791">dataset 58791</a>（SIDEWALK_202412，分 Part 1 北北桃與 Part 2 其餘 19 縣市兩檔，全 22 縣市共 88,545 段）。本專題逐段彙整寬度（SW_WTH）、淨寬（SWW_WTH）、長度（SW_LENG），以長度加權切級距；淨寬比例之分母為有填淨寬之路段。臺南市、新竹市另在自家平台公開同類資料（<a href="https://data.gov.tw/dataset/121008">dataset 121008</a>、<a href="https://data.gov.tw/dataset/86540">86540</a>），數值與全國圖資交叉驗證一致。臺東、苗栗、花蓮、金門、連江段數較少（&lt;300 段），覆蓋可能不完整。<br>原始檔：<code>原始資料/人行道寬度GIS/</code>、<code>原始資料/各縣市人行道開放資料/</code><br>地圖：<a href="https://sidewalk.nlma.gov.tw/sidewalk/">sidewalk.nlma.gov.tw</a></li>
       <li>〔4〕行政院「永續提升人行安全計畫」政策頁、交通部公路局計畫頁、內政部新聞稿；立法院《改善標線型人行道相關法制問題研析》；眼底城事〈考評成績的校正回歸，解密開放資料中的人行道〉。</li>
+      <li>〔5〕社群痛點編碼：2019–2026 年 PTT／Dcard／Threads／Mobile01／新聞媒體等 60 則人行道相關貼文，依佔用型（機車／汽車／騎樓）、缺席型、設計失敗型、制度挫折型、安全恐懼型、反彈方等 8 類編碼，並標記立場與情緒框架；各引句均附原始連結可查核。<br>原始檔：<code>data-room/06_彙整與分析產出/人行道社群痛點編碼分析.xlsx</code></li>
     </ol>
     <div class="meta">
       本網頁所有數據可回溯至上述原始檔案，存放於專題 <code>原始資料/</code> 資料夾，並附《資料來源與缺口說明.md》逐項對照。<br>
@@ -1191,6 +1274,41 @@ function sortGap(){
 }
 
 /* ===================== init + scroll fx ===================== */
+/* ===== pain-point quiz (hero) =====
+   N=60 社群貼文編碼（2019–2026，PTT/Dcard/Threads/Mobile01/新聞），出處：人行道社群痛點編碼分析.xlsx */
+const QUIZ=[
+  {icon:'🛵',label:'機車直接騎上來、按喇叭要你讓',n:13,go:'#occupied',goL:'帳面上有，你走不了',
+   line:'佔用型抱怨的最大宗。而「被機車佔用的比例」，全國<b>連統計都沒有</b>。'},
+  {icon:'🚗',label:'汽車整台停在人行道上',n:4,go:'#occupied',goL:'帳面上有，你走不了',
+   line:'被迫繞到車道上的你，在官方統計裡，仍然「有人行道可走」。'},
+  {icon:'📦',label:'騎樓被攤販、雜物、機車堵死',n:7,go:'#occupied',goL:'帳面上有，你走不了',
+   line:'有人為此檢舉了 <b>250 封信</b>、花了四年——沒有用。'},
+  {icon:'🚶',label:'根本沒有人行道，只能走車道',n:9,go:'#ch1',goL:'壹 · 一條太平的曲線',
+   line:'全國兩萬一千公里的市區道路，只有 39% 有人行道——而且這個數字，還被動過手腳。'},
+  {icon:'🗼',label:'電線桿、變電箱長在正中間',n:10,go:'#ch3',goL:'參 · 能不能並肩走過',
+   line:'官方統計裡每五公里就有一公里「太窄」——電箱電桿，還不算在內。'},
+  {icon:'♿',label:'高低差讓輪椅、嬰兒車卡住',n:8,go:'#ch3',goL:'參 · 能不能並肩走過',
+   line:'有人因為一個高低差摔傷臥床。人行道的「品質」，在普及率裡看不見。'},
+];
+function initQuiz(){
+  const grid=document.getElementById('quizgrid');if(!grid)return;
+  QUIZ.forEach((q,i)=>{
+    const b=document.createElement('button');b.className='qcard';
+    b.innerHTML=`<span class="qi">${q.icon}</span><span class="qt">${q.label}</span>`;
+    b.onclick=()=>{
+      [...grid.children].forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+      const out=document.getElementById('quizout');out.classList.add('show');
+      out.innerHTML=`你不孤單。60 則社群抱怨裡，<span class="big">${q.n} 則跟你一樣</span>
+        <div class="bar"><i></i></div>
+        <div class="meta">2019–2026 · PTT／Dcard／Threads 等 60 則貼文編碼，最大宗的情緒不是憤怒，是<b>無力感（22 則）</b></div>
+        <p style="margin:14px 0 0">${q.line}</p>
+        <a class="go" href="${q.go}">看數據怎麼說 → ${q.goL}</a>`;
+      requestAnimationFrame(()=>{const bar=out.querySelector('.bar i');if(bar)setTimeout(()=>bar.style.width=(q.n/60*100)+'%',60);});
+    };
+    grid.appendChild(b);
+  });
+}
+
 /* ===== age calculator (hero) ===== */
 const CALC_CITY=[['全國平均',39.29],['臺北市',72.1],['臺中市',71.88],['宜蘭縣',56.58],['桃園市',54.64],['嘉義市',49.62],['臺南市',39.19],['彰化縣',35.83],['基隆市',33.59],['苗栗縣',30.61],['新竹市',28.6],['南投縣',27.05],['新竹縣',22.59],['屏東縣',19.7],['花蓮縣',18.93],['嘉義縣',17.5],['金門縣',11.4],['澎湖縣',7.7]];
 const CALC_PACE=0.87, CALC_BASE=113, CALC_NOW=115;
@@ -1339,7 +1457,7 @@ function drawWidthSty(state){
 }
 
 function init(){
-  initCalc();
+  initQuiz();initCalc();
   drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
   initScrolly('sty-nat',drawNat1);
   initScrolly('sty-city',drawCitySty);
