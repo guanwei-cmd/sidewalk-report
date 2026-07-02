@@ -165,6 +165,23 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .method .mmem{font-size:13.5px;color:var(--muted);line-height:1.7;}
 .method .mmem b{color:var(--ink-soft);font-weight:500;}
 
+/* ---------- 時力延伸閱讀（低調下拉）---------- */
+.npp{display:inline-block;margin:14px 0 2px;font-size:13px;}
+.npp>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  color:var(--muted);border:1px dashed var(--line2);border-radius:999px;padding:4px 12px;transition:.18s;user-select:none;}
+.npp>summary::-webkit-details-marker{display:none;}
+.npp>summary:hover{border-color:var(--amber);color:var(--ink-soft);}
+.npp>summary .dot{width:8px;height:8px;border-radius:2px;background:var(--amber);flex:none;}
+.npp>summary .caret{transition:transform .2s;font-size:10px;color:var(--faint);}
+.npp[open]>summary .caret{transform:rotate(180deg);}
+.npp-menu{margin-top:8px;padding:10px 14px;background:#fffdf8;border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:0 6px 6px 0;max-width:520px;}
+.npp-menu a{display:block;color:var(--ink-soft);text-decoration:none;font-size:14px;line-height:1.6;padding:4px 0;border-bottom:1px solid var(--line);}
+.npp-menu a:last-child{border-bottom:none;}
+.npp-menu a:hover{color:var(--red-d);}
+.npp-menu a::before{content:"↗";color:var(--amber);margin-right:7px;font-size:12px;}
+.npp-menu .src{margin-top:6px;font-size:11px;color:var(--faint);}
+
 /* ---------- 社群之聲 voice card ---------- */
 .voice{max-width:640px;margin:34px auto;padding:18px 22px 14px;background:#fffdf8;border:1px solid var(--line);
   border-left:4px solid var(--amber);border-radius:0 8px 8px 0;}
@@ -604,6 +621,14 @@ footer a{color:#e7b86a;}
 
 <section class="wrap">
   <p class="rv">而這份圖資的「看得見」與「看不見」，恰好劃出一條界線。它其實逐段記錄了全台二十二縣市每條人行道的寬度與淨寬——上一章那張全國寬度比較，正是這麼來的；換句話說，「多寬」，國家看得見。它看不見的，是「型別」與「定義」：同一份資料分不出標線型與實體，各縣市的普及率又各用各的分母、彼此對不起來。<b>國家手上從來不是沒有資料，缺的是一套讓資料對得起來、能拿來問責的共同定義與標準。</b></p>
+  <details class="npp rv">
+    <summary><span class="dot"></span>延伸閱讀<span class="caret">▾</span></summary>
+    <div class="npp-menu">
+      <a href="https://npp-traffic-safety.vercel.app/blog/6" target="_blank" rel="noopener">交通部該為「行人地獄」負責——回應國際對台灣行人環境的警告</a>
+      <a href="https://npp-traffic-safety.vercel.app/blog/3" target="_blank" rel="noopener">執法悖論：台灣開 277 萬張超速罰單，死亡率仍是日本的 5 倍</a>
+      <div class="src">時代力量・交通安全專題</div>
+    </div>
+  </details>
 </section>
 
 <section class="wrap">
@@ -644,6 +669,14 @@ footer a{color:#e7b86a;}
 <section class="wrap part">
   <h3 class="sub rv">錢編下去了，工不一定動得了</h3>
   <p class="rv">預算放大，不等於工程啟動。第一次全國競爭型評選核定 27 億、175 案；到 114 年 9 月中累積 243 案、約 45 億。但在同一個時間點，國土署自己盤點的 601 處行人易肇事路口，<b>只完工了 329 處</b>；而全台 22 縣市裡，竟有 <b>12 個縣市連勞務發包都還沒完成</b>。錢卡在哪裡，往往比錢有多少更值得追問。</p>
+  <details class="npp rv">
+    <summary><span class="dot"></span>延伸閱讀<span class="caret">▾</span></summary>
+    <div class="npp-menu">
+      <a href="https://npp-traffic-safety.vercel.app/blog/4" target="_blank" rel="noopener">無照駕駛橫行：執法失靈，是交通亂象的根源</a>
+      <a href="https://npp-traffic-safety.vercel.app/blog/12" target="_blank" rel="noopener">高齡交通死亡：逾八成是行人、機車等弱勢用路人</a>
+      <div class="src">時代力量・交通安全專題</div>
+    </div>
+  </details>
 </section>
 
 <div class="figure rv">
