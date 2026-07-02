@@ -279,7 +279,7 @@ footer a{color:#e7b86a;}
 
 <div class="figure rv">
   <div class="ftitle">各縣市自稱的「全市人行道普及率」</div>
-  <div class="fsub">資料來自各縣市《行人安全環境總健檢及行動改善方案》。數字看似可比，分母卻各說各話。</div>
+  <div class="fsub">資料來自各縣市《行人安全環境總健檢及行動改善方案》。數字看似可比，分母卻各說各話。標 ⚠ 者為原始資料本身有疑義（缺分母、口徑不一、分子未揭露），游標移到縣市名或長條可見說明。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-city"></div>
     <div id="chart-city"></div>
@@ -288,7 +288,7 @@ footer a{color:#e7b86a;}
 </div>
 
 <section class="wrap">
-  <p class="rv">秘密藏在分母裡。臺南市把分母設成「有人行道＋無人行道的道路」，得到 39.19%；桃園市更巧妙，分母只算「<b>可以施作人行道的道路</b>」，於是 54.64%——但桃園的市區道路其實長達 9,701 公里，若用這個總長當分母，普及率<b>瞬間掉到約 11.7%</b>。新竹縣則把道路長度乘以二（雙側）當分母。</p>
+  <p class="rv">秘密藏在分母裡。臺南市把分母設成「有人行道＋無人行道的道路」，得到 39.19%；桃園市更巧妙，分母只算「<b>可以施作人行道的道路</b>」，於是 54.64%——但桃園的市區道路其實長達 9,701 公里，若用這個總長當分母，普及率<b>瞬間掉到約 11.7%</b>。新竹縣則反其道而行，把道路長度乘以二（雙側）當分母，自報 22.59%——把這個「除以二」乘回來，同一把尺下其實是 <b>45.18%</b>。</p>
   <p class="rv">對照之下，<b>老老實實用「道路總長」當分母的縣市，數字都很誠實</b>：臺北 72.1%、彰化 35.83%、苗栗 30.61%、新竹市 28.6%、南投 27.05%。換句話說，真正把普及率「做高」的，正是那幾個動了分母的大都會。按下上方圖表的<b>「改用同一把尺」</b>，看看當桃園、臺南被迫使用「市區道路總長」這個共同分母時，數字如何崩塌——這不是誰造假，而是<b>當沒有統一定義，每個城市都會找到對自己最有利的算法</b>。</p>
 </section>
 
@@ -301,7 +301,10 @@ footer a{color:#e7b86a;}
 <div class="figure rv">
   <div class="ftitle">新竹縣：重點場所周邊人行道普及率</div>
   <div class="fsub">「重點場所」是行人最密集、最該被保護的地方——卻往往最低。</div>
-  <div class="chartcard"><div id="chart-keyplace"></div></div>
+  <div class="chartcard">
+    <div class="controls" id="ctl-keyplace"></div>
+    <div id="chart-keyplace"></div>
+  </div>
   <div class="fsrc">資料來源：新竹縣健檢報告，各公所盤點統計（校園 200 公尺範圍）。原始檔見文末〔2〕。</div>
 </div>
 
@@ -312,7 +315,10 @@ footer a{color:#e7b86a;}
 <div class="figure rv">
   <div class="ftitle">孩子的上學路：校園周邊人行道普及率，最高與最低差了七倍</div>
   <div class="fsub">各縣市健檢報告自報之「校園周邊人行道普及率」。定義與盤點範圍未必一致，數字僅反映各縣市自我評估——但落差之大，已足以說明問題。</div>
-  <div class="chartcard"><div id="chart-campus"></div></div>
+  <div class="chartcard">
+    <div class="controls" id="ctl-campus"></div>
+    <div id="chart-campus"></div>
+  </div>
   <div class="fsrc">資料來源：桃園、臺南、苗栗、宜蘭、嘉義縣、屏東、新竹縣《行人安全環境總健檢及行動改善方案》。各縣定義與盤點範圍未必一致。原始檔見文末〔2〕。</div>
 </div>
 
@@ -419,7 +425,8 @@ footer a{color:#e7b86a;}
 
 <div class="figure rv">
   <div class="chartcard" style="padding:10px 18px 18px">
-  <table class="gaptable">
+  <div class="controls" id="ctl-gap" style="margin-top:10px"></div>
+  <table class="gaptable" id="gaptable">
     <thead><tr><th>資料項目</th><th>狀態</th><th>說明</th></tr></thead>
     <tbody>
       <tr><td>全國普及率時間序列</td><td><span class="pill ok">已取得</span></td><td>立法院預算中心 PDF（國土署數據，110–114 年）</td></tr>
@@ -468,10 +475,10 @@ const NATIONAL=[
 ];
 const CITY=[ /* official rate + recomputed-on-total-road where possible */
   {city:'臺北市',off:72.1, base:'道路總長',uni:72.1, note:'1,025÷1,422，分母即道路總長'},
-  {city:'臺中市',off:71.88,base:'人行道+無人行道',uni:null, note:'缺市區道路總長，無法換算'},
-  {city:'宜蘭縣',off:56.58,base:'雙向人行道÷道路總長',uni:40.6,note:'自報雙向 56.58%；中央GIS單側基準僅 40.6%'},
+  {city:'臺中市',off:71.88,base:'人行道+無人行道',uni:null, note:'缺市區道路總長，無法換算',flag:'文件未揭露市區道路總長，71.88% 無從驗證'},
+  {city:'宜蘭縣',off:56.58,base:'雙向人行道÷道路總長',uni:40.6,note:'自報雙向 56.58%；中央GIS單側基準僅 40.6%',flag:'自報雙向計，與中央GIS單側基準落差 16 個百分點'},
   {city:'桃園市',off:54.64,base:'可施作人行道道路',uni:11.69,note:'1,133.7 ÷ 9,701（道路總長）'},
-  {city:'嘉義市',off:49.62,base:'雙向人行道÷道路總長',uni:null,note:'158.8÷320.1；文件另載 57.92%，口徑不一'},
+  {city:'嘉義市',off:49.62,base:'雙向人行道÷道路總長',uni:null,note:'158.8÷320.1；文件另載 57.92%，口徑不一',flag:'同一份文件並載 49.62% 與 57.92% 兩個數字，口徑不一'},
   {city:'臺南市',off:39.19,base:'人行道+無人行道',uni:20.78,note:'966.5 ÷ 4,650（道路總長）'},
   {city:'彰化縣',off:35.83,base:'道路總長',uni:35.83,note:'252.0÷703.4，分母即道路總長'},
   {city:'基隆市',off:33.59,base:'道路總長',uni:33.59,note:'54÷207，分母即道路總長'},
@@ -479,11 +486,11 @@ const CITY=[ /* official rate + recomputed-on-total-road where possible */
   {city:'苗栗縣',off:30.61,base:'市區道路總長',uni:30.61,note:'124.2÷405.7（市區道路）'},
   {city:'新竹市',off:28.6, base:'主要道路總長',uni:28.6, note:'22.4÷78.5，母體為主要道路'},
   {city:'南投縣',off:27.05,base:'道路總長',uni:27.05,note:'依GIS統計方式，雙向人行道計'},
-  {city:'新竹縣',off:22.59,base:'道路長×2',uni:null, note:'分母為雙側計，定義特殊'},
+  {city:'新竹縣',off:22.59,base:'道路長×2',uni:45.18,note:'分母為道路長×2（雙側計），乘回二＝單一把尺 45.18%'},
   {city:'屏東縣',off:19.7, base:'市區道路總長',uni:19.7, note:'195.0÷988.4（市區道路）'},
   {city:'花蓮縣',off:18.93,base:'都市計畫道路總長',uni:18.93,note:'121.2÷640.2（都市計畫道路）'},
   {city:'嘉義縣',off:17.5, base:'道路總長',uni:17.5, note:'262.1÷1,495，分母即道路總長'},
-  {city:'金門縣',off:11.4, base:'道路總長',uni:11.4, note:'道路總長 379.2km；文件僅給百分比'},
+  {city:'金門縣',off:11.4, base:'道路總長',uni:11.4, note:'道路總長 379.2km；文件僅給百分比',flag:'文件僅載百分比，未揭露人行道長度，分子無從核對'},
   {city:'澎湖縣',off:7.7,  base:'道路總長',uni:7.7,  note:'52.59÷680，分母即道路總長'},
 ];
 const KEYPLACE=[
@@ -538,6 +545,13 @@ function moveTip(ev){const p=12;let x=ev.clientX+14,y=ev.clientY+14;if(x+250>inn
 function hideTip(){tip.style.opacity=0;}
 function bind(el,html){el.style.cursor='pointer';el.addEventListener('mousemove',e=>showTip(e,html));el.addEventListener('mouseleave',hideTip);
   el.addEventListener('touchstart',e=>{showTip(e.touches[0],html);},{passive:true});}
+/* sort toggle buttons (降冪/升冪), appended to a .controls container */
+function addSortBtns(c,cur,cb){
+  [['desc','降冪 ↓'],['asc','升冪 ↑']].forEach(([k,t])=>{
+    const b=document.createElement('button');b.className='btn'+(cur===k?' on':'');b.textContent=t;
+    b.setAttribute('aria-pressed',cur===k);b.onclick=()=>cb(k);c.appendChild(b);
+  });
+}
 
 /* ===================== 1. NATIONAL line ===================== */
 function drawNational(){
@@ -584,10 +598,11 @@ function drawNational(){
 }
 
 /* ===================== 2. CITY rate (denominator toggle) ===================== */
-let cityMode='off';
+let cityMode='off',citySort='desc';
 function drawCity(){
   const box=document.getElementById('chart-city');box.innerHTML='';
-  const data=[...CITY].sort((a,b)=> (cityMode==='off'?b.off-a.off : (b.uni??b.off)-(a.uni??a.off)));
+  const dir=citySort==='desc'?1:-1;
+  const data=[...CITY].sort((a,b)=> dir*(cityMode==='off'?b.off-a.off : (b.uni??b.off)-(a.uni??a.off)));
   const W=860,rowH=58,m={t:14,r:30,b:24,l:88};
   const H=m.t+m.b+data.length*rowH;
   const s=svg(W,H);
@@ -599,7 +614,9 @@ function drawCity(){
     s.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11.5}));}
   data.forEach((d,i)=>{
     const yy=m.t+i*rowH+12;
-    s.appendChild(txt(m.l-12,yy+18,d.city,{'text-anchor':'end',class:'cityname'}));
+    const name=txt(m.l-12,yy+18,d.city+(d.flag?' ⚠':''),{'text-anchor':'end',class:'cityname'});
+    if(d.flag){name.setAttribute('fill',C.red_d);bind(name,`<b>${d.city} ⚠ 資料有疑義</b><br>${d.flag}`);}
+    s.appendChild(name);
     const shown = cityMode==='off' ? d.off : (d.uni??d.off);
     const isEstimable = !(cityMode==='uni' && d.uni===null);
     const col = cityMode==='uni' ? (d.uni!==null?C.red:C.line) : C.teal;
@@ -613,7 +630,7 @@ function drawCity(){
     const lab=txt(m.l+xw(shown)+ (isEstimable?10:6), yy+18, isEstimable? shown.toFixed(2)+'%' : '無法換算',
       {'font-weight':700,fill:isEstimable?C.ink:C.muted,'font-size':isEstimable?14:12.5,class:'barlabel'});
     s.appendChild(lab);
-    bind(bar,`<b>${d.city}</b><br>官方公布 ${d.off}%<br>分母：${d.base}<br>${cityMode==='uni'?('統一分母 → '+(d.uni!==null?d.uni.toFixed(2)+'%':'無法換算')):''}<br><span style="opacity:.8">${d.note}</span>`);
+    bind(bar,`<b>${d.city}</b><br>官方公布 ${d.off}%<br>分母：${d.base}<br>${cityMode==='uni'?('統一分母 → '+(d.uni!==null?d.uni.toFixed(2)+'%':'無法換算')+'<br>'):''}${d.flag?'⚠ '+d.flag+'<br>':''}<span style="opacity:.8">${d.note}</span>`);
   });
   box.appendChild(s);
 }
@@ -623,18 +640,25 @@ function buildCityCtl(){
     const b=document.createElement('button');b.className='btn'+(cityMode===k?' on red':'');b.textContent=t;
     b.onclick=()=>{cityMode=k;buildCityCtl();drawCity();};c.appendChild(b);
   });
-  if(c.children.length<3){const n=document.createElement('span');n.style.cssText='font-size:12.5px;color:var(--muted);align-self:center;margin-left:6px';
-    n.textContent= cityMode==='uni'?'虛線＝官方原數字':'';c.appendChild(n);}
+  addSortBtns(c,citySort,k=>{citySort=k;buildCityCtl();drawCity();});
+  if(cityMode==='uni'){const n=document.createElement('span');n.style.cssText='font-size:12.5px;color:var(--muted);align-self:center;margin-left:6px';
+    n.textContent='虛線＝官方原數字';c.appendChild(n);}
 }
 
 /* ===================== 2b. KEYPLACE (新竹縣) ===================== */
+let keyplaceSort='desc';
+function buildKeyplaceCtl(){
+  const c=document.getElementById('ctl-keyplace');if(!c)return;c.innerHTML='';
+  addSortBtns(c,keyplaceSort,k=>{keyplaceSort=k;buildKeyplaceCtl();drawKeyplace();});
+}
 function drawKeyplace(){
   const box=document.getElementById('chart-keyplace');box.innerHTML='';
-  const W=860,rowH=54,m={t:10,r:30,b:24,l:130};const H=m.t+m.b+KEYPLACE.length*rowH;
+  const data=[...KEYPLACE].sort((a,b)=>(keyplaceSort==='desc'?1:-1)*(b.v-a.v));
+  const W=860,rowH=54,m={t:10,r:30,b:24,l:130};const H=m.t+m.b+data.length*rowH;
   const s=svg(W,H);const maxV=100;const xw=v=>(v/maxV)*(W-m.l-m.r);
   for(let g=0;g<=100;g+=25){const gx=m.l+xw(g);s.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b,class:'gridline'}));
     s.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11.5}));}
-  KEYPLACE.forEach((d,i)=>{const yy=m.t+i*rowH+10;
+  data.forEach((d,i)=>{const yy=m.t+i*rowH+10;
     s.appendChild(txt(m.l-12,yy+17,d.k,{'text-anchor':'end',class:'cityname'}));
     const bar=mk('rect',{x:m.l,y:yy,width:1,height:24,fill:d.v<15?C.red:C.amber,rx:3});s.appendChild(bar);
     requestAnimationFrame(()=>{bar.style.transition='width .8s cubic-bezier(.3,1,.4,1)';bar.setAttribute('width',Math.max(2,xw(d.v)));});
@@ -645,13 +669,15 @@ function drawKeyplace(){
 }
 
 /* ===================== 3. WIDTH stacked ===================== */
-let widthMode='w';
+let widthMode='w',widthSort='desc';
 const WCOL=[C.red,C.amber,C.teal];const WLAB=['寬度 ＜1.25m','1.25 ~ 2.5m','≥ 2.5m'];
 function drawWidth(){
   const box=document.getElementById('chart-width');box.innerHTML='';
-  const W=860,rowH=60,m={t:10,r:30,b:14,l:80};const H=m.t+m.b+WIDTH.length*rowH;
+  const wkey=d=> widthMode==='w' ? d.w[2] : d.net15; // 排序鍵：寬度模式用 ≥2.5m 占比、淨寬模式用淨寬不足比例
+  const wdata=[...WIDTH].sort((a,b)=>(widthSort==='desc'?1:-1)*(wkey(b)-wkey(a)));
+  const W=860,rowH=60,m={t:10,r:30,b:14,l:80};const H=m.t+m.b+wdata.length*rowH;
   const s=svg(W,H);const fw=W-m.l-m.r;
-  WIDTH.forEach((d,i)=>{
+  wdata.forEach((d,i)=>{
     const yy=m.t+i*rowH+12;
     s.appendChild(txt(m.l-12,yy+16,d.city+(d.thin?' ＊':''),{'text-anchor':'end',class:'cityname'}));
     s.appendChild(txt(m.l-12,yy+40,d.total.toLocaleString()+' km',{'text-anchor':'end',fill:C.muted,'font-size':11}));
@@ -687,10 +713,11 @@ function buildWidthCtl(){
     const b=document.createElement('button');b.className='btn'+(widthMode===k?' on red':'');b.textContent=t;
     b.onclick=()=>{widthMode=k;buildWidthCtl();drawWidth();};c.appendChild(b);
   });
+  addSortBtns(c,widthSort,k=>{widthSort=k;buildWidthCtl();drawWidth();});
 }
 
 /* ===================== 5. budget ===================== */
-let budgetMode='ministry';
+let budgetMode='ministry',budgetSort='desc';
 function drawBudget(){
   const box=document.getElementById('chart-budget');box.innerHTML='';
   if(budgetMode==='ministry'){
@@ -722,7 +749,7 @@ function drawBudget(){
     s.appendChild(txt(W/2,H-4,'內政部「永續提升人行安全計畫」逐年預算',{'text-anchor':'middle',fill:C.muted,'font-size':12}));
     box.appendChild(s);
   }else{
-    const W=860,rowH=40,m={t:6,r:84,b:8,l:160};const data=[...BUDGET.targets].sort((a,b)=>b.v-a.v);
+    const W=860,rowH=40,m={t:6,r:84,b:8,l:160};const data=[...BUDGET.targets].sort((a,b)=>(budgetSort==='desc'?1:-1)*(b.v-a.v));
     const H=m.t+m.b+data.length*rowH;const s=svg(W,H);const maxV=Math.max(...data.map(d=>d.v));
     const logw=v=>(Math.log10(v)/Math.log10(maxV))*(W-m.l-m.r);
     data.forEach((d,i)=>{const yy=m.t+i*rowH+6;
@@ -742,6 +769,7 @@ function buildBudgetCtl(){
     const b=document.createElement('button');b.className='btn'+(budgetMode===k?' on red':'');b.textContent=t;
     b.onclick=()=>{budgetMode=k;buildBudgetCtl();drawBudget();};c.appendChild(b);
   });
+  if(budgetMode==='targets')addSortBtns(c,budgetSort,k=>{budgetSort=k;buildBudgetCtl();drawBudget();});
 }
 
 /* ===================== 2c. CAMPUS (cross-county) ===================== */
@@ -754,13 +782,19 @@ const CAMPUS=[
   {city:'屏東縣',v:22},
   {city:'新竹縣',v:10.73},
 ];
+let campusSort='desc';
+function buildCampusCtl(){
+  const c=document.getElementById('ctl-campus');if(!c)return;c.innerHTML='';
+  addSortBtns(c,campusSort,k=>{campusSort=k;buildCampusCtl();drawCampus();});
+}
 function drawCampus(){
   const box=document.getElementById('chart-campus');if(!box)return;box.innerHTML='';
-  const W=860,rowH=56,m={t:10,r:40,b:26,l:88};const H=m.t+m.b+CAMPUS.length*rowH;
+  const data=[...CAMPUS].sort((a,b)=>(campusSort==='desc'?1:-1)*(b.v-a.v));
+  const W=860,rowH=56,m={t:10,r:40,b:26,l:88};const H=m.t+m.b+data.length*rowH;
   const s=svg(W,H);const maxV=100;const xw=v=>(v/maxV)*(W-m.l-m.r);
   for(let g=0;g<=100;g+=25){const gx=m.l+xw(g);s.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b,class:'gridline'}));
     s.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11.5}));}
-  CAMPUS.forEach((d,i)=>{const yy=m.t+i*rowH+12;
+  data.forEach((d,i)=>{const yy=m.t+i*rowH+12;
     s.appendChild(txt(m.l-12,yy+17,d.city,{'text-anchor':'end',class:'cityname'}));
     const col=d.v<15?C.red:(d.v<50?C.amber:C.teal);
     const bar=mk('rect',{x:m.l,y:yy,width:1,height:26,fill:col,rx:3});s.appendChild(bar);
@@ -892,11 +926,26 @@ function diBindGlobal(){
   window.addEventListener('touchmove',diMove,{passive:false});window.addEventListener('touchend',diEnd);
 }
 
+/* ===================== 6. gap table sort（依取得狀態） ===================== */
+let gapSort='desc';
+function buildGapCtl(){
+  const c=document.getElementById('ctl-gap');if(!c)return;c.innerHTML='';
+  addSortBtns(c,gapSort,k=>{gapSort=k;buildGapCtl();sortGap();});
+  const n=document.createElement('span');n.style.cssText='font-size:12.5px;color:var(--muted);align-self:center;margin-left:6px';
+  n.textContent='依取得狀態排序';c.appendChild(n);
+}
+function sortGap(){
+  const tb=document.querySelector('#gaptable tbody');if(!tb)return;
+  const rank=r=>{const p=r.querySelector('.pill');return !p?0:p.classList.contains('ok')?2:p.classList.contains('part')?1:0;};
+  [...tb.rows].sort((a,b)=>(gapSort==='desc'?1:-1)*(rank(b)-rank(a))).forEach(r=>tb.appendChild(r));
+}
+
 /* ===================== init + scroll fx ===================== */
 function init(){
   drawGuess();buildGuessCtl();diBindGlobal();
-  drawNational();buildCityCtl();drawCity();drawKeyplace();drawCampus();
+  drawNational();buildCityCtl();drawCity();buildKeyplaceCtl();drawKeyplace();buildCampusCtl();drawCampus();
   buildWidthCtl();drawWidth();buildBudgetCtl();drawBudget();drawYears();drawProgress();drawUndispatched();
+  buildGapCtl();sortGap();
 }
 init();
 window.addEventListener('resize',()=>{/* svg is responsive via viewBox; redraw bars for crispness */});
