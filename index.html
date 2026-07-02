@@ -178,6 +178,23 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .bout .bbar i{display:block;height:100%;width:0;background:var(--red);border-radius:99px;transition:width .7s cubic-bezier(.3,1,.4,1);}
 .bout .bnote{font-size:13px;color:var(--muted);}
 .bsrc{margin-top:14px;text-align:center;font-size:11.5px;color:var(--faint);line-height:1.7;max-width:640px;margin-left:auto;margin-right:auto;}
+
+/* ---------- 你的縣市速覽卡 ---------- */
+.youcard{max-width:640px;margin:22px auto 0;background:#fffdf8;border:1px solid var(--line);border-left:4px solid var(--red);
+  border-radius:0 10px 10px 0;padding:16px 20px 14px;text-align:left;
+  opacity:0;transform:translateY(8px);transition:.45s;display:none;}
+.youcard.show{display:block;opacity:1;transform:none;}
+.youcard .yh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.youcard .yh b{font-family:"Noto Serif TC",serif;font-size:19px;color:var(--ink);}
+.youcard .yh .ytag{font-size:11.5px;color:#fff;border-radius:99px;padding:2px 10px;}
+.youcard .ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;}
+.youcard .yi .yl{font-size:11.5px;color:var(--muted);letter-spacing:.04em;}
+.youcard .yi .yv{font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;color:var(--ink);line-height:1.3;}
+.youcard .yi .yv small{font-size:11px;color:var(--muted);font-family:"Noto Sans TC";font-weight:400;}
+.youcard .yfoot{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted);
+  display:flex;gap:14px;flex-wrap:wrap;}
+.youcard .yfoot a{color:var(--red-d);text-decoration:none;border-bottom:1px dotted var(--red-d);}
+
 @media(max-width:560px){.bitem{padding:5px 6px 5px 10px;font-size:13px;}.bitem .bw{display:none;}}
 
 /* ---------- 四種分母算法卡 ---------- */
@@ -398,6 +415,7 @@ footer a{color:#e7b86a;}
     <div class="bshelf" id="bshelf"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
+    <div class="youcard" id="youcard"></div>
     <div class="bsrc">寬度需求依「市區道路及附屬工程設計規範」通行淨寬概數；比例依國土署全國人行道圖資（2024-12，88,677 段）之<b>淨寬</b>逐段長度加權計算，未含側向淨距。</div>
   </div>
   <div class="scrollcue" style="position:static;margin-top:34px">往下捲，看這些數字是怎麼被算出來的</div>
@@ -1423,6 +1441,45 @@ const B_ITEMS=[
   {k:'cane',   icon:'🦯',name:'白手杖',w:0.90},
 ];
 let bCounts={adult:1,wheel:1}, bCity='全國';
+/* ===== 縣市個人化：遊戲選了縣市 → 全站著重顯示 ===== */
+const G2T={'台北市':'臺北市','台中市':'臺中市','台南市':'臺南市','台東縣':'臺東縣'};
+const T2G=Object.fromEntries(Object.entries(G2T).map(([g,t])=>[t,g]));
+const toT=n=>G2T[n]||n, toG=n=>T2G[n]||n;
+let userCity=null;                       // 正體「臺」形式
+try{userCity=localStorage.getItem('npp_city')||null;}catch(e){}
+function setUserCity(gName){             // gName＝遊戲/圖資名（台）；'全國' 則清除
+  userCity = gName&&gName!=='全國' ? toT(gName) : null;
+  try{userCity?localStorage.setItem('npp_city',userCity):localStorage.removeItem('npp_city');}catch(e){}
+  personalize();
+}
+function personalize(){
+  renderYouCard();
+  // 年齡計算機預選
+  const sel=document.getElementById('hc-city');
+  if(sel&&userCity){const o=[...sel.options].find(o=>o.textContent===userCity);if(o)sel.value=o.value;}
+  // 縣市圖若已在探索狀態，立即重繪以顯示「你」標記
+  if(typeof cityState!=='undefined'&&cityState>0)drawCitySty(cityState);
+}
+function renderYouCard(){
+  const el=document.getElementById('youcard');if(!el)return;
+  if(!userCity){el.classList.remove('show');el.innerHTML='';return;}
+  const cRow=CITY.find(c=>c.city===userCity);
+  const wRow=WIDTH.find(d=>toT(d.city)===userCity);
+  const kRow=CAMPUS.find(d=>d.city===userCity);
+  const cat=cRow?CAT_INFO[cRow.cat]:null;
+  const fmt=(v,u='%')=>v==null?'—':v+u;
+  el.innerHTML=`
+    <div class="yh"><b>你的縣市：${userCity}</b>${cat?`<span class="ytag" style="background:${cat.color}">${cat.name}</span>`:''}</div>
+    <div class="ygrid">
+      <div class="yi"><div class="yl">自報普及率</div><div class="yv">${cRow?fmt(cRow.off):'未公布'}<small>${cRow?'　'+cRow.base:''}</small></div></div>
+      <div class="yi"><div class="yl">同一把尺（全道路）</div><div class="yv">${cRow?(cRow.uni!=null?fmt(cRow.uni):'無法換算'):'—'}</div></div>
+      <div class="yi"><div class="yl">寬度不足 1.5m</div><div class="yv">${wRow?fmt(wRow.w[0]):'—'}<small>　占人行道長</small></div></div>
+      <div class="yi"><div class="yl">淨寬不足 1.5m</div><div class="yv">${wRow?fmt(wRow.net15):'—'}</div></div>
+      <div class="yi"><div class="yl">校園周邊普及率</div><div class="yv">${kRow?fmt(kRow.v):'未公布'}${kRow&&kRow.flag?'<small> ⚠</small>':''}</div></div>
+    </div>
+    <div class="yfoot">後文圖表將以紅點標出你的縣市　<a href="#ch2">口徑怎麼算 ↓</a><a href="#ch3">寬度全比較 ↓</a>${kRow?'<a href="#sty-campus">上學路 ↓</a>':''}</div>`;
+  el.classList.add('show');
+}
 function bNeed(){let s=0;for(const it of B_ITEMS)s+=(bCounts[it.k]||0)*it.w;return Math.round(s*100)/100;}
 function bPct(city,w){const a=SWCDF[city];if(!a)return null;if(w<=0)return 100;
   const idx=Math.min(50,Math.ceil(w*10-1e-6));return a[idx];}
@@ -1581,11 +1638,13 @@ function drawB(){
      <div class="bbar"><i style="background:${col}"></i></div>
      <div class="bnote">的人行道淨寬走得下這一組${bCity!=='全國'?`（全國 ${bPct('全國',need).toFixed(1)}%）`:''}${need>1.5?'':'　·　法定下限 1.5m'}</div>`;
   const selEl=document.getElementById('bcity');
-  if(selEl)selEl.onchange=e=>{bCity=e.target.value;drawB();};
+  if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
   requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,pct)+'%',50);});
 }
 function initGame(){
   const shelf=document.getElementById('bshelf');if(!shelf)return;
+  if(userCity&&SWCDF[toG(userCity)])bCity=toG(userCity);   // 回訪者：還原上次縣市
+  personalize();
   const render=()=>{shelf.innerHTML='';
     B_ITEMS.forEach(it=>{
       const n=bCounts[it.k]||0;
@@ -1700,7 +1759,10 @@ function hbars(boxId,opts,state){
     s.appendChild(txt(gx,H-8,Math.round(g)+unit,{'text-anchor':'middle',fill:C.muted,'font-size':11}));}
   list.forEach((r,i)=>{
     const isF=r===focusRow,v=vof(r),barH=state<=0?30:22,yy=m.t+i*rowH+(rowH-barH)/2;
-    s.appendChild(txt(m.l-10,yy+barH/2+5,r.label+(r.flag?' ⚠':''),{'text-anchor':'end',fill:isF?C.red_d:C.ink,'font-size':state<=0?18:15,'font-weight':isF?700:500}));
+    const isYou=!!(userCity&&r.label===userCity);
+    if(isYou){s.appendChild(mk('circle',{cx:10,cy:yy+barH/2,r:5,fill:C.red}));
+      s.appendChild(txt(10,yy+barH/2-9,'你',{'text-anchor':'middle',fill:C.red_d,'font-size':10,'font-weight':700}));}
+    s.appendChild(txt(m.l-10,yy+barH/2+5,r.label+(r.flag?' ⚠':''),{'text-anchor':'end',fill:(isF||isYou)?C.red_d:C.ink,'font-size':state<=0?18:15,'font-weight':(isF||isYou)?700:500}));
     if(alt && r.alt!=null && r.alt!==r.v)s.appendChild(mk('rect',{x:m.l,y:yy,width:Math.max(2,xw(r.v)),height:barH,rx:3,fill:'none',stroke:'#c9c0ad','stroke-dasharray':'4 3'}));
     const noVal = alt && r.alt==null;
     const col=isF?C.red:(opts.rowColor?opts.rowColor(r,alt):(opts.color?opts.color(v):C.teal));
@@ -1769,7 +1831,9 @@ function drawWidthSty(state){
     s.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':10.5}));}
   list.forEach((d,i)=>{
     const isF=d.city==='臺北市',barH=state<=0?34:20,yy=m.t+i*rowH+(rowH-barH)/2;
-    s.appendChild(txt(m.l-8,yy+barH/2+5,d.city,{'text-anchor':'end',fill:(netMode&&d.net15>=50)||isF?C.red_d:C.ink,'font-size':state<=0?14:11.5,'font-weight':isF?700:500}));
+    const isYou=!!(userCity&&toT(d.city)===userCity);
+    if(isYou){s.appendChild(mk('circle',{cx:9,cy:yy+barH/2,r:4.5,fill:C.red}));}
+    s.appendChild(txt(m.l-8,yy+barH/2+5,d.city,{'text-anchor':'end',fill:(netMode&&d.net15>=50)||isF||isYou?C.red_d:C.ink,'font-size':state<=0?14:11.5,'font-weight':(isF||isYou)?700:500}));
     if(netMode){const v=d.net15;s.appendChild(mk('rect',{x:m.l,y:yy,width:Math.max(2,xw(v)),height:barH,rx:3,fill:C.red,opacity:v>=50?1:.62}));
       s.appendChild(txt(m.l+xw(v)+7,yy+barH/2+5,v.toFixed(0)+'%',{fill:C.red_d,'font-size':11.5,'font-weight':600}));}
     else{let acc=0;d.w.forEach((seg,k)=>{s.appendChild(mk('rect',{x:m.l+xw(acc),y:yy,width:Math.max(1,xw(seg)),height:barH,fill:WCOL2[k],opacity:1}));
