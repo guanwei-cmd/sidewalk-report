@@ -226,7 +226,7 @@ footer a{color:#e7b86a;}
 <div class="sharemodal" id="sharemodal" aria-hidden="true">
   <div class="sharebox" role="dialog" aria-modal="true" aria-label="分享圖卡">
     <button class="shareclose" id="share-close" aria-label="關閉">×</button>
-    <div class="sharecanvas-wrap"><canvas id="sharecanvas" width="1080" height="1080"></canvas></div>
+    <div class="sharecanvas-wrap"><canvas id="sharecanvas" width="1080" height="1350"></canvas></div>
     <div class="sharebtns">
       <button class="btn on red" id="share-native">分享 ↗</button>
       <button class="btn" id="share-download">下載圖片</button>
@@ -997,7 +997,7 @@ let shareBlob=null;
 
 function drawShareCard(){
   const cv=document.getElementById('sharecanvas');const g=cv.getContext('2d');
-  const W=1080,Hc=1080,P=90;g.clearRect(0,0,W,Hc);
+  const W=1080,Hc=1350,P=90;g.clearRect(0,0,W,Hc);
   const ink='#1b1a18',muted='#736d62',red='#cf4636',redd='#a8341f',teal='#2c6e6a',line='#ddd6c7';
   const serif='"Noto Serif TC",Georgia,serif',sans='"Noto Sans TC",system-ui,sans-serif';
   // bg
@@ -1006,30 +1006,30 @@ function drawShareCard(){
   // kicker
   g.textBaseline='alphabetic';g.textAlign='left';
   try{g.letterSpacing='4px';}catch(e){}
-  g.font='600 27px '+sans;g.fillStyle=muted;
-  const k1='資料專題　·　';g.fillText(k1,P,120);
-  const kw=g.measureText(k1).width;g.fillStyle=red;g.fillText('人本交通',P+kw,120);
+  g.font='600 28px '+sans;g.fillStyle=muted;
+  const k1='資料專題　·　';g.fillText(k1,P,140);
+  const kw=g.measureText(k1).width;g.fillStyle=red;g.fillText('人本交通',P+kw,140);
   try{g.letterSpacing='0px';}catch(e){}
   // headline
-  g.fillStyle=ink;g.font='900 92px '+serif;g.fillText('每年不到 ',P,235);
-  const hw=g.measureText('每年不到 ').width;g.fillStyle=red;g.fillText('1%',P+hw,235);
-  g.fillStyle=ink;g.font='700 46px '+serif;
-  g.fillText('台灣人行道的緩慢與失真',P,310);
+  g.fillStyle=ink;g.font='900 100px '+serif;g.fillText('每年不到 ',P,270);
+  const hw=g.measureText('每年不到 ').width;g.fillStyle=red;g.fillText('1%',P+hw,270);
+  g.fillStyle=ink;g.font='700 50px '+serif;
+  g.fillText('台灣人行道的緩慢與失真',P,350);
   // subhead
-  g.font='400 30px '+sans;g.fillStyle='#2c2a26';
-  g.fillText('全國市區人行道普及率，三年只增加 2.61 個百分點。',P,370);
+  g.font='400 31px '+sans;g.fillStyle='#2c2a26';
+  g.fillText('全國市區人行道普及率，三年只增加 2.61 個百分點。',P,420);
   // ---- mini chart ----
-  const gx0=P,gx1=W-P,gy0=430,gy1=760;const cw=gx1-gx0;
+  const gx0=P,gx1=W-P,gy0=500,gy1=940;const cw=gx1-gx0;
   const xi=i=>gx0+i*(cw/3);
   const yv=v=>gy1-(v/100)*(gy1-gy0);
   // grid 0/50/100
-  g.strokeStyle=line;g.lineWidth=1;g.fillStyle=muted;g.font='400 22px '+sans;g.textAlign='right';
+  g.strokeStyle=line;g.lineWidth=1;g.fillStyle=muted;g.font='400 23px '+sans;g.textAlign='right';
   [0,50,100].forEach(v=>{g.beginPath();g.moveTo(gx0,yv(v));g.lineTo(gx1,yv(v));g.stroke();g.fillText(v+'%',gx0-14,yv(v)+7);});
   g.textAlign='left';
   // 50% goal dashed
   g.save();g.setLineDash([8,6]);g.strokeStyle=teal;g.lineWidth=2;g.globalAlpha=.7;
   g.beginPath();g.moveTo(gx0,yv(50));g.lineTo(gx1,yv(50));g.stroke();g.restore();
-  g.fillStyle=teal;g.font='600 22px '+sans;g.textAlign='right';
+  g.fillStyle=teal;g.font='600 23px '+sans;g.textAlign='right';
   g.fillText('一半道路都有人行道',gx1,yv(50)-12);g.textAlign='left';
   // guessed line (if revealed)
   if(diRevealed&&diDraw.length){
@@ -1040,29 +1040,30 @@ function drawShareCard(){
   g.strokeStyle=red;g.lineWidth=6;g.lineJoin='round';g.beginPath();
   NAT_REAL.forEach((p,k)=>{const X=xi(p.i),Y=yv(p.v);k?g.lineTo(X,Y):g.moveTo(X,Y);});g.stroke();
   NAT_REAL.forEach(p=>{g.beginPath();g.arc(xi(p.i),yv(p.v),9,0,7);g.fillStyle='#fffdf8';g.fill();g.lineWidth=5;g.strokeStyle=red;g.stroke();});
-  g.fillStyle=redd;g.font='700 26px '+sans;
-  g.fillText('起點 36.68%',xi(0)+18,yv(NAT_START)+46);
-  g.textAlign='right';g.fillText('真實 39.29%',xi(3)-16,yv(NAT_END)+46);g.textAlign='left';
+  g.fillStyle=redd;g.font='700 27px '+sans;
+  g.fillText('起點 36.68%',xi(0)+18,yv(NAT_START)+48);
+  g.textAlign='right';g.fillText('真實 39.29%',xi(3)-16,yv(NAT_END)+48);g.textAlign='left';
   // years
-  g.fillStyle=muted;g.font='400 22px '+sans;g.textAlign='center';
-  ['民國110','111','112','113'].forEach((l,i)=>g.fillText(l,xi(i),gy1+38));g.textAlign='left';
+  g.fillStyle=muted;g.font='400 23px '+sans;g.textAlign='center';
+  ['民國110','111','112','113'].forEach((l,i)=>g.fillText(l,xi(i),gy1+40));g.textAlign='left';
   // personalized verdict
-  let vy=858;
+  let vy=1075;
   if(diRevealed&&diDraw.length){
     const gv=diDraw[diDraw.length-1].v;
-    g.fillStyle=ink;g.font='700 40px '+serif;
+    g.fillStyle=ink;g.font='700 44px '+serif;
     g.fillText('我以為會漲到 '+gv.toFixed(0)+'%，',P,vy);
-    g.fillStyle=redd;g.fillText('真相只有 39.29%',P,vy+56);vy+=56;
+    g.fillStyle=redd;g.fillText('真相只有 39.29%',P,vy+62);
   }else{
-    g.fillStyle=ink;g.font='700 40px '+serif;
-    g.fillText('三年、四百億，只換來 +2.61 個百分點。',P,vy);
+    g.fillStyle=ink;g.font='700 44px '+serif;
+    g.fillText('三年、四百億，',P,vy);
+    g.fillText('只換來 +2.61 個百分點。',P,vy+62);
   }
   // footer
-  g.strokeStyle=line;g.lineWidth=1;g.beginPath();g.moveTo(P,975);g.lineTo(W-P,975);g.stroke();
-  g.fillStyle=muted;g.font='400 23px '+sans;
-  g.fillText('資料來源：內政部國土管理署／立法院預算中心',P,1015);
-  g.fillStyle=redd;g.font='600 23px '+sans;
-  g.fillText(SHARE_URL.replace(/^https?:\/\//,'').replace(/\/$/,''),P,1050);
+  g.strokeStyle=line;g.lineWidth=1;g.beginPath();g.moveTo(P,1240);g.lineTo(W-P,1240);g.stroke();
+  g.fillStyle=muted;g.font='400 24px '+sans;
+  g.fillText('資料來源：內政部國土管理署／立法院預算中心',P,1285);
+  g.fillStyle=redd;g.font='600 24px '+sans;
+  g.fillText(SHARE_URL.replace(/^https?:\/\//,'').replace(/\/$/,''),P,1322);
 }
 
 function openShareCard(){
