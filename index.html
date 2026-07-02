@@ -58,6 +58,23 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .toc a.active .lab b{color:var(--red);}
 @media(max-width:1160px){.toc{display:none;}}
 
+/* ---------- share-card modal ---------- */
+.sharemodal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;
+  padding:24px;background:rgba(27,26,24,.72);backdrop-filter:blur(3px);}
+.sharemodal.show{display:flex;animation:shFade .28s ease;}
+@keyframes shFade{from{opacity:0}to{opacity:1}}
+.sharebox{background:var(--paper);border-radius:10px;padding:20px;max-width:420px;width:100%;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.6);position:relative;animation:shPop .3s cubic-bezier(.3,1,.4,1);}
+@keyframes shPop{from{transform:translateY(14px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.shareclose{position:absolute;top:8px;right:12px;border:none;background:none;font-size:26px;line-height:1;
+  color:var(--muted);cursor:pointer;padding:4px;}
+.shareclose:hover{color:var(--ink);}
+.sharecanvas-wrap{border-radius:6px;overflow:hidden;border:1px solid var(--line);}
+#sharecanvas{display:block;width:100%;height:auto;}
+.sharebtns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.sharebtns .btn{flex:1;text-align:center;min-width:90px;}
+.sharehint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;text-align:center;}
+
 /* ---------- HERO ---------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   padding:90px 24px 60px;text-align:center;position:relative;overflow:hidden;}
@@ -205,6 +222,20 @@ footer a{color:#e7b86a;}
 </div>
 <div class="tip" id="tip"></div>
 
+<!-- ============ share-card modal ============ -->
+<div class="sharemodal" id="sharemodal" aria-hidden="true">
+  <div class="sharebox" role="dialog" aria-modal="true" aria-label="分享圖卡">
+    <button class="shareclose" id="share-close" aria-label="關閉">×</button>
+    <div class="sharecanvas-wrap"><canvas id="sharecanvas" width="1080" height="1080"></canvas></div>
+    <div class="sharebtns">
+      <button class="btn on red" id="share-native">分享 ↗</button>
+      <button class="btn" id="share-download">下載圖片</button>
+      <button class="btn" id="share-copy">複製連結</button>
+    </div>
+    <div class="sharehint" id="share-hint">長按圖片可儲存；或用上方按鈕分享到社群。</div>
+  </div>
+</div>
+
 <!-- ============ side chapter TOC ============ -->
 <nav class="toc" id="toc" aria-label="章節導覽">
   <a href="#ch1"><span class="tick"></span><span class="lab"><b>壹</b>一條太平的曲線</span></a>
@@ -259,6 +290,7 @@ footer a{color:#e7b86a;}
     <div class="controls" style="margin-top:10px">
       <button class="btn" id="di-reveal" disabled>看真實答案</button>
       <button class="btn" id="di-reset">重畫</button>
+      <button class="btn" id="di-share">分享圖卡 ↗</button>
     </div>
     <div class="di-result" id="di-result"></div>
   </div>
@@ -887,12 +919,12 @@ function drawGuess(){
   const box=document.getElementById('chart-guess'); if(!box) return; box.innerHTML='';
   const W=860,H=440,m={t:42,r:60,b:50,l:54};
   const s=svg(W,H);
-  const yMin=25,yMax=60, plotW=W-m.l-m.r, plotH=H-m.t-m.b;
+  const yMin=0,yMax=100, plotW=W-m.l-m.r, plotH=H-m.t-m.b;
   const xi=i=>m.l+i*(plotW/3);
   const yv=v=>m.t+(1-(v-yMin)/(yMax-yMin))*plotH;
   const toI=px=>Math.max(0,Math.min(3,(px-m.l)/(plotW/3)));
   const toV=py=>Math.max(yMin,Math.min(yMax,yMin+(1-(py-m.t)/plotH)*(yMax-yMin)));
-  for(let g=30;g<=60;g+=10){
+  for(let g=0;g<=100;g+=20){
     s.appendChild(mk('line',{x1:m.l,x2:W-m.r,y1:yv(g),y2:yv(g),class:'gridline'}));
     s.appendChild(txt(m.l-12,yv(g)+4,g+'%',{'text-anchor':'end',fill:C.muted,'font-size':12}));
   }
@@ -949,11 +981,133 @@ function diResult(g){
 function buildGuessCtl(){
   const rev=document.getElementById('di-reveal'),rst=document.getElementById('di-reset');
   if(rev)rev.onclick=diReveal;
+  const shb=document.getElementById('di-share');if(shb)shb.onclick=openShareCard;
   if(rst)rst.onclick=()=>{diDraw=[];diRevealed=false;const r=document.getElementById('di-result');if(r)r.classList.remove('show');const h=document.getElementById('di-hint');if(h)h.textContent='↘ 按住圖中的紅點，往右拖曳，一路畫到民國 113 年。';const rev2=document.getElementById('di-reveal');if(rev2)rev2.disabled=true;drawGuess();};
 }
 function diBindGlobal(){
   window.addEventListener('mousemove',diMove);window.addEventListener('mouseup',diEnd);
   window.addEventListener('touchmove',diMove,{passive:false});window.addEventListener('touchend',diEnd);
+}
+
+/* ===================== social share card ===================== */
+const SHARE_URL = location.protocol.indexOf('http')===0 ? location.href.split('#')[0]
+  : 'https://guanwei-cmd.github.io/sidewalk-report/';
+const SHARE_TEXT = '台灣人行道普及率，三年只從 36.68% 走到 39.29%——每年不到 1%。';
+let shareBlob=null;
+
+function drawShareCard(){
+  const cv=document.getElementById('sharecanvas');const g=cv.getContext('2d');
+  const W=1080,Hc=1080,P=90;g.clearRect(0,0,W,Hc);
+  const ink='#1b1a18',muted='#736d62',red='#cf4636',redd='#a8341f',teal='#2c6e6a',line='#ddd6c7';
+  const serif='"Noto Serif TC",Georgia,serif',sans='"Noto Sans TC",system-ui,sans-serif';
+  // bg
+  g.fillStyle='#f6f3ec';g.fillRect(0,0,W,Hc);
+  g.fillStyle=red;g.fillRect(0,0,W,16);
+  // kicker
+  g.textBaseline='alphabetic';g.textAlign='left';
+  try{g.letterSpacing='4px';}catch(e){}
+  g.font='600 27px '+sans;g.fillStyle=muted;
+  const k1='資料專題　·　';g.fillText(k1,P,120);
+  const kw=g.measureText(k1).width;g.fillStyle=red;g.fillText('人本交通',P+kw,120);
+  try{g.letterSpacing='0px';}catch(e){}
+  // headline
+  g.fillStyle=ink;g.font='900 92px '+serif;g.fillText('每年不到 ',P,235);
+  const hw=g.measureText('每年不到 ').width;g.fillStyle=red;g.fillText('1%',P+hw,235);
+  g.fillStyle=ink;g.font='700 46px '+serif;
+  g.fillText('台灣人行道的緩慢與失真',P,310);
+  // subhead
+  g.font='400 30px '+sans;g.fillStyle='#2c2a26';
+  g.fillText('全國市區人行道普及率，三年只增加 2.61 個百分點。',P,370);
+  // ---- mini chart ----
+  const gx0=P,gx1=W-P,gy0=430,gy1=760;const cw=gx1-gx0;
+  const xi=i=>gx0+i*(cw/3);
+  const yv=v=>gy1-(v/100)*(gy1-gy0);
+  // grid 0/50/100
+  g.strokeStyle=line;g.lineWidth=1;g.fillStyle=muted;g.font='400 22px '+sans;g.textAlign='right';
+  [0,50,100].forEach(v=>{g.beginPath();g.moveTo(gx0,yv(v));g.lineTo(gx1,yv(v));g.stroke();g.fillText(v+'%',gx0-14,yv(v)+7);});
+  g.textAlign='left';
+  // 50% goal dashed
+  g.save();g.setLineDash([8,6]);g.strokeStyle=teal;g.lineWidth=2;g.globalAlpha=.7;
+  g.beginPath();g.moveTo(gx0,yv(50));g.lineTo(gx1,yv(50));g.stroke();g.restore();
+  g.fillStyle=teal;g.font='600 22px '+sans;g.textAlign='right';
+  g.fillText('一半道路都有人行道',gx1,yv(50)-12);g.textAlign='left';
+  // guessed line (if revealed)
+  if(diRevealed&&diDraw.length){
+    g.strokeStyle=ink;g.lineWidth=5;g.globalAlpha=.85;g.beginPath();
+    g.moveTo(xi(0),yv(NAT_START));diDraw.forEach(p=>g.lineTo(xi(p.i),yv(p.v)));g.stroke();g.globalAlpha=1;
+  }
+  // real line
+  g.strokeStyle=red;g.lineWidth=6;g.lineJoin='round';g.beginPath();
+  NAT_REAL.forEach((p,k)=>{const X=xi(p.i),Y=yv(p.v);k?g.lineTo(X,Y):g.moveTo(X,Y);});g.stroke();
+  NAT_REAL.forEach(p=>{g.beginPath();g.arc(xi(p.i),yv(p.v),9,0,7);g.fillStyle='#fffdf8';g.fill();g.lineWidth=5;g.strokeStyle=red;g.stroke();});
+  g.fillStyle=redd;g.font='700 26px '+sans;
+  g.fillText('起點 36.68%',xi(0)+18,yv(NAT_START)+46);
+  g.textAlign='right';g.fillText('真實 39.29%',xi(3)-16,yv(NAT_END)+46);g.textAlign='left';
+  // years
+  g.fillStyle=muted;g.font='400 22px '+sans;g.textAlign='center';
+  ['民國110','111','112','113'].forEach((l,i)=>g.fillText(l,xi(i),gy1+38));g.textAlign='left';
+  // personalized verdict
+  let vy=858;
+  if(diRevealed&&diDraw.length){
+    const gv=diDraw[diDraw.length-1].v;
+    g.fillStyle=ink;g.font='700 40px '+serif;
+    g.fillText('我以為會漲到 '+gv.toFixed(0)+'%，',P,vy);
+    g.fillStyle=redd;g.fillText('真相只有 39.29%',P,vy+56);vy+=56;
+  }else{
+    g.fillStyle=ink;g.font='700 40px '+serif;
+    g.fillText('三年、四百億，只換來 +2.61 個百分點。',P,vy);
+  }
+  // footer
+  g.strokeStyle=line;g.lineWidth=1;g.beginPath();g.moveTo(P,975);g.lineTo(W-P,975);g.stroke();
+  g.fillStyle=muted;g.font='400 23px '+sans;
+  g.fillText('資料來源：內政部國土管理署／立法院預算中心',P,1015);
+  g.fillStyle=redd;g.font='600 23px '+sans;
+  g.fillText(SHARE_URL.replace(/^https?:\/\//,'').replace(/\/$/,''),P,1050);
+}
+
+function openShareCard(){
+  const wait = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  wait.then(()=>{
+    drawShareCard();
+    const cv=document.getElementById('sharecanvas');
+    cv.toBlob(b=>{shareBlob=b;}, 'image/png');
+    const nb=document.getElementById('share-native');
+    nb.style.display = (navigator.canShare) ? '' : 'none';
+    document.getElementById('sharemodal').classList.add('show');
+  });
+}
+function closeShareCard(){document.getElementById('sharemodal').classList.remove('show');}
+function shareCardFile(){
+  return new Promise(res=>{
+    if(shareBlob) return res(new File([shareBlob],'sidewalk-report.png',{type:'image/png'}));
+    document.getElementById('sharecanvas').toBlob(b=>{shareBlob=b;res(new File([b],'sidewalk-report.png',{type:'image/png'}));},'image/png');
+  });
+}
+function bindShareCard(){
+  const q=id=>document.getElementById(id);
+  const md=q('sharemodal');if(!md)return;
+  q('share-close').onclick=closeShareCard;
+  md.addEventListener('click',e=>{if(e.target===md)closeShareCard();});
+  q('share-download').onclick=async()=>{
+    const f=await shareCardFile();const a=document.createElement('a');
+    a.href=URL.createObjectURL(f);a.download='sidewalk-report.png';a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  };
+  q('share-native').onclick=async()=>{
+    try{
+      const f=await shareCardFile();
+      const data={files:[f],title:'台灣人行道資料專題',text:SHARE_TEXT,url:SHARE_URL};
+      if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share(data);
+      else await navigator.share({title:data.title,text:SHARE_TEXT,url:SHARE_URL});
+    }catch(e){/* 使用者取消 */}
+  };
+  q('share-copy').onclick=async()=>{
+    const btn=q('share-copy');
+    try{await navigator.clipboard.writeText(SHARE_URL);btn.textContent='已複製 ✓';}
+    catch(e){btn.textContent='複製失敗';}
+    setTimeout(()=>btn.textContent='複製連結',1800);
+  };
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeShareCard();});
 }
 
 /* ===================== 6. gap table sort（依取得狀態） ===================== */
@@ -972,7 +1126,7 @@ function sortGap(){
 
 /* ===================== init + scroll fx ===================== */
 function init(){
-  drawGuess();buildGuessCtl();diBindGlobal();
+  drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
   drawNational();buildCityCtl();drawCity();buildKeyplaceCtl();drawKeyplace();buildCampusCtl();drawCampus();
   buildWidthCtl();drawWidth();buildBudgetCtl();drawBudget();drawYears();drawProgress();drawUndispatched();
   buildGapCtl();sortGap();
