@@ -286,21 +286,12 @@ footer a{color:#e7b86a;}
   <a href="#ch6"><span class="tick"></span><span class="lab"><b>陸</b>給讀者的檢驗清單</span></a>
 </nav>
 
-<!-- ============ HERO：年齡計算機 ============ -->
-<header class="herocalc" id="top">
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
-  <h1 class="serif">照這個速度，你家的人行道<br>補到<span class="hl">先進國家水準</span>，你幾歲？</h1>
-  <p class="dek">先進城市的人行道普及率多在<b>八成</b>以上。台灣全國平均，每年只增加 0.87 個百分點。</p>
-  <div class="calcbar">
-    <span>我住在</span>
-    <select id="hc-city" aria-label="選擇縣市"></select>
-    <span>，今年</span>
-    <input type="number" id="hc-age" min="1" max="99" value="25" aria-label="你的年齡">
-    <span>歲。</span>
-    <button class="btn on red" id="hc-go">算給我看</button>
-  </div>
-  <div class="calcresult" id="hc-out" aria-live="polite"></div>
-  <div class="cue">往下看，為什麼會這樣</div>
+  <h1 class="serif">每年不到 <span class="hl">1%</span><br>台灣人行道的<br>緩慢與失真</h1>
+  <p class="dek">行政院喊「行人優先」、編了四百億，三年過去——<br>這條線，你覺得走到哪了？</p>
+  <div class="scrollcue">向下捲動，換你來畫</div>
 </header>
 
 <main>
@@ -326,6 +317,23 @@ footer a{color:#e7b86a;}
   </div>
   <div class="fsrc">真實資料同下圖：內政部國土管理署提供，立法院預算中心《115 年度預算評估報告》表 1。</div>
 </div>
+
+<!-- ====== 年齡計算機（畫完之後的現實重擊） ====== -->
+<section class="herocalc">
+  <div class="tag">現實 · 輪到你家要等多久</div>
+  <h1 class="serif">你剛畫的是理想。<br>照<span class="hl">真實速度</span>，你家補到八成，你幾歲？</h1>
+  <p class="dek">先進城市的人行道普及率多在<b>八成</b>以上。台灣全國平均，每年只增加 0.87 個百分點。</p>
+  <div class="calcbar">
+    <span>我住在</span>
+    <select id="hc-city" aria-label="選擇縣市"></select>
+    <span>，今年</span>
+    <input type="number" id="hc-age" min="1" max="99" value="25" aria-label="你的年齡">
+    <span>歲。</span>
+    <button class="btn on red" id="hc-go">算給我看</button>
+  </div>
+  <div class="calcresult" id="hc-out" aria-live="polite"></div>
+  <div class="cue">往下看，為什麼會這樣</div>
+</section>
 
 <section class="wrap">
   <p class="dropcap">攤開內政部國土管理署提供、立法院預算中心彙整的官方統計，全國市區人行道普及率，從民國 110 年底的 <b>36.68%</b>，到 113 年底的 <b>39.29%</b>。三年，2.61 個百分點。換算下來，<b>平均每年增加不到一個百分點</b>。</p>
