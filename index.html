@@ -1295,7 +1295,24 @@ function diBindGlobal(){
 /* ===================== social share card ===================== */
 const SHARE_URL = location.protocol.indexOf('http')===0 ? location.href.split('#')[0]
   : 'https://guanwei-cmd.github.io/sidewalk-report/';
-const SHARE_TEXT = '台灣人行道普及率，三年只從 36.68% 走到 39.29%——每年不到 1%。';
+function getShareText(){
+  if(userCity){
+    const r=CITY.find(c=>c.city===userCity);
+    if(!r)return `我住${userCity}——它連官方人行道普及率都沒有。`;
+    if(r.off<80){const roc=Math.round(113+(80-r.off)/0.87),w=Math.max(0,roc-115);
+      return userAge?`我住${userCity}，等到人行道及格（八成）那年，我 ${userAge+w} 歲。`:`我住${userCity}，人行道要及格還要 ${w} 年。`;}
+  }
+  return '台灣人行道普及率，三年只從 36.68% 走到 39.29%——每年不到 1%。';
+}
+/* canvas 口徑小標籤 */
+function g_measureTag(g,t){const f=g.font;g.font='500 22px "Noto Sans TC",sans-serif';const w=g.measureText(t).width+28;g.font=f;return w;}
+function drawTag(g,x,y,t,color){
+  const f=g.font;g.font='500 22px "Noto Sans TC",sans-serif';
+  const w=g.measureText(t).width+28,h=36,r=18;
+  g.fillStyle=color;g.beginPath();
+  g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();g.fill();
+  g.fillStyle='#fff';g.fillText(t,x+14,y+26);g.font=f;
+}
 let shareBlob=null;
 
 function drawShareCard(){
@@ -1349,9 +1366,29 @@ function drawShareCard(){
   // years
   g.fillStyle=muted;g.font='400 23px '+sans;g.textAlign='center';
   ['民國110','111','112','113'].forEach((l,i)=>g.fillText(l,xi(i),gy1+40));g.textAlign='left';
-  // personalized verdict
+  // personalized verdict（優先序：身份定錨 > 你來畫 > 通用句）
   let vy=1075;
-  if(diRevealed&&diDraw.length){
+  const idRow = userCity ? CITY.find(c=>c.city===userCity) : null;
+  if(userCity){
+    g.fillStyle=ink;g.font='700 44px '+serif;
+    if(!idRow){
+      g.fillText(`我住${userCity}——它連官方普及率`,P,vy);
+      g.fillStyle=redd;g.fillText('都沒有，要等幾年無從算起。',P,vy+62);
+    }else if(idRow.off>=80){
+      g.fillText(`我住${userCity}，帳面已達 ${idRow.off}%`,P,vy);
+      g.fillStyle=redd;g.fillText('——但那把尺，本身就是問題。',P,vy+62);
+    }else{
+      const roc80=Math.round(113+(80-idRow.off)/0.87), wait=Math.max(0,roc80-115);
+      // 口徑小標籤
+      const cat=CAT_INFO[idRow.cat];
+      g.fillText(`我住${userCity}（普及率 ${idRow.off}%`,P,vy);
+      const w1=g.measureText(`我住${userCity}（普及率 ${idRow.off}%`).width;
+      if(cat){const tw=g_measureTag(g,cat.name);drawTag(g,P+w1+14,vy-30,cat.name,cat.color);}
+      g.fillStyle=ink;g.fillText('）',P+w1+(cat?g_measureTag(g,cat.name)+22:0),vy);
+      g.fillStyle=redd;
+      g.fillText(userAge?`等到八成及格那年，我 ${userAge+wait} 歲。`:`補到八成，還要 ${wait} 年（民國 ${roc80}）。`,P,vy+62);
+    }
+  }else if(diRevealed&&diDraw.length){
     const gv=diDraw[diDraw.length-1].v;
     g.fillStyle=ink;g.font='700 44px '+serif;
     g.fillText('我以為會漲到 '+gv.toFixed(0)+'%，',P,vy);
@@ -1400,9 +1437,9 @@ function bindShareCard(){
   q('share-native').onclick=async()=>{
     try{
       const f=await shareCardFile();
-      const data={files:[f],title:'台灣人行道資料專題',text:SHARE_TEXT,url:SHARE_URL};
+      const data={files:[f],title:'台灣人行道資料專題',text:getShareText(),url:SHARE_URL};
       if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share(data);
-      else await navigator.share({title:data.title,text:SHARE_TEXT,url:SHARE_URL});
+      else await navigator.share({title:data.title,text:getShareText(),url:SHARE_URL});
     }catch(e){/* 使用者取消 */}
   };
   q('share-copy').onclick=async()=>{
@@ -1517,12 +1554,14 @@ function renderYouCard(){
     </div>
     <div class="yyears">我今年 <input type="number" id="you-age" min="1" max="99" value="${userAge||''}" placeholder="歲數" aria-label="你的年齡"> 歲。
       <span id="you-years">${yearsHTML(cRow)}</span></div>
-    <div class="yfoot">後文圖表將以紅點標出你的縣市　<a href="#ch2">口徑怎麼算 ↓</a><a href="#ch3">寬度全比較 ↓</a>${kRow?'<a href="#sty-campus">上學路 ↓</a>':''}</div>`;
+    <div class="yfoot">後文圖表將以紅點標出你的縣市　<a href="#ch2">口徑怎麼算 ↓</a><a href="#ch3">寬度全比較 ↓</a>${kRow?'<a href="#sty-campus">上學路 ↓</a>':''}<a href="javascript:void(0)" id="you-share" style="margin-left:auto;font-weight:600">做成圖卡分享 ↗</a></div>`;
   el.classList.add('show');
   const ai=document.getElementById('you-age');
   if(ai)ai.oninput=e=>{const v=parseInt(e.target.value);setUserAge(v);
     const yl=document.getElementById('you-years');if(yl)yl.innerHTML=yearsHTML(cRow);
     const ag=document.getElementById('hc-age');if(ag&&userAge)ag.value=userAge;};
+  const sh=document.getElementById('you-share');
+  if(sh)sh.onclick=()=>{collect('share');if(typeof openShareCard==='function')openShareCard();};
 }
 function bNeed(){let s=0;for(const it of B_ITEMS)s+=(bCounts[it.k]||0)*it.w;return Math.round(s*100)/100;}
 function bPct(city,w){const a=SWCDF[city];if(!a)return null;if(w<=0)return 100;
