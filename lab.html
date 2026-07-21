@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>互動原型實驗室｜人行道專題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f3ec; --paper2:#efeae0; --ink:#1b1a18; --muted:#736d62; --faint:#a39c8e;
+  --line:#ddd6c7; --line2:#c9c0ad; --red:#cf4636; --red-d:#a8341f; --amber:#e0a13c;
+  --teal:#2c6e6a; --teal-d:#1f5350; --ink-soft:#2c2a26;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC",system-ui,"PingFang TC",sans-serif;font-weight:300;line-height:1.9;
+  -webkit-font-smoothing:antialiased;}
+.serif{font-family:"Noto Serif TC",Georgia,serif;}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px;}
+
+/* lab banner */
+.labtop{background:var(--ink);color:var(--paper);padding:12px 24px;font-size:13px;letter-spacing:.06em;
+  text-align:center;position:sticky;top:0;z-index:50;}
+.labtop b{color:var(--amber);}
+
+/* section shell */
+.proto{padding:70px 0;border-bottom:1px solid var(--line);}
+.tagline{font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.28em;color:var(--red);font-weight:700;margin-bottom:12px;}
+h2{font-family:"Noto Serif TC",serif;font-weight:700;font-size:clamp(24px,4.4vw,34px);line-height:1.32;margin:.1em 0 .5em;}
+.lead{font-size:17px;color:var(--ink-soft);font-weight:400;max-width:60ch;}
+.card{background:#fffdf8;border:1px solid var(--line);border-radius:8px;padding:26px 22px;margin-top:26px;
+  box-shadow:0 18px 40px -34px rgba(0,0,0,.5);}
+.hint{font-size:13.5px;color:var(--muted);margin-top:10px;}
+
+/* controls */
+.btn{font-family:inherit;font-size:14px;font-weight:500;color:var(--ink-soft);background:var(--paper2);
+  border:1px solid var(--line2);border-radius:999px;padding:8px 18px;cursor:pointer;transition:.18s;}
+.btn:hover{border-color:var(--ink);}
+.btn.on{background:var(--red);color:#fff;border-color:var(--red);}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+select,input[type=number]{font-family:inherit;font-size:15px;padding:8px 12px;border:1px solid var(--line2);
+  border-radius:8px;background:#fff;color:var(--ink);}
+input[type=range]{width:100%;accent-color:var(--red);height:26px;}
+svg{display:block;width:100%;height:auto;overflow:visible;}
+
+/* A – width */
+.verdict{font-family:"Noto Serif TC",serif;font-weight:700;font-size:22px;margin-top:16px;}
+.verdict.bad{color:var(--red-d);} .verdict.ok{color:var(--teal-d);} .verdict.mid{color:#9a6a14;}
+.bignum{font-family:"Noto Serif TC",serif;font-weight:900;line-height:1;}
+
+/* B – calc output */
+.calcout{margin-top:20px;padding:20px;border-left:4px solid var(--red);background:#fff;border-radius:0 8px 8px 0;
+  font-size:17px;line-height:1.9;display:none;}
+.calcout.show{display:block;animation:fade .4s ease;}
+.calcout .k{font-family:"Noto Serif TC",serif;font-weight:900;font-size:34px;color:var(--red-d);}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* E – scrollytelling */
+.scrolly{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+.scrolly .sticky{position:sticky;top:120px;height:min(70vh,520px);align-self:start;
+  background:#fffdf8;border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;align-items:center;}
+.steps .step{min-height:78vh;display:flex;align-items:center;}
+.steps .step .box{background:rgba(255,253,248,.9);border:1px solid var(--line);border-left:4px solid var(--line2);
+  border-radius:0 8px 8px 0;padding:20px 22px;transition:.35s;}
+.steps .step.active .box{border-left-color:var(--red);box-shadow:0 14px 34px -28px rgba(0,0,0,.5);}
+.steps .step .box .n{font-family:"Noto Serif TC",serif;color:var(--red);font-weight:700;font-size:13px;letter-spacing:.2em;}
+.steps .step .box p{margin:.4em 0 0;font-size:18px;line-height:1.85;}
+.steps .step .box b{color:var(--red-d);}
+@media(max-width:720px){.scrolly{grid-template-columns:1fr;}.scrolly .sticky{position:sticky;top:56px;height:44vh;}.steps .step{min-height:70vh;}}
+.foot{padding:50px 24px 80px;text-align:center;color:var(--muted);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="labtop">🧪 <b>互動原型實驗室</b> — 這是實驗頁，不影響正式版（<code>index.html</code> / tag v1.0-baseline）</div>
+
+<div class="wrap">
+  <div style="padding:56px 0 10px">
+    <div class="tagline">PROTOTYPE LAB</div>
+    <h1 class="serif" style="font-size:clamp(30px,6vw,52px);font-weight:900;line-height:1.15;margin:.1em 0">四個鉤子，<br>先感覺，再讀字</h1>
+    <p class="lead" style="margin-top:14px">下面每一個都可以直接動手玩。玩完後我們再決定哪些「畢業」進正式版、要不要串成完整敘事。</p>
+  </div>
+</div>
+
+<!-- ============ A. 等比人行道 ============ -->
+<section class="proto" id="pA">
+  <div class="wrap">
+    <div class="tagline">方向 A · 身體感</div>
+    <h2>這條人行道，容得下一台輪椅跟一個人錯身嗎？</h2>
+    <p class="lead">數字很抽象，寬度是身體的事。拉動滑桿改變人行道寬度，看看誰過得去、誰被卡住。</p>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>寬度：<span class="bignum" id="A-w" style="font-size:30px;color:var(--red-d)">1.25</span> <span style="color:var(--muted)">公尺</span></div>
+        <div class="row" id="A-presets"></div>
+      </div>
+      <input type="range" id="A-range" min="0.8" max="3.2" step="0.05" value="1.25" style="margin-top:12px">
+      <div id="A-chart" style="margin-top:6px"></div>
+      <div class="verdict" id="A-verdict"></div>
+      <div class="hint" id="A-note"></div>
+    </div>
+    <p class="hint">＊全國仍有多縣市大量人行道淨寬不足 1.25 公尺；2.5 公尺才足以讓輪椅、嬰兒車與行人自在共用。</p>
+  </div>
+</section>
+
+<!-- ============ C. 同一把尺 ============ -->
+<section class="proto" id="pC">
+  <div class="wrap">
+    <div class="tagline">方向 C · 拆穿數字</div>
+    <h2>同一座城市，換一把尺，普及率當場變一個數字</h2>
+    <p class="lead">各縣市自報的「普及率」分母各說各話。選一個城市，切換成「同一把尺（市區道路總長）」，看它怎麼跳。</p>
+    <div class="card">
+      <div class="row" id="C-cities"></div>
+      <div style="margin:22px 0 6px;text-align:center">
+        <div class="bignum" id="C-num" style="font-size:clamp(56px,13vw,96px);color:var(--red)">54.64<span style="font-size:.4em">%</span></div>
+        <div id="C-den" style="color:var(--muted);font-size:14px;margin-top:2px"></div>
+      </div>
+      <div id="C-bar"></div>
+      <div class="row" style="margin-top:18px;justify-content:center">
+        <button class="btn" id="C-off">官方分母</button>
+        <button class="btn on" id="C-uni">同一把尺：市區道路總長</button>
+      </div>
+      <div class="hint" id="C-note" style="margin-top:16px;text-align:center"></div>
+    </div>
+    <p class="hint">＊新竹縣是反向案例：官方用「道路長×2」當分母，換成同一把尺後普及率反而<b>上升</b>——證明問題不是「灌水」，而是「沒有統一定義」。</p>
+  </div>
+</section>
+
+<!-- ============ B. 年齡計算機 ============ -->
+<section class="proto" id="pB">
+  <div class="wrap">
+    <div class="tagline">方向 B · 個人化</div>
+    <h2>照這個速度，你的城市補到八成，你幾歲？</h2>
+    <p class="lead">先進城市的人行道普及率多在八成以上。台灣全國平均每年只增加 0.87 個百分點——選你的城市、填你的年齡，算算看要等到民國幾年。</p>
+    <div class="card">
+      <div class="row">
+        <label>我住在
+          <select id="B-city"></select>
+        </label>
+        <label>我今年
+          <input type="number" id="B-age" min="1" max="99" value="22" style="width:80px"> 歲
+        </label>
+        <button class="btn on" id="B-go">算給我看</button>
+      </div>
+      <div class="calcout" id="B-out"></div>
+    </div>
+    <p class="hint">＊假設各縣市都以全國平均速度（+0.87 個百分點／年）成長，自民國 113 年底基準推估；僅為示意，非官方預測。</p>
+  </div>
+</section>
+
+<!-- ============ E. scrollytelling ============ -->
+<section class="proto" id="pE">
+  <div class="wrap">
+    <div class="tagline">方向 E · 結構</div>
+    <h2>圖固定，字隨你捲動——一次講一件事</h2>
+    <p class="lead">把長段落拆成一句一句的「步進」，圖表在旁邊即時反應。往下捲試試。</p>
+  </div>
+  <div class="wrap" style="max-width:1000px">
+    <div class="scrolly">
+      <div class="sticky"><div id="E-chart" style="width:100%"></div></div>
+      <div class="steps" id="E-steps">
+        <div class="step" data-step="0"><div class="box"><div class="n">民國 110</div><p>故事從這裡開始：全國市區人行道普及率 <b>36.68%</b>。</p></div></div>
+        <div class="step" data-step="1"><div class="box"><div class="n">110 → 113</div><p>三年過去。行政院喊「行人優先」，編了 <b>四百億</b>。</p></div></div>
+        <div class="step" data-step="2"><div class="box"><div class="n">結果</div><p>普及率停在 <b>39.29%</b>。三年，只動了 <b>2.61 個百分點</b>。</p></div></div>
+        <div class="step" data-step="3"><div class="box"><div class="n">而目標呢？</div><p>「一半道路都有人行道」還在 <b>50%</b> 那條線上——遙遙無期。</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="foot">互動原型實驗室 · 人行道資料專題 · feature/interactive-hooks 分支</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+function mk(t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function txt(x,y,s,a){const e=mk('text',Object.assign({x,y},a));e.textContent=s;return e;}
+function svg(w,h){const s=mk('svg',{viewBox:`0 0 ${w} ${h}`});s.setAttribute('width','100%');return s;}
+const C={ink:'#1b1a18',red:'#cf4636',redd:'#a8341f',teal:'#2c6e6a',amber:'#e0a13c',muted:'#736d62',line:'#ddd6c7',line2:'#c9c0ad'};
+
+/* =================== A. 等比人行道 =================== */
+const A_PXM=175; // px per metre
+// 站立行人（頭＋肩身капсула），寬 = 肩寬
+function drawWalker(g,cx,base,w,color,op){
+  const H=150,hr=15,bodyTop=base-H+hr*2;
+  const gg=mk('g',{opacity:op||1});g.appendChild(gg);
+  gg.appendChild(mk('rect',{x:cx-w/2,y:bodyTop,width:w,height:H-hr*2,rx:Math.min(w*0.32,26),fill:color}));
+  gg.appendChild(mk('circle',{cx,cy:bodyTop-hr+3,r:hr,fill:color}));
+  return gg;
+}
+// 輪椅使用者（坐姿＋大輪＋腳踏），寬 = 輪椅寬
+function drawChair(g,cx,base,w,color,op){
+  const hr=14,seatTop=base-96;
+  const gg=mk('g',{opacity:op||1});g.appendChild(gg);
+  gg.appendChild(mk('circle',{cx:cx+w*0.12,cy:base-30,r:32,fill:'none',stroke:color,'stroke-width':7}));       // 大輪
+  gg.appendChild(mk('circle',{cx:cx-w*0.42,cy:base-14,r:11,fill:'none',stroke:color,'stroke-width':4}));       // 前小輪
+  gg.appendChild(mk('rect',{x:cx-w*0.30,y:seatTop,width:w*0.62,height:44,rx:9,fill:color}));                   // 軀幹
+  gg.appendChild(mk('circle',{cx:cx-w*0.02,cy:seatTop-hr+2,r:hr,fill:color}));                                 // 頭
+  gg.appendChild(mk('rect',{x:cx-w*0.5,y:base-16,width:w*0.34,height:8,rx:4,fill:color}));                     // 腳踏
+  return gg;
+}
+function hatch(defs){
+  const p=mk('pattern',{id:'hx',width:8,height:8,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'});
+  p.appendChild(mk('rect',{width:8,height:8,fill:'#cf4636',opacity:.14}));
+  p.appendChild(mk('line',{x1:0,y1:0,x2:0,y2:8,stroke:'#cf4636','stroke-width':3,opacity:.55}));
+  defs.appendChild(p);
+}
+function drawA(){
+  const w_m=parseFloat(document.getElementById('A-range').value);
+  document.getElementById('A-w').textContent=w_m.toFixed(2);
+  const box=document.getElementById('A-chart');box.innerHTML='';
+  const W=700,H=250,base=H-40;
+  const s=svg(W,H);const defs=mk('defs',{});s.appendChild(defs);hatch(defs);
+  const wpx=w_m*A_PXM, x0=(W-wpx)/2, x1=x0+wpx;
+  // 車道（人行道外側）
+  s.appendChild(mk('rect',{x:0,y:base+3,width:W,height:30,fill:'#2c2a26'}));
+  s.appendChild(txt(W-10,base+22,'車道',{'text-anchor':'end',fill:'#cfc8b8','font-size':11,'letter-spacing':'.1em'}));
+  // 人行道鋪面
+  s.appendChild(mk('rect',{x:x0,y:40,width:wpx,height:base-40,fill:'#efeae0'}));
+  s.appendChild(mk('rect',{x:x0-6,y:40,width:6,height:base-40,fill:C.line2}));           // 內側緣石
+  s.appendChild(mk('rect',{x:x1,y:40,width:6,height:base-40,fill:C.ink}));               // 臨車道緣石
+  // 寬度標註
+  s.appendChild(mk('line',{x1:x0,x2:x1,y1:30,y2:30,stroke:C.muted,'stroke-width':1}));
+  s.appendChild(mk('line',{x1:x0,x2:x0,y1:26,y2:34,stroke:C.muted}));
+  s.appendChild(mk('line',{x1:x1,x2:x1,y1:26,y2:34,stroke:C.muted}));
+  s.appendChild(txt(W/2,24,w_m.toFixed(2)+' 公尺',{'text-anchor':'middle',fill:C.muted,'font-size':12.5,'font-weight':600}));
+  // 兩位使用者：行人靠內側、輪椅臨車道，對向錯身
+  const pW=0.6*A_PXM, wW=0.8*A_PXM, pad=0;
+  const pRight = x0+pad+pW;          // 行人右緣
+  const wLeft  = x1-pad-wW;          // 輪椅左緣
+  const overlapPx = pRight - wLeft;  // >0 表示重疊
+  const g=mk('g',{});s.appendChild(g);
+  if(overlapPx<=0){
+    // 錯身成功
+    drawWalker(g,x0+pad+pW/2,base,pW,C.teal);
+    drawChair(g,x1-pad-wW/2,base,wW,C.red);
+    if(overlapPx<-10){ // 有餘裕，畫綠色間距
+      const gx1=pRight,gx2=wLeft;
+      s.appendChild(mk('line',{x1:gx1,x2:gx2,y1:base-70,y2:base-70,stroke:C.teal,'stroke-width':1.5}));
+      s.appendChild(txt((gx1+gx2)/2,base-78,'餘裕 '+((wLeft-pRight)/A_PXM*100).toFixed(0)+' cm',{'text-anchor':'middle',fill:C.teal,'font-size':11.5,'font-weight':600}));
+    }
+  }else{
+    // 擠不下：兩者半透明重疊，中間畫紅色衝突帶
+    drawWalker(g,x0+pad+pW/2,base,pW,C.muted,.85);
+    drawChair(g,x1-pad-wW/2,base,wW,C.red,.85);
+    s.appendChild(mk('rect',{x:wLeft,y:44,width:overlapPx,height:base-44,fill:'url(#hx)',stroke:C.red,'stroke-dasharray':'4 3'}));
+    s.appendChild(txt((wLeft+pRight)/2,base-78,'差 '+(overlapPx/A_PXM*100).toFixed(0)+' cm',{'text-anchor':'middle',fill:C.red,'font-size':13,'font-weight':700}));
+  }
+  box.appendChild(s);
+  // 判語
+  const v=document.getElementById('A-verdict'),n=document.getElementById('A-note');
+  const needPass=(0.6+0.8), needComfort=1.65;
+  if(w_m<0.9){v.className='verdict bad';v.textContent='連一個人，都走得勉強。';n.textContent='輪椅與嬰兒車幾乎無法通行，只能被迫下到車道與汽機車爭道。';}
+  else if(w_m<needPass){v.className='verdict bad';v.textContent='一位行人與一台輪椅，過不去。';n.textContent=`兩者並肩至少需 ${needPass.toFixed(2)} 公尺，目前差 ${((needPass-w_m)*100).toFixed(0)} 公分——有人得停下、退到路邊讓行。`;}
+  else if(w_m<needComfort){v.className='verdict mid';v.textContent='勉強錯身，但沒有餘裕。';n.textContent='只要遇到一根電線桿、一個變電箱或一台違停機車，就會被卡死。';}
+  else{v.className='verdict ok';v.textContent='輪椅、嬰兒車、行人，都能自在共用。';n.textContent='這才是「人本交通」該有的基本尺度。';}
+}
+(function initA(){
+  const pr=document.getElementById('A-presets');
+  [['0.90','狹窄'],['1.25','法規下限'],['2.50','理想']].forEach(([v,l])=>{
+    const b=document.createElement('button');b.className='btn';b.textContent=l;
+    b.onclick=()=>{document.getElementById('A-range').value=v;drawA();};pr.appendChild(b);
+  });
+  document.getElementById('A-range').addEventListener('input',drawA);drawA();
+})();
+
+/* =================== C. 同一把尺 =================== */
+const C_DATA={
+  '桃園市':{off:54.64,uni:11.69,offDen:'可施作人行道的道路',uniDen:'市區道路總長 9,701 km',
+    note:'人行道 1,133.7 km。分母只算「可施作」的路，普及率就從 11.69% 膨脹成 54.64%。'},
+  '臺南市':{off:39.19,uni:20.78,offDen:'有人行道＋無人行道道路',uniDen:'道路總長 4,650 km',
+    note:'人行道 966.5 km。把分母限縮，普及率幾乎翻倍。'},
+  '新竹縣':{off:22.59,uni:45.18,offDen:'道路長 × 2（雙側計）',uniDen:'道路總長 × 1',
+    note:'反向案例：官方把分母乘二，數字反而被「做低」。同一把尺下其實有 45.18%。'}
+};
+let C_city='桃園市',C_mode='uni';
+function drawCbar(){
+  const d=C_DATA[C_city],val=C_mode==='off'?d.off:d.uni;
+  const box=document.getElementById('C-bar');box.innerHTML='';
+  const W=700,H=64,m=40,maxV=100;const s=svg(W,H);
+  s.appendChild(mk('rect',{x:m,y:20,width:W-m*2,height:24,rx:12,fill:C.line}));
+  const bw=(val/maxV)*(W-m*2);
+  const bar=mk('rect',{x:m,y:20,width:2,height:24,rx:12,fill:C_mode==='off'?C.muted:C.red});
+  s.appendChild(bar);
+  // ghost of the other value
+  const other=C_mode==='off'?d.uni:d.off;
+  s.appendChild(mk('rect',{x:m,y:20,width:(other/maxV)*(W-m*2),height:24,rx:12,fill:'none',stroke:C.line2,'stroke-dasharray':'5 4'}));
+  for(let g=0;g<=100;g+=25){const gx=m+(g/100)*(W-m*2);s.appendChild(txt(gx,H-4,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11}));}
+  box.appendChild(s);
+  requestAnimationFrame(()=>{bar.style.transition='width .7s cubic-bezier(.3,1,.4,1)';bar.setAttribute('width',Math.max(4,bw));});
+  // number + labels
+  document.getElementById('C-num').innerHTML=val.toFixed(2)+'<span style="font-size:.4em">%</span>';
+  document.getElementById('C-num').style.color=C_mode==='off'?C.muted:C.red;
+  document.getElementById('C-den').textContent='分母：'+(C_mode==='off'?d.offDen:d.uniDen);
+  document.getElementById('C-note').textContent=d.note;
+  document.getElementById('C-off').className='btn'+(C_mode==='off'?' on':'');
+  document.getElementById('C-uni').className='btn'+(C_mode==='uni'?' on':'');
+}
+(function initC(){
+  const row=document.getElementById('C-cities');
+  Object.keys(C_DATA).forEach((c,i)=>{const b=document.createElement('button');b.className='btn'+(i===0?' on':'');
+    b.textContent=c;b.onclick=()=>{C_city=c;[...row.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');drawCbar();};row.appendChild(b);});
+  document.getElementById('C-off').onclick=()=>{C_mode='off';drawCbar();};
+  document.getElementById('C-uni').onclick=()=>{C_mode='uni';drawCbar();};
+  drawCbar();
+})();
+
+/* =================== B. 年齡計算機 =================== */
+const B_CITY=[['全國平均',39.29],['臺北市',72.1],['臺中市',71.88],['宜蘭縣',56.58],['桃園市',54.64],['嘉義市',49.62],['臺南市',39.19],['彰化縣',35.83],['基隆市',33.59],['苗栗縣',30.61],['新竹市',28.6],['南投縣',27.05],['新竹縣',22.59],['屏東縣',19.7],['花蓮縣',18.93],['嘉義縣',17.5],['金門縣',11.4],['澎湖縣',7.7]];
+const PACE=0.87, BASE_ROC=113;
+(function initB(){
+  const sel=document.getElementById('B-city');
+  B_CITY.forEach(([n,v])=>{const o=document.createElement('option');o.value=v;o.textContent=n;sel.appendChild(o);});
+  sel.value=39.29;
+  document.getElementById('B-go').onclick=()=>{
+    const cur=parseFloat(sel.value),age=parseInt(document.getElementById('B-age').value)||0;
+    const name=sel.options[sel.selectedIndex].textContent;
+    const out=document.getElementById('B-out');out.classList.add('show');
+    const NOW_ROC=115;
+    if(cur>=80){
+      out.innerHTML=`<b>${name}</b> 帳面上已達八成（${cur}%）。<br>但別忘了——這個數字用的是哪一把尺，本身就是問題。`;
+      return;
+    }
+    const roc80=Math.round(BASE_ROC+(80-cur)/PACE), roc50=Math.round(BASE_ROC+(50-cur)/PACE);
+    const wait80=Math.max(0,roc80-NOW_ROC), wait50=Math.max(0,roc50-NOW_ROC);
+    // 主：補到八成
+    let sec;
+    if(cur>=50) sec=`<span style="color:var(--muted);font-size:15px">你的城市連一半都超過了（${cur}%）——但要邁向八成，仍是 ${wait80} 年後的事。</span>`;
+    else sec=`<span style="color:var(--muted);font-size:15px">就算只求「一半」，也要等到民國 ${roc50} 年（你 ${age+wait50} 歲）。</span>`;
+    out.innerHTML=`在 <b>${name}</b>（目前 ${cur}%），若照全國速度：<br>
+      補到「八成道路有人行道」還要 <span class="k">${wait80}</span> 年，<br>
+      那是 <b>民國 ${roc80} 年</b>，你會是 <b>${age+wait80} 歲</b>。<br>${sec}`;
+  };
+})();
+
+/* =================== E. scrollytelling =================== */
+let E_state=0;
+function drawE(){
+  const box=document.getElementById('E-chart');box.innerHTML='';
+  const W=460,H=420,m={t:30,r:40,b:40,l:46};
+  const s=svg(W,H);
+  const yrs=[110,111,112,113], vals=[36.68,38.18,38.04,39.29];
+  const x=i=>m.l+i*((W-m.l-m.r)/3);
+  const y=v=>m.t+(1-v/100)*(H-m.t-m.b);
+  for(let g=0;g<=100;g+=25){s.appendChild(mk('line',{x1:m.l,x2:W-m.r,y1:y(g),y2:y(g),stroke:C.line,'stroke-dasharray':'2 4'}));
+    s.appendChild(txt(m.l-10,y(g)+4,g+'%',{'text-anchor':'end',fill:C.muted,'font-size':11}));}
+  yrs.forEach((yr,i)=>s.appendChild(txt(x(i),H-16,'民國'+yr,{'text-anchor':'middle',fill:C.muted,'font-size':11})));
+  // 50% goal (state>=3)
+  if(E_state>=3){
+    s.appendChild(mk('line',{x1:m.l,x2:W-m.r,y1:y(50),y2:y(50),stroke:C.teal,'stroke-dasharray':'6 4','stroke-width':1.5}));
+    s.appendChild(txt(W-m.r,y(50)-8,'目標 50%',{'text-anchor':'end',fill:C.teal,'font-size':11,'font-weight':600}));
+  }
+  // line: full when state>=1
+  const upto = E_state>=1?4:1;
+  let d=`M ${x(0)} ${y(vals[0])}`;for(let i=1;i<upto;i++)d+=` L ${x(i)} ${y(vals[i])}`;
+  s.appendChild(mk('path',{d,fill:'none',stroke:C.red,'stroke-width':3.5,'stroke-linejoin':'round'}));
+  for(let i=0;i<upto;i++)s.appendChild(mk('circle',{cx:x(i),cy:y(vals[i]),r:5,fill:'#fffdf8',stroke:C.red,'stroke-width':3}));
+  // start label
+  s.appendChild(txt(x(0)+10,y(36.68)-12,'36.68%',{fill:C.redd||'#a8341f','font-size':12,'font-weight':700}));
+  if(E_state>=1)s.appendChild(txt(x(3)-6,y(39.29)-12,'39.29%',{'text-anchor':'end',fill:'#a8341f','font-size':12,'font-weight':700}));
+  // gap annotation state>=2
+  if(E_state>=2){
+    s.appendChild(mk('line',{x1:x(3)+16,x2:x(3)+16,y1:y(36.68),y2:y(39.29),stroke:C.ink,'stroke-width':1}));
+    s.appendChild(txt(x(3)+22,(y(36.68)+y(39.29))/2,'+2.61',{fill:C.ink,'font-size':12,'font-weight':700}));
+  }
+  box.appendChild(s);
+}
+(function initE(){
+  drawE();
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){const st=+e.target.dataset.step;
+      document.querySelectorAll('#E-steps .step').forEach(x=>x.classList.remove('active'));
+      e.target.classList.add('active');
+      if(st!==E_state){E_state=st;drawE();}
+    }
+  }),{rootMargin:'-45% 0px -45% 0px'});
+  document.querySelectorAll('#E-steps .step').forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>
