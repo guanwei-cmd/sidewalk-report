@@ -125,6 +125,12 @@ a{color:var(--red-d);text-underline-offset:3px;}
 
 /* ---------- 組隊過人行道 builder ---------- */
 .builder{max-width:900px;margin:26px auto 0;padding:0 14px;}
+.bpresets{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
+.bpresets .pbtn{font-family:inherit;font-size:13px;color:var(--ink-soft);background:#fffdf8;
+  border:1.5px solid var(--line2);border-radius:999px;padding:6px 14px;cursor:pointer;transition:.18s;}
+.bpresets .pbtn:hover{border-color:var(--red);}
+.bpresets .pbtn.on{background:var(--red);border-color:var(--red);color:#fff;}
+.bpresets .plabel{font-size:12px;color:var(--muted);align-self:center;margin-right:2px;}
 .bshelf{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
 .bitem{display:inline-flex;align-items:center;gap:8px;background:#fffdf8;border:1.5px solid var(--line2);
   border-radius:999px;padding:6px 8px 6px 14px;font-size:14px;color:var(--ink);}
@@ -371,6 +377,7 @@ footer a{color:#e7b86a;}
   <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">這條人行道，<br>裝得下<span class="hl">你的家人</span>嗎？</h1>
   <p class="dek">把要一起出門的人放上人行道橫斷面——<br>看看你住的縣市，有幾成人行道走得下這一組。</p>
   <div class="builder">
+    <div class="bpresets" id="bpresets"></div>
     <div class="bshelf" id="bshelf"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
@@ -555,20 +562,8 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">參 · 能不能好好走</div>
   <h2 class="sec rv">不是有沒有，而是走不走得了你的日常</h2>
   <p class="rv">普及率回答「有沒有」，但你每天真正的問題是：<b>推著輪椅出得了門嗎？牽著小孩，對向來人時擠得過去嗎？</b>法規寫得清楚：人行道淨寬原則不得小於 1.5 公尺。但 1.5 公尺是什麼意思？——是一台輪椅（0.9m）與一個行人（0.6m）剛好交會的寬度。</p>
-  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。我們把幾種最日常的通行情境換算成需求寬度，回頭去問這份 <b>88,677 段</b>的資料：全台灣的人行道，有多少真的走得了？再進一步——<b>把分母換成「所有道路」</b>：因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會失真；能不能好好走，最終要看你出門會經過的每一條路。</p>
+  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：你可以按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），看你的縣市有幾成人行道走得下；再看下面那行「<b>把分母換成所有道路</b>」——因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會失真；能不能好好走，最終要看你出門會經過的每一條路。而多數縣市連全道路總長都沒揭露，想換算都換算不了。</p>
 </section>
-
-<div class="figure rv">
-  <div class="ftitle">哪些日常，走得進你縣市的人行道？</div>
-  <div class="fsub">選一種出門情境，看各縣市「淨寬走得下」的比例。再按「換算到所有道路」——把有人行道、且寬度夠的長度，除以該縣市<b>全道路總長</b>（僅報告有揭露總長的縣市能換算）。</div>
-  <div class="chartcard">
-    <div class="controls" id="ctl-scenario"></div>
-    <div class="controls" id="ctl-scenario-view" style="margin-top:-8px"></div>
-    <div id="chart-scenario"></div>
-    <div class="fsub" id="scenario-note" style="margin:14px 0 0"></div>
-  </div>
-  <div class="fsrc">情境需求寬度依「市區道路及附屬工程設計規範」通行淨寬概數加總（同首屏遊戲）。比例依國土署圖資淨寬逐段長度加權；「所有道路」分母＝各縣市健檢報告自載之全道路總長（省+縣+鄉+市區），未揭露者標「無法換算」。已剔除 9 筆長度登載錯誤段（共 352.5 公里虛長）後重算（詳文末〔3〕〔6〕）。</div>
-</div>
 
 <section class="wrap">
   <p class="rv">再把鏡頭拉遠，看整體寬度分布。這是同一份資料、同一把尺量出來的全國比較：最繁華的臺北，反而是最窄的都會之一——<b>33.0%</b> 的人行道寬度不足法定下限、超過半數（54.2%）的淨寬不到 1.5 公尺；新北市淨寬不足的比例更高達 <b>64.6%</b>。對照之下，臺南、臺中、高雄有六成五上下的人行道寬在 2.5 公尺以上。同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南卻可能寬到種得下一排行道樹。</p>
@@ -820,13 +815,13 @@ const PLACES_NOTE={
   transit:'22 縣市中只有新竹縣一個縣市公布「大眾運輸場站周邊」數字。',
   gov:'22 縣市中只有新竹縣一個縣市公布「政府機關周邊」數字。另臺南報告有商圈 79%、公園 64%、區公所 70% 三類自報值。',
 };
-/* 通行情境（需求寬度＝首屏遊戲之單元寬度加總） */
+/* 通行情境預設組合（首屏遊戲快捷鍵；需求寬度＝單元寬度加總） */
 const SCEN=[
-  {k:'solo', icon:'🚶',  name:'一個人走',       w:0.6,  mix:'大人 0.6m'},
-  {k:'pair', icon:'🚶🚶',name:'兩人並肩／交會',  w:1.2,  mix:'大人 0.6m × 2'},
-  {k:'wheel',icon:'♿🚶',name:'輪椅與行人交會',  w:1.5,  mix:'輪椅 0.9m ＋ 大人 0.6m（恰為法定下限）'},
-  {k:'kid',  icon:'🧒🚶',name:'牽小孩，對向有人',w:1.65, mix:'大人 0.6m ＋ 小孩 0.45m ＋ 對向大人 0.6m'},
-  {k:'wheel2',icon:'♿♿',name:'兩台輪椅交會',    w:1.8,  mix:'輪椅 0.9m × 2'},
+  {k:'solo', icon:'🚶',  name:'一個人走',       counts:{adult:1},         mix:'大人 0.6m'},
+  {k:'pair', icon:'🚶🚶',name:'兩人並肩／交會',  counts:{adult:2},         mix:'大人 0.6m × 2'},
+  {k:'wheel',icon:'♿🚶',name:'輪椅與行人交會',  counts:{wheel:1,adult:1}, mix:'輪椅 0.9m ＋ 大人 0.6m（恰為法定下限 1.5m）'},
+  {k:'kid',  icon:'🧒🚶',name:'牽小孩，對向有人',counts:{adult:2,kid:1},   mix:'大人 0.6m ＋ 小孩 0.45m ＋ 對向大人 0.6m'},
+  {k:'wheel2',icon:'♿♿',name:'兩台輪椅交會',    counts:{wheel:2},         mix:'輪椅 0.9m × 2'},
 ];
 const C={red:'#cf4636',amber:'#e0a13c',teal:'#2c6e6a',ink:'#1b1a18',muted:'#736d62',line:'#ddd6c7',red_d:'#a8341f'};
 
@@ -995,73 +990,7 @@ function drawPlaces(){
   if(note)note.textContent=PLACES_NOTE[placesCat]||'';
 }
 
-/* ===================== 3b. 情境換算 ===================== */
-let scenKey='wheel',scenView='sw';
-function buildScenarioCtl(){
-  const c=document.getElementById('ctl-scenario');if(!c)return;c.innerHTML='';
-  SCEN.forEach(sc=>{
-    const b=document.createElement('button');
-    b.className='btn'+(scenKey===sc.k?' on red':'');
-    b.textContent=`${sc.icon} ${sc.name}（需 ${sc.w.toFixed(2)}m）`;
-    b.title=sc.mix;
-    b.onclick=()=>{scenKey=sc.k;buildScenarioCtl();drawScenario();};c.appendChild(b);
-  });
-  const v=document.getElementById('ctl-scenario-view');if(!v)return;v.innerHTML='';
-  [['sw','占人行道的比例'],['road','換算到所有道路']].forEach(([k,t])=>{
-    const b=document.createElement('button');
-    b.className='btn'+(scenView===k?' on':'');b.textContent=t;
-    b.onclick=()=>{scenView=k;buildScenarioCtl();drawScenario();};v.appendChild(b);
-  });
-}
-function drawScenario(){
-  const box=document.getElementById('chart-scenario');if(!box)return;box.innerHTML='';
-  const sc=SCEN.find(s=>s.k===scenKey);
-  const rows=WIDTH.map(d=>{
-    const tName=toT(d.city), gName=toG(d.city);
-    const cdf=bPct(SWCDF[gName]?gName:d.city, sc.w);   // 淨寬 ≥ 需求寬之人行道長度占比
-    if(cdf==null)return null;
-    const km=d.total*cdf/100;
-    const rl=ROADLEN[tName];
-    return {city:tName,cdf,km,road:rl?+(km/rl*100).toFixed(2):null,thin:d.thin,fixed:d.fixed};
-  }).filter(Boolean);
-  const useRoad=scenView==='road';
-  const data=rows.sort((a,b)=>{
-    const va=useRoad?(a.road??-1):a.cdf, vb=useRoad?(b.road??-1):b.cdf;
-    return vb-va;
-  });
-  const maxV=useRoad?Math.max(30,...data.map(d=>d.road||0))*1.15:100;
-  const W=860,rowH=44,m={t:10,r:96,b:26,l:88};const H=m.t+m.b+data.length*rowH;
-  const s=svg(W,H);const xw=v=>(v/maxV)*(W-m.l-m.r);
-  const step=useRoad?Math.ceil(maxV/4/5)*5:25;
-  for(let g=0;g<=maxV;g+=step){const gx=m.l+xw(g);s.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b,class:'gridline'}));
-    s.appendChild(txt(gx,H-8,Math.round(g)+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11}));}
-  data.forEach((d,i)=>{
-    const yy=m.t+i*rowH+8;
-    const isYou=!!(userCity&&d.city===userCity);
-    const noVal=useRoad&&d.road==null;
-    const v=useRoad?d.road:d.cdf;
-    const nm=txt(m.l-12,yy+16,d.city+(d.thin?' ＊':''),{'text-anchor':'end',class:'cityname','font-size':13});
-    if(isYou){nm.setAttribute('fill',C.red_d);nm.setAttribute('font-weight',700);}
-    s.appendChild(nm);
-    if(noVal){
-      s.appendChild(txt(m.l+6,yy+16,'無法換算（全道路總長未揭露）',{fill:C.muted,'font-size':12}));
-      return;
-    }
-    const col=v<15?C.red:(v<40?C.amber:C.teal);
-    const bar=mk('rect',{x:m.l,y:yy,width:1,height:22,fill:isYou?C.red:col,rx:3});s.appendChild(bar);
-    requestAnimationFrame(()=>{bar.style.transition='width .7s cubic-bezier(.3,1,.4,1)';bar.setAttribute('width',Math.max(2,xw(v)));});
-    s.appendChild(txt(m.l+xw(v)+8,yy+16,v.toFixed(1)+'%',{'font-weight':700,fill:C.ink,'font-size':13}));
-    bind(bar,`<b>${d.city}</b>${d.thin?' ＊資料較少':''}<br>${sc.icon} ${sc.name}（${sc.mix}）<br>`+
-      `淨寬走得下：占人行道 <b>${d.cdf.toFixed(1)}%</b>（≈ ${d.km.toFixed(0)} km）`+
-      (d.road!=null?`<br>換算到全道路：<b>${d.road.toFixed(2)}%</b>（÷ 全道路 ${ROADLEN[d.city].toLocaleString()} km）`:'<br>全道路總長未揭露，無法換算')+
-      (d.fixed?'<br><span style="opacity:.8">⚠ '+d.fixed+'</span>':''));
-  });
-  box.appendChild(s);
-  const note=document.getElementById('scenario-note');
-  if(note)note.innerHTML= useRoad
-    ? '「換算到所有道路」＝（人行道總長 × 淨寬走得下比例）÷ 該縣市全道路總長。只看「占人行道比例」會失真——一個縣市可能人行道很少但剛好都很寬。分母僅 8 縣市之健檢報告有揭露（彰化、基隆因報告內部數字矛盾不列入）；其餘縣市無法換算，這件事本身就是問題。'
-    : `以「${sc.name}」需求淨寬 ${sc.w.toFixed(2)}m（${sc.mix}）對照各縣市人行道淨寬分布。淨寬比例分母為圖資中有填淨寬之路段。`;
-}
+/* （情境換算已整合進首屏遊戲：SCEN 快捷鍵＋「換算到所有道路」） */
 
 /* ===================== 3. WIDTH stacked ===================== */
 let widthMode='w',widthSort='desc';
@@ -1501,7 +1430,6 @@ function personalize(){
   if(ag&&userAge)ag.value=userAge;
   // 重繪各圖以顯示「你」標記
   if(document.getElementById('chart-city')&&document.getElementById('chart-city').childNodes.length)drawCity();
-  if(document.getElementById('chart-scenario')&&document.getElementById('chart-scenario').childNodes.length)drawScenario();
   if(document.getElementById('chart-alloc')&&document.getElementById('chart-alloc').childNodes.length)drawAlloc();
 }
 /* 「補到八成，你幾歲」——身份定錨即時推估（往前放進速覽卡） */
@@ -1693,19 +1621,58 @@ function drawB(){
   const pct=bPct(bCity,need);
   const col=pct>=50?C.teal:(pct>=25?'#9a6a14':C.red);
   const sel=`<select id="bcity" aria-label="選縣市">${Object.keys(SWCDF).map(c=>`<option${c===bCity?' selected':''}>${c}</option>`).join('')}</select>`;
-  out.innerHTML= need===0 ? `<div class="bnote">把要一起出門的組合加上來，看看需要多寬。</div>` :
+  out.innerHTML= need===0 ? `<div class="bnote">按上方情境快捷鍵、或自己把要一起出門的組合加上來，看看需要多寬。</div>` :
     `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
      <span class="pass" style="color:${col}">${pct.toFixed(1)}%</span>
      <div class="bbar"><i style="background:${col}"></i></div>
-     <div class="bnote">的人行道淨寬走得下這一組${bCity!=='全國'?`（全國 ${bPct('全國',need).toFixed(1)}%）`:''}${need>1.5?'':'　·　法定下限 1.5m'}</div>`;
+     <div class="bnote">的人行道淨寬走得下這一組${bCity!=='全國'?`（全國 ${bPct('全國',need).toFixed(1)}%）`:''}${need>1.5?'':'　·　法定下限 1.5m'}</div>
+     <div class="bnote" id="broad" style="margin-top:9px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.8"></div>`;
   const selEl=document.getElementById('bcity');
   if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
   requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,pct)+'%',50);});
+  // 換算到所有道路（避免「人行道少但寬」的帳面假象）
+  const rd=document.getElementById('broad');
+  if(rd){
+    if(need===0){rd.innerHTML='';}
+    else if(bCity==='全國'){
+      const km=10344.2*pct/100, rp=km/21666.73*100;
+      rd.innerHTML=`把分母換成<b>全部市區道路</b>（21,667 km）：走得下這一組的人行道 ≈ ${km.toFixed(0)} km，只覆蓋 <b style="color:var(--red-d)">${rp.toFixed(1)}%</b> 的路。`;
+    }else{
+      const tName=toT(bCity), wRow=WIDTH.find(d=>d.city===tName), rl=ROADLEN[tName];
+      if(wRow&&rl){
+        const km=wRow.total*pct/100, rp=km/rl*100;
+        rd.innerHTML=`把分母換成<b>全道路</b>（${bCity}報告自載 ${rl.toLocaleString()} km，省+縣+鄉+市區）：走得下這一組的人行道 ≈ ${km.toFixed(0)} km，只覆蓋 <b style="color:var(--red-d)">${rp.toFixed(1)}%</b> 的路。`;
+      }else{
+        rd.innerHTML=`想換算「在<b>所有道路</b>中有機會這樣走的比例」？${bCity}的健檢報告<b style="color:var(--red-d)">沒有揭露全道路總長</b>——連想算都算不了。`;
+      }
+    }
+  }
+  // 快捷情境按鈕高亮同步
+  const pc=document.getElementById('bpresets');
+  if(pc)[...pc.querySelectorAll('.pbtn')].forEach(b=>{
+    const sc=SCEN.find(s=>s.k===b.dataset.k);
+    if(!sc)return;
+    const match=B_ITEMS.every(it=>(bCounts[it.k]||0)===(sc.counts[it.k]||0));
+    b.classList.toggle('on',match);
+  });
 }
 function initGame(){
   const shelf=document.getElementById('bshelf');if(!shelf)return;
   if(userCity&&SWCDF[toG(userCity)])bCity=toG(userCity);   // 回訪者：還原上次縣市
   personalize();
+  // 情境快捷鍵：一鍵擺好預設組合
+  const pc=document.getElementById('bpresets');
+  if(pc){
+    pc.innerHTML='';
+    const lab=document.createElement('span');lab.className='plabel';lab.textContent='試試日常情境：';pc.appendChild(lab);
+    SCEN.forEach(sc=>{
+      const b=document.createElement('button');b.className='pbtn';b.dataset.k=sc.k;
+      const w=B_ITEMS.reduce((s,it)=>s+(sc.counts[it.k]||0)*it.w,0);
+      b.textContent=`${sc.icon} ${sc.name}`;b.title=`${sc.mix}｜需求淨寬 ${w.toFixed(2)}m`;
+      b.onclick=()=>{bCounts={...sc.counts};render();drawB();collect('preset',{preset:sc.k});};
+      pc.appendChild(b);
+    });
+  }
   const render=()=>{shelf.innerHTML='';
     B_ITEMS.forEach(it=>{
       const n=bCounts[it.k]||0;
@@ -1751,7 +1718,6 @@ function init(){
   drawNational();
   buildCityCtl();drawCity();buildDiffTable();
   buildPlacesCtl();drawPlaces();
-  buildScenarioCtl();drawScenario();
   buildWidthCtl();drawWidth();
   drawYears();
   buildAllocCtl();drawAlloc();
