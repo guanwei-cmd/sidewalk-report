@@ -375,14 +375,14 @@ footer a{color:#e7b86a;}
 <header class="hero" id="top" style="min-height:auto;padding-bottom:40px">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
   <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">這條人行道，<br>裝得下<span class="hl">你的家人</span>嗎？</h1>
-  <p class="dek">把要一起出門的人放上人行道橫斷面——<br>看看你住的縣市，有幾成人行道走得下這一組。</p>
+  <p class="dek">把要一起出門的人放上人行道橫斷面——<br>看看你住的縣市，有幾成<b>道路</b>真的走得下這一組。</p>
   <div class="builder">
     <div class="bpresets" id="bpresets"></div>
     <div class="bshelf" id="bshelf"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
     <div class="youcard" id="youcard"></div>
-    <div class="bsrc">寬度需求依「市區道路及附屬工程設計規範」通行淨寬概數；比例依國土署全國人行道圖資（2024-12，原始 88,677 段，剔除 9 筆屬性錯誤段）之<b>淨寬</b>逐段長度加權計算，未含側向淨距。</div>
+    <div class="bsrc">寬度需求依「市區道路及附屬工程設計規範」通行淨寬概數；比例依國土署全國人行道圖資（2024-12，原始 88,677 段，剔除 9 筆屬性錯誤段）之<b>淨寬</b>逐段長度加權計算，未含側向淨距。主數字分母＝<b>所有道路</b>：縣市用健檢報告自載之全道路總長（省+縣+鄉+市區，僅 8 縣市有揭露），全國用市區道路總長 21,667 km；未揭露總長之縣市退回「已鋪人行道」分母並明確標示。</div>
   </div>
   <div class="scrollcue" style="position:static;margin-top:34px">往下捲，看這些數字是怎麼被算出來的</div>
 </header>
@@ -562,7 +562,7 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">參 · 能不能好好走</div>
   <h2 class="sec rv">不是有沒有，而是走不走得了你的日常</h2>
   <p class="rv">普及率回答「有沒有」，但你每天真正的問題是：<b>推著輪椅出得了門嗎？牽著小孩，對向來人時擠得過去嗎？</b>法規寫得清楚：人行道淨寬原則不得小於 1.5 公尺。但 1.5 公尺是什麼意思？——是一台輪椅（0.9m）與一個行人（0.6m）剛好交會的寬度。</p>
-  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：你可以按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），看你的縣市有幾成人行道走得下；再看下面那行「<b>把分母換成所有道路</b>」——因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會失真；能不能好好走，最終要看你出門會經過的每一條路。而多數縣市連全道路總長都沒揭露，想換算都換算不了。</p>
+  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），它給你的主數字，分母<b>預設就是「所有道路」</b>——因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會好看得騙人；能不能好好走，最終要看你出門會經過的每一條路。而多數縣市連全道路總長都沒揭露，想換算都換算不了——遊戲裡選到這些縣市，你會直接看到這個缺口。</p>
 </section>
 
 <section class="wrap">
@@ -1616,35 +1616,41 @@ function drawB(){
     }}
   if(need===0)s.appendChild(txt(W/2,base-60,'← 按上方 ＋ 把人放上來',{'text-anchor':'middle',fill:C.muted,'font-size':14}));
   box.appendChild(s);
-  // 結果
+  // 結果（預設分母＝所有道路；只看人行道的比例降為輔助行）
   const out=document.getElementById('bout');if(!out)return;
-  const pct=bPct(bCity,need);
-  const col=pct>=50?C.teal:(pct>=25?'#9a6a14':C.red);
+  const pct=bPct(bCity,need);                                    // 已鋪人行道中走得下的比例
+  const natPct=bPct('全國',need);
+  const natRoad=10344.2*natPct/100/21666.73*100;                 // 全國：圖資人行道長 ÷ 市區道路總長
+  let roadPct=null, roadLine='', roadCaption='';
+  if(bCity==='全國'){
+    roadPct=natRoad;
+    roadCaption=`的<b>市區道路</b>，這一組真的走得過（有人行道、淨寬也夠；市區道路共 21,667 km）`;
+  }else{
+    const tName=toT(bCity), wRow=WIDTH.find(d=>d.city===tName), rl=ROADLEN[tName];
+    if(wRow&&rl){
+      roadPct=wRow.total*pct/100/rl*100;
+      roadCaption=`的<b>所有道路</b>，這一組真的走得過（有人行道、淨寬也夠；全道路 ${rl.toLocaleString()} km，${bCity}報告自載）`;
+    }
+  }
+  const primary = roadPct!=null ? roadPct : pct;
+  const col=primary>=50?C.teal:(primary>=25?'#9a6a14':C.red);
   const sel=`<select id="bcity" aria-label="選縣市">${Object.keys(SWCDF).map(c=>`<option${c===bCity?' selected':''}>${c}</option>`).join('')}</select>`;
+  const caption = roadPct!=null ? roadCaption : `的<b>已鋪人行道</b>淨寬走得下這一組`;
   out.innerHTML= need===0 ? `<div class="bnote">按上方情境快捷鍵、或自己把要一起出門的組合加上來，看看需要多寬。</div>` :
     `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
-     <span class="pass" style="color:${col}">${pct.toFixed(1)}%</span>
+     <span class="pass" style="color:${col}">${primary.toFixed(1)}%</span>
      <div class="bbar"><i style="background:${col}"></i></div>
-     <div class="bnote">的人行道淨寬走得下這一組${bCity!=='全國'?`（全國 ${bPct('全國',need).toFixed(1)}%）`:''}${need>1.5?'':'　·　法定下限 1.5m'}</div>
-     <div class="bnote" id="broad" style="margin-top:9px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.8"></div>`;
+     <div class="bnote">${caption}${need>1.5?'':'　·　法定下限 1.5m'}</div>
+     <div class="bnote" id="broad" style="margin-top:9px;max-width:620px;margin-left:auto;margin-right:auto;line-height:1.8"></div>`;
   const selEl=document.getElementById('bcity');
   if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
-  requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,pct)+'%',50);});
-  // 換算到所有道路（避免「人行道少但寬」的帳面假象）
+  requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,primary)+'%',50);});
   const rd=document.getElementById('broad');
   if(rd){
-    if(need===0){rd.innerHTML='';}
-    else if(bCity==='全國'){
-      const km=10344.2*pct/100, rp=km/21666.73*100;
-      rd.innerHTML=`把分母換成<b>全部市區道路</b>（21,667 km）：走得下這一組的人行道 ≈ ${km.toFixed(0)} km，只覆蓋 <b style="color:var(--red-d)">${rp.toFixed(1)}%</b> 的路。`;
+    if(roadPct!=null){
+      rd.innerHTML=`只看<b>已鋪人行道</b>的部分：${pct.toFixed(1)}% 淨寬走得下${bCity!=='全國'?`（全國 ${natPct.toFixed(1)}%；換算到全國市區道路 ${natRoad.toFixed(1)}%）`:''}——但人行道少的地方，這個數字會好看得騙人。`;
     }else{
-      const tName=toT(bCity), wRow=WIDTH.find(d=>d.city===tName), rl=ROADLEN[tName];
-      if(wRow&&rl){
-        const km=wRow.total*pct/100, rp=km/rl*100;
-        rd.innerHTML=`把分母換成<b>全道路</b>（${bCity}報告自載 ${rl.toLocaleString()} km，省+縣+鄉+市區）：走得下這一組的人行道 ≈ ${km.toFixed(0)} km，只覆蓋 <b style="color:var(--red-d)">${rp.toFixed(1)}%</b> 的路。`;
-      }else{
-        rd.innerHTML=`想換算「在<b>所有道路</b>中有機會這樣走的比例」？${bCity}的健檢報告<b style="color:var(--red-d)">沒有揭露全道路總長</b>——連想算都算不了。`;
-      }
+      rd.innerHTML=`⚠ 上面這個數字的分母<b>只有已鋪人行道</b>——想換算成「在所有道路中有機會這樣走的比例」，${bCity}的健檢報告<b style="color:var(--red-d)">沒有揭露全道路總長，連想算都算不了</b>（全國市區道路口徑為 ${natRoad.toFixed(1)}%）。`;
     }
   }
   // 快捷情境按鈕高亮同步
