@@ -1483,114 +1483,140 @@ function renderYouCard(){
 function bNeed(){let s=0;for(const it of B_ITEMS)s+=(bCounts[it.k]||0)*it.w;return Math.round(s*100)/100;}
 function bPct(city,w){const a=SWCDF[city];if(!a)return null;if(w<=0)return 100;
   const idx=Math.min(50,Math.ceil(w*10-1e-6));return a[idx];}
-/* --- 人形插畫（橫斷面正面視角，雙色調扁平風；每個圖佔滿自己的寬度格）--- */
+/* --- 人形插畫（chibi 圓潤風：2.5 頭身大頭、點眼、腮紅、微笑，參考動森／牧場物語）--- */
+const B_SKIN='#f7d3ac', B_BLUSH='#f2a196', B_INK2='#4a3b30';
 const B_PAL={
-  adult:  ['#2c6e6a','#1f5350'],
-  kid:    ['#e0a13c','#b97e23'],
-  wheel:  ['#cf4636','#a8341f'],
-  stroller:['#7a6a8f','#5d4f70'],
-  dog:    ['#a9812f','#7c5c17'],
-  cane:   ['#4a4640','#1b1a18'],
+  adult:   {cloth:'#5e9e97',dark:'#43776f',hair:'#5a4636'},
+  kid:     {cloth:'#f0b95e',dark:'#c98f3a',hair:'#4a3b2d'},
+  wheel:   {cloth:'#d97f6f',dark:'#b05f4e',hair:'#3f332a',chair:'#7d7489'},
+  stroller:{cloth:'#a795c0',dark:'#84709e',hair:'#6b4f3a'},
+  dog:     {cloth:'#e2b877',dark:'#c39348',hair:'#f6e8d3'},
+  cane:    {cloth:'#8d8579',dark:'#6d665c',hair:'#4a4034'},
 };
 function bShadow(g,cx,base,w){g.appendChild(mk('ellipse',{cx,cy:base+3,rx:w*0.42,ry:4.5,fill:'#1b1a18',opacity:.10}));}
-/* 站立人（正面）：頭、頸、肩斜軀幹、雙臂、雙腿 */
+function cuteFace(g,cx,cy,hr,opt={}){
+  const ey=cy+hr*0.18, ex=hr*0.36;
+  if(opt.glasses){
+    g.appendChild(mk('line',{x1:cx-hr*0.12,x2:cx+hr*0.12,y1:ey,y2:ey,stroke:'#2c2a26','stroke-width':Math.max(1.5,hr*0.09)}));
+    g.appendChild(mk('circle',{cx:cx-ex,cy:ey,r:hr*0.27,fill:'#2c2a26'}));
+    g.appendChild(mk('circle',{cx:cx+ex,cy:ey,r:hr*0.27,fill:'#2c2a26'}));
+    g.appendChild(mk('circle',{cx:cx-ex-hr*0.08,cy:ey-hr*0.09,r:hr*0.06,fill:'#fff',opacity:.7}));
+    g.appendChild(mk('circle',{cx:cx+ex-hr*0.08,cy:ey-hr*0.09,r:hr*0.06,fill:'#fff',opacity:.7}));
+  }else if(opt.sleep){
+    [[-1],[1]].forEach(([sg])=>g.appendChild(mk('path',{d:`M ${cx+sg*ex-hr*0.14} ${ey} q ${hr*0.14} ${hr*0.16} ${hr*0.28} 0`,stroke:B_INK2,'stroke-width':1.6,fill:'none','stroke-linecap':'round'})));
+  }else{
+    g.appendChild(mk('circle',{cx:cx-ex,cy:ey,r:Math.max(1.8,hr*0.115),fill:B_INK2}));
+    g.appendChild(mk('circle',{cx:cx+ex,cy:ey,r:Math.max(1.8,hr*0.115),fill:B_INK2}));
+  }
+  g.appendChild(mk('ellipse',{cx:cx-hr*0.58,cy:cy+hr*0.42,rx:hr*0.18,ry:hr*0.11,fill:B_BLUSH,opacity:.65}));
+  g.appendChild(mk('ellipse',{cx:cx+hr*0.58,cy:cy+hr*0.42,rx:hr*0.18,ry:hr*0.11,fill:B_BLUSH,opacity:.65}));
+  if(!opt.sleep)g.appendChild(mk('path',{d:`M ${cx-hr*0.13} ${cy+hr*0.45} q ${hr*0.13} ${hr*0.16} ${hr*0.26} 0`,stroke:B_INK2,'stroke-width':1.6,fill:'none','stroke-linecap':'round'}));
+}
+function cuteHair(g,cx,cy,hr,color,opt={}){
+  g.appendChild(mk('path',{d:`M ${cx-hr} ${cy-hr*0.05} a ${hr} ${hr} 0 0 1 ${hr*2} 0 z`,fill:color}));
+  [[-0.55],[0],[0.55]].forEach(([f])=>g.appendChild(mk('circle',{cx:cx+f*hr*0.60,cy:cy-hr*0.28+Math.abs(f)*hr*0.10,r:hr*0.24,fill:color})));
+  if(opt.pigtails){
+    g.appendChild(mk('circle',{cx:cx-hr*1.08,cy:cy+hr*0.06,r:hr*0.32,fill:color}));
+    g.appendChild(mk('circle',{cx:cx+hr*1.08,cy:cy+hr*0.06,r:hr*0.32,fill:color}));
+    g.appendChild(mk('circle',{cx:cx-hr*1.08,cy:cy-hr*0.18,r:hr*0.10,fill:'#cf4636'}));
+    g.appendChild(mk('circle',{cx:cx+hr*1.08,cy:cy-hr*0.18,r:hr*0.10,fill:'#cf4636'}));
+  }
+}
 function bPerson(g,cx,base,wpx,H,pal,opt={}){
-  const [c,d]=pal, sh=wpx*0.42;
-  const hr=H*0.13, headY=base-H+hr;
-  const legH=H*0.32, legW=Math.max(5,wpx*0.13);
-  const torsoTop=headY+hr*0.9, torsoBot=base-legH+4;
-  g.appendChild(mk('rect',{x:cx-legW-wpx*0.045,y:base-legH,width:legW,height:legH,rx:legW/2,fill:d}));
-  g.appendChild(mk('rect',{x:cx+wpx*0.045,y:base-legH,width:legW,height:legH,rx:legW/2,fill:d}));
-  g.appendChild(mk('path',{d:`M ${cx-sh} ${torsoTop+H*0.13}
-    Q ${cx-sh} ${torsoTop} ${cx-sh*0.45} ${torsoTop}
-    L ${cx+sh*0.45} ${torsoTop}
-    Q ${cx+sh} ${torsoTop} ${cx+sh} ${torsoTop+H*0.13}
-    Q ${cx+sh*0.93} ${torsoBot-H*0.05} ${cx+sh*0.6} ${torsoBot}
-    L ${cx-sh*0.6} ${torsoBot}
-    Q ${cx-sh*0.93} ${torsoBot-H*0.05} ${cx-sh} ${torsoTop+H*0.13} Z`,fill:c}));
-  const armW=Math.max(4.5,wpx*0.095), armT=torsoTop+H*0.13, armB=torsoBot-H*0.03;
-  g.appendChild(mk('rect',{x:cx-sh+armW*0.05,y:armT,width:armW,height:armB-armT,rx:armW/2,fill:d}));
-  if(!opt.noRightArm)g.appendChild(mk('rect',{x:cx+sh-armW*1.05,y:armT,width:armW,height:armB-armT,rx:armW/2,fill:d}));
-  g.appendChild(mk('rect',{x:cx-hr*0.34,y:headY+hr*0.55,width:hr*0.68,height:hr*0.75,fill:c}));
-  g.appendChild(mk('circle',{cx,cy:headY,r:hr,fill:c}));
-  return {torsoTop,armT,armB,sh};
+  const hr=H*0.27, headCy=base-H+hr;
+  const legH=H*0.15, legW=Math.max(6,wpx*0.11);
+  const bodyTop=headCy+hr*0.72, bodyBot=base-legH+4;
+  const bw=Math.min(wpx*0.66,H*0.55);
+  g.appendChild(mk('rect',{x:cx-legW-wpx*0.02,y:base-legH,width:legW,height:legH,rx:legW/2,fill:pal.dark}));
+  g.appendChild(mk('rect',{x:cx+wpx*0.02,y:base-legH,width:legW,height:legH,rx:legW/2,fill:pal.dark}));
+  g.appendChild(mk('rect',{x:cx-bw/2,y:bodyTop,width:bw,height:bodyBot-bodyTop,rx:bw*0.42,fill:pal.cloth}));
+  const armW=Math.max(5.5,wpx*0.095), armL=(bodyBot-bodyTop)*0.62;
+  g.appendChild(mk('rect',{x:cx-bw/2-armW*0.55,y:bodyTop+H*0.03,width:armW,height:armL,rx:armW/2,fill:pal.cloth}));
+  if(!opt.noRightArm)g.appendChild(mk('rect',{x:cx+bw/2-armW*0.45,y:bodyTop+H*0.03,width:armW,height:armL,rx:armW/2,fill:pal.cloth}));
+  g.appendChild(mk('circle',{cx,cy:headCy,r:hr,fill:B_SKIN}));
+  cuteHair(g,cx,headCy,hr,pal.hair,opt);
+  cuteFace(g,cx,headCy,hr,opt);
+  return {bodyTop,bodyBot,bw,hr,headCy,armW};
 }
 function bFig(g,kind,x,base,wpx){
-  const cx=x+wpx/2, pal=B_PAL[kind]||B_PAL.cane, [c,d]=pal;
+  const cx=x+wpx/2,pal=B_PAL[kind]||B_PAL.adult;
   const gg=mk('g',{});g.appendChild(gg);
   bShadow(gg,cx,base,wpx);
-  const HH=Math.max(122,Math.min(182,wpx*1.32));   // 身高隨格寬縮放，維持修長比例
-  if(kind==='adult'){ bPerson(gg,cx,base,wpx,HH,pal); }
-  else if(kind==='kid'){
-    const H=HH*0.72; bPerson(gg,cx,base,wpx,H,pal);
-    const hr=H*0.115, headY=base-H+hr;      // 雙馬尾
-    gg.appendChild(mk('circle',{cx:cx-hr*1.15,cy:headY+hr*0.15,r:hr*0.34,fill:d}));
-    gg.appendChild(mk('circle',{cx:cx+hr*1.15,cy:headY+hr*0.15,r:hr*0.34,fill:d}));
-  }
+  const HH=Math.max(122,Math.min(182,wpx*1.32));
+  if(kind==='adult'){bPerson(gg,cx,base,wpx,HH,pal);}
+  else if(kind==='kid'){bPerson(gg,cx,base,wpx,HH*0.74,pal,{pigtails:true});}
   else if(kind==='cane'){
-    const H=HH, p=bPerson(gg,cx,base,wpx,H,pal,{noRightArm:true});
-    const hr=H*0.115, headY=base-H+hr;      // 墨鏡帶
-    gg.appendChild(mk('rect',{x:cx-hr*0.9,y:headY-hr*0.25,width:hr*1.8,height:hr*0.5,rx:hr*0.25,fill:'#1b1a18'}));
-    const hx=cx+p.sh*0.9, hy=p.armT+(p.armB-p.armT)*0.45;
-    gg.appendChild(mk('rect',{x:cx+p.sh-wpx*0.12,y:p.armT,width:Math.max(4.5,wpx*0.11),height:hy-p.armT+8,rx:4,fill:d}));
-    const tipX=cx+wpx*0.46, tipY=base;      // 白手杖＋紅尖
-    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:tipY,stroke:'#c9c0ad','stroke-width':6.5,'stroke-linecap':'round',opacity:.5}));
-    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:tipY,stroke:'#fffdf8','stroke-width':4.6,'stroke-linecap':'round'}));
-    const fx=hx+(tipX-hx)*0.82, fy=hy+(tipY-hy)*0.82;
-    gg.appendChild(mk('line',{x1:fx,y1:fy,x2:tipX,y2:tipY,stroke:'#cf4636','stroke-width':4.6,'stroke-linecap':'round'}));
+    const p=bPerson(gg,cx,base,wpx,HH,pal,{glasses:true,noRightArm:true});
+    gg.appendChild(mk('rect',{x:cx+p.bw/2-p.armW*0.5,y:p.bodyTop+HH*0.03,width:p.armW,height:HH*0.16,rx:p.armW/2,fill:pal.cloth}));
+    const hx=cx+p.bw/2+p.armW*0.15, hy=p.bodyTop+HH*0.18, tipX=cx+wpx*0.46;
+    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:base,stroke:'#c9c0ad','stroke-width':6,'stroke-linecap':'round'}));
+    gg.appendChild(mk('line',{x1:hx,y1:hy,x2:tipX,y2:base,stroke:'#fffdf8','stroke-width':4.2,'stroke-linecap':'round'}));
+    const fx=hx+(tipX-hx)*0.8,fy=hy+(base-hy)*0.8;
+    gg.appendChild(mk('line',{x1:fx,y1:fy,x2:tipX,y2:base,stroke:'#cf4636','stroke-width':4.2,'stroke-linecap':'round'}));
   }
   else if(kind==='wheel'){
-    const wr=wpx*0.34, wy=base-wr;          // 兩大輪：輪圈+輻條+輪轂
-    [[-1],[1]].forEach(([s])=>{
-      const wx=cx+s*(wpx*0.5-wr*0.42);
-      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr,fill:'none',stroke:d,'stroke-width':6}));
-      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.55,fill:'none',stroke:d,'stroke-width':2,opacity:.55}));
-      gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.14,fill:d}));
-      [0,60,120].forEach(a=>{const r1=wr*0.16,r2=wr*0.52,rad=a*Math.PI/180;
-        gg.appendChild(mk('line',{x1:wx+r1*Math.cos(rad),y1:wy+r1*Math.sin(rad),x2:wx+r2*Math.cos(rad),y2:wy+r2*Math.sin(rad),stroke:d,'stroke-width':2,opacity:.55}));
-        gg.appendChild(mk('line',{x1:wx-r1*Math.cos(rad),y1:wy-r1*Math.sin(rad),x2:wx-r2*Math.cos(rad),y2:wy-r2*Math.sin(rad),stroke:d,'stroke-width':2,opacity:.55}));});
-    });
-    const seatW=wpx*0.5, seatY=wy-wr*0.5;            // 全部依 wpx 係數化
-    const torsoH=wpx*0.28, hr=wpx*0.085, headY=seatY-torsoH-hr*0.9;
-    gg.appendChild(mk('path',{d:`M ${cx-seatW*0.42} ${seatY-torsoH}
-      Q ${cx-seatW*0.42} ${seatY-torsoH-hr*0.6} ${cx-seatW*0.22} ${seatY-torsoH-hr*0.6}
-      L ${cx+seatW*0.22} ${seatY-torsoH-hr*0.6}
-      Q ${cx+seatW*0.46} ${seatY-torsoH-hr*0.6} ${cx+seatW*0.46} ${seatY-torsoH+hr*0.4}
-      L ${cx+seatW*0.5} ${seatY} L ${cx-seatW*0.5} ${seatY} Z`,fill:c}));   // 坐姿軀幹含圓肩
-    gg.appendChild(mk('rect',{x:cx-hr*0.32,y:headY+hr*0.6,width:hr*0.64,height:hr*0.8,fill:c}));
-    gg.appendChild(mk('circle',{cx,cy:headY,r:hr,fill:c}));
-    gg.appendChild(mk('rect',{x:cx-seatW/2-4,y:seatY,width:seatW+8,height:Math.max(7,wpx*0.05),rx:4,fill:d}));
-    gg.appendChild(mk('rect',{x:cx-seatW/2-4,y:seatY+Math.max(11,wpx*0.075),width:seatW+8,height:Math.max(5,wpx*0.033),rx:3,fill:d,opacity:.85}));
-    gg.appendChild(mk('rect',{x:cx-seatW*0.32,y:base-Math.max(7,wpx*0.045),width:seatW*0.64,height:Math.max(5,wpx*0.033),rx:3,fill:d}));
+    const wr=wpx*0.32, wx=cx-wpx*0.05, wy=base-wr;
+    const seatY=wy-wr*0.42, backX=wx-wr*0.9, bw=wr*1.15;
+    // 乘坐者（先畫，讓輪子壓在前面）
+    const hr=wpx*0.19, headCy=seatY-wpx*0.26-hr*0.5;
+    gg.appendChild(mk('rect',{x:backX+2,y:headCy+hr*0.7,width:bw,height:seatY-(headCy+hr*0.7)+5,rx:bw*0.4,fill:pal.cloth}));
+    gg.appendChild(mk('rect',{x:backX+bw*0.5,y:seatY,width:wr*0.95,height:8,rx:4,fill:pal.dark}));
+    gg.appendChild(mk('rect',{x:backX+bw*0.5+wr*0.95-8,y:seatY,width:8,height:wr*0.55,rx:4,fill:pal.dark}));
+    gg.appendChild(mk('circle',{cx:backX+bw*0.5,cy:headCy,r:hr,fill:B_SKIN}));
+    cuteHair(gg,backX+bw*0.5,headCy,hr,pal.hair);
+    cuteFace(gg,backX+bw*0.5,headCy,hr);
+    // 椅背＋把手＋座墊
+    gg.appendChild(mk('rect',{x:backX-7,y:seatY-wpx*0.33,width:9,height:wpx*0.37,rx:4.5,fill:pal.chair}));
+    gg.appendChild(mk('path',{d:`M ${backX-2} ${seatY-wpx*0.33} q -11 -3 -13 6`,stroke:pal.chair,'stroke-width':4,fill:'none','stroke-linecap':'round'}));
+    gg.appendChild(mk('rect',{x:backX-4,y:seatY-2,width:wr*1.35,height:8,rx:4,fill:pal.chair}));
+    // 大輪（厚框圓潤）＋前小輪＋踏板
+    gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr,fill:'none',stroke:pal.chair,'stroke-width':6}));
+    gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.52,fill:'none',stroke:pal.chair,'stroke-width':2,opacity:.45}));
+    [0,45,90,135].forEach(a=>{const r1=wr*0.16,r2=wr*0.5,rad=a*Math.PI/180;
+      gg.appendChild(mk('line',{x1:wx-r2*Math.cos(rad),y1:wy-r2*Math.sin(rad),x2:wx+r2*Math.cos(rad),y2:wy+r2*Math.sin(rad),stroke:pal.chair,'stroke-width':2,opacity:.45}));});
+    gg.appendChild(mk('circle',{cx:wx,cy:wy,r:wr*0.15,fill:pal.chair}));
+    gg.appendChild(mk('circle',{cx:cx+wpx*0.31,cy:base-7,r:7,fill:'#fffdf8',stroke:pal.chair,'stroke-width':4}));
+    gg.appendChild(mk('rect',{x:cx+wpx*0.2,y:base-5,width:wr*0.55,height:5,rx:2.5,fill:pal.chair}));
   }
   else if(kind==='stroller'){
-    const bw=wpx*0.86, bx=cx-bw/2, bodyT=base-64, bodyH=34, wr2=9.5;
-    gg.appendChild(mk('line',{x1:bx+4,y1:base-wr2,x2:bx+bw*0.3,y2:bodyT+bodyH,stroke:d,'stroke-width':4}));
-    gg.appendChild(mk('line',{x1:bx+bw-4,y1:base-wr2,x2:bx+bw*0.7,y2:bodyT+bodyH,stroke:d,'stroke-width':4}));
-    [[bx+4],[bx+bw-4]].forEach(([wx])=>{gg.appendChild(mk('circle',{cx:wx,cy:base-wr2,r:wr2,fill:'none',stroke:d,'stroke-width':4}));
-      gg.appendChild(mk('circle',{cx:wx,cy:base-wr2,r:2.6,fill:d}));});
-    gg.appendChild(mk('rect',{x:bx,y:bodyT,width:bw,height:bodyH,rx:10,fill:c}));
-    gg.appendChild(mk('path',{d:`M ${bx} ${bodyT} Q ${bx} ${bodyT-40} ${cx} ${bodyT-40} L ${cx} ${bodyT} Z`,fill:d}));
-    gg.appendChild(mk('circle',{cx:cx+bw*0.18,cy:bodyT-10,r:9,fill:'#f2d9b8'}));
-    gg.appendChild(mk('path',{d:`M ${cx+bw*0.18-9} ${bodyT-13} a 9 9 0 0 1 18 0 z`,fill:d}));
-    gg.appendChild(mk('line',{x1:bx+bw*0.92,y1:bodyT-2,x2:bx+bw*1.02,y2:bodyT-46,stroke:d,'stroke-width':4,'stroke-linecap':'round'}));
-    gg.appendChild(mk('line',{x1:bx+bw*0.72,y1:bodyT-46,x2:bx+bw*1.02,y2:bodyT-46,stroke:d,'stroke-width':5,'stroke-linecap':'round'}));
+    const bw=wpx*0.84,bx=cx-bw/2,bodyT=base-58,bodyH=30,wr2=10;
+    [[bx+10],[bx+bw-10]].forEach(([wx2])=>{
+      gg.appendChild(mk('line',{x1:wx2,y1:base-wr2,x2:wx2+(wx2<cx?6:-6),y2:bodyT+bodyH,stroke:pal.dark,'stroke-width':4}));
+      gg.appendChild(mk('circle',{cx:wx2,cy:base-wr2,r:wr2,fill:'#fffdf8',stroke:pal.dark,'stroke-width':4}));
+      gg.appendChild(mk('circle',{cx:wx2,cy:base-wr2,r:3,fill:pal.dark}));
+    });
+    // 寶寶（探頭、睡臉、呆毛）
+    const bhr=11,bhx=bx+bw*0.72,bhy=bodyT-1;
+    gg.appendChild(mk('circle',{cx:bhx,cy:bhy,r:bhr,fill:B_SKIN}));
+    gg.appendChild(mk('path',{d:`M ${bhx-bhr} ${bhy} a ${bhr} ${bhr} 0 0 1 ${bhr*2} 0 z`,fill:'#6b4f3a',opacity:.9}));
+    gg.appendChild(mk('path',{d:`M ${bhx} ${bhy-bhr} q 2 -6 7 -4`,stroke:'#6b4f3a','stroke-width':2.2,fill:'none','stroke-linecap':'round'}));
+    cuteFace(gg,bhx,bhy,bhr,{sleep:true});
+    // 籃身＋波浪蓬
+    gg.appendChild(mk('rect',{x:bx,y:bodyT,width:bw,height:bodyH,rx:14,fill:pal.cloth}));
+    gg.appendChild(mk('path',{d:`M ${bx} ${bodyT+8} Q ${bx-2} ${bodyT-38} ${bx+bw*0.52} ${bodyT-36} L ${bx+bw*0.52} ${bodyT+4}
+      q -${bw*0.09} 9 -${bw*0.17} 0 q -${bw*0.09} 9 -${bw*0.17} 0 q -${bw*0.09} 9 -${bw*0.18} 0 Z`,fill:pal.dark}));
+    gg.appendChild(mk('circle',{cx:bx+bw*0.17,cy:bodyT-14,r:3,fill:'#fffdf8',opacity:.55}));
+    // 手把
+    gg.appendChild(mk('path',{d:`M ${bx+bw-3} ${bodyT+5} q ${bw*0.15} -24 ${bw*0.07} -42`,stroke:pal.dark,'stroke-width':4.5,fill:'none','stroke-linecap':'round'}));
+    gg.appendChild(mk('line',{x1:bx+bw*0.85,y1:bodyT-38,x2:bx+bw+7,y2:bodyT-38,stroke:pal.dark,'stroke-width':5.5,'stroke-linecap':'round'}));
   }
   else if(kind==='dog'){
-    const bw=wpx*0.8, bx=cx-bw/2, bodyY=base-30, bodyH=19;
-    gg.appendChild(mk('path',{d:`M ${bx} ${bodyY+bodyH*0.5} Q ${bx} ${bodyY} ${bx+bw*0.18} ${bodyY}
-      L ${bx+bw*0.78} ${bodyY} Q ${bx+bw} ${bodyY} ${bx+bw} ${bodyY+bodyH*0.55}
-      Q ${bx+bw} ${bodyY+bodyH} ${bx+bw*0.8} ${bodyY+bodyH} L ${bx+bw*0.15} ${bodyY+bodyH}
-      Q ${bx} ${bodyY+bodyH} ${bx} ${bodyY+bodyH*0.5} Z`,fill:c}));
-    [[0.14],[0.32],[0.62],[0.82]].forEach(([f],i)=>gg.appendChild(mk('rect',{x:bx+bw*f-2.6,y:base-13,width:5.2,height:13,rx:2.6,fill:i%2?d:c})));
-    const hx=bx+bw+2, hy=bodyY-6;
-    gg.appendChild(mk('circle',{cx:hx,cy:hy,r:10,fill:c}));
-    gg.appendChild(mk('rect',{x:hx+4,y:hy-1,width:10,height:7.5,rx:3.5,fill:c}));
-    gg.appendChild(mk('circle',{cx:hx+13.5,cy:hy+1,r:2.2,fill:d}));
-    gg.appendChild(mk('path',{d:`M ${hx-6} ${hy-8} q -6 4 -4 14 q 5 2 7 -2 z`,fill:d}));
-    gg.appendChild(mk('path',{d:`M ${bx+1} ${bodyY+2} q -9 -6 -7 -16`,fill:'none',stroke:c,'stroke-width':4.5,'stroke-linecap':'round'}));
-    gg.appendChild(mk('rect',{x:hx-8,y:hy+6,width:14,height:4,rx:2,fill:'#cf4636'}));
-    gg.appendChild(mk('path',{d:`M ${hx-1} ${hy+8} Q ${cx-wpx*0.5} ${base-88} ${cx-wpx*0.62} ${base-118}`,fill:'none',stroke:d,'stroke-width':2.4,opacity:.8}));
+    const bw=wpx*0.66,bx=cx-bw/2,bodyY=base-26,bodyH=18;
+    gg.appendChild(mk('path',{d:`M ${bx+3} ${bodyY+3} q -11 -9 -3 -16 q 8 -6 11 2`,fill:'none',stroke:pal.cloth,'stroke-width':6,'stroke-linecap':'round'}));
+    gg.appendChild(mk('rect',{x:bx,y:bodyY,width:bw,height:bodyH,rx:bodyH/2,fill:pal.cloth}));
+    gg.appendChild(mk('ellipse',{cx:bx+bw*0.5,cy:bodyY+bodyH-2,rx:bw*0.3,ry:5.5,fill:pal.hair,opacity:.9}));
+    [[0.16],[0.36],[0.64],[0.84]].forEach(([f])=>gg.appendChild(mk('rect',{x:bx+bw*f-3,y:base-11,width:6,height:11,rx:3,fill:pal.cloth})));
+    const hx=bx+bw+2,hy=bodyY-8,hrD=13;
+    gg.appendChild(mk('path',{d:`M ${hx-hrD*0.8} ${hy-hrD*0.35} l -4 -11 l 10 4 z`,fill:pal.dark}));
+    gg.appendChild(mk('path',{d:`M ${hx+hrD*0.2} ${hy-hrD*0.8} l 2 -11 l 9 7 z`,fill:pal.dark}));
+    gg.appendChild(mk('circle',{cx:hx,cy:hy,r:hrD,fill:pal.cloth}));
+    gg.appendChild(mk('ellipse',{cx:hx+hrD*0.45,cy:hy+hrD*0.35,rx:hrD*0.5,ry:hrD*0.38,fill:pal.hair}));
+    gg.appendChild(mk('circle',{cx:hx+hrD*0.62,cy:hy+hrD*0.16,r:2.4,fill:'#3a3128'}));
+    gg.appendChild(mk('circle',{cx:hx-hrD*0.12,cy:hy-hrD*0.12,r:1.9,fill:'#3a3128'}));
+    gg.appendChild(mk('ellipse',{cx:hx-hrD*0.55,cy:hy+hrD*0.26,rx:3.2,ry:2,fill:B_BLUSH,opacity:.65}));
+    gg.appendChild(mk('ellipse',{cx:hx+hrD*0.5,cy:hy+hrD*0.74,rx:2.6,ry:3.4,fill:'#ef8d8d'}));
+    gg.appendChild(mk('rect',{x:hx-hrD*0.72,y:hy+hrD*0.6,width:hrD*1.1,height:4,rx:2,fill:'#cf4636'}));
+    gg.appendChild(mk('path',{d:`M ${hx-hrD*0.2} ${hy+hrD*0.7} Q ${cx-wpx*0.45} ${base-84} ${cx-wpx*0.6} ${base-116}`,fill:'none',stroke:'#8a6f4e','stroke-width':2.4,opacity:.85}));
   }
 }
 function drawB(){
