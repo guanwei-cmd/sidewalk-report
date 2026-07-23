@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>《每年不到 1%》v3 改版檢核對照表</title>
+<style>
+@page{size:A4 landscape;margin:12mm 10mm;}
+*{box-sizing:border-box;}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#1b1a18;margin:0;font-size:9.5pt;line-height:1.6;}
+h1{font-size:16pt;margin:0 0 2pt;}
+.meta{color:#736d62;font-size:8.5pt;margin-bottom:10pt;}
+h2{font-size:11.5pt;margin:14pt 0 6pt;padding-left:6pt;border-left:4px solid #cf4636;page-break-after:avoid;}
+table{width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{border:0.6pt solid #b9b2a3;padding:4pt 6pt;vertical-align:top;text-align:left;word-wrap:break-word;}
+th{background:#1b1a18;color:#fff;font-size:8.5pt;font-weight:600;}
+col.c0{width:15%;} col.c1{width:26%;} col.c2{width:34%;} col.c3{width:25%;}
+tr{page-break-inside:avoid;}
+td b{color:#a8341f;}
+.ok{display:inline-block;background:#e3efe6;color:#1f5350;border-radius:6pt;padding:0 5pt;font-size:8pt;font-weight:700;margin-right:3pt;}
+.num{color:#736d62;font-size:8pt;}
+.appendix td{font-size:9pt;}
+.foot{margin-top:10pt;color:#736d62;font-size:8pt;border-top:0.6pt solid #b9b2a3;padding-top:5pt;}
+</style>
+</head>
+<body>
+
+<h1>《每年不到 1%：台灣人行道的緩慢與失真》 v3 改版檢核對照表</h1>
+<div class="meta">審閱意見逐項 Before／After 對照＋資料查證方式　·　基準版本 v2.1（commit 1601d65）→ 交付版本 v3.3（commit f3b32d0）　·　線上版：guanwei-cmd.github.io/sidewalk-report　·　檢核日期：2026-07-23</div>
+
+<h2>一、重新定義「可以好好走」的標準</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已完成</span>數據對應真實生活情境（推輪椅實際空間、牽小孩交會寬度）</td>
+<td>首屏遊戲有人偶單元寬度，但寬度分析僅以法定 1.5m 單一門檻切分，無生活情境對應</td>
+<td>首屏遊戲內建五種日常情境快捷鍵，一鍵擺好組合：一個人走 <b>0.60m</b>／兩人並肩交會 <b>1.20m</b>／輪椅與行人交會 <b>1.50m</b>（輪椅 0.9＋行人 0.6，恰為法定下限）／牽小孩對向有人 <b>1.65m</b>（0.6＋0.45＋0.6）／兩台輪椅交會 <b>1.80m</b></td>
+<td>單元寬度依「市區道路及附屬工程設計規範」通行淨寬概數；比例依國土署圖資淨寬累積分布（0.1m 步進、長度加權）計算</td></tr>
+<tr><td><span class="ok">已完成</span>預設情境組合換算「在所有道路中有機會這樣走的比例」</td>
+<td>無此概念，遊戲只顯示「占人行道的比例」</td>
+<td>遊戲主數字<b>預設分母＝所有道路</b>：（人行道長 × 淨寬走得下比例）÷ 全道路總長。實例（輪椅與行人交會）：全國 <b>27.6%</b>、臺北 45.1%、<b>桃園 6.5%</b></td>
+<td>全道路總長取自 17 份健檢報告「道路長度組成」逐字重核（省＋縣＋鄉＋市區）；僅 8 縣市有揭露，彰化・基隆因報告內部數字矛盾不列入換算</td></tr>
+<tr><td><span class="ok">已完成</span>避免數據盲點（人行道少但寬 → 帳面虛高）</td>
+<td>僅呈現「人行道內」比例，無從辨識帳面虛高</td>
+<td>主數字改用所有道路分母後盲點現形（桃園：人行道內 57.7% vs 所有道路 6.5%）；未揭露總長的 14 縣市明確顯示「<b>連想算都算不了</b>」；輔助行加註「人行道少的地方，這個數字會好看得騙人」</td>
+<td>同上；另經原始圖資異常值剔除（見第四節）防止單筆錯誤造成的極端值</td></tr>
+</tbody></table>
+
+<h2>二、報告架構與段落調整</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已完成</span>整併前言與總體數據（8,000 km／2 萬 km 移最上方）</td>
+<td>前言、畫線遊戲、年齡計算機、總體數據、壹章標題彼此分離；21,666／8,511 km 藏在捲動步驟中</td>
+<td>壹章開頭即「八千公里的人行道，與兩萬公里的道路」，前言與總體數據（21,666 km／8,511 km／39.29%）合併於首段完整揭示</td>
+<td>數字沿用立法院預算中心《115 年度預算評估報告》表 1（國土署數據），未變動</td></tr>
+<tr><td><span class="ok">已完成</span>高雄進度與健檢報告移回第一部分，盤點補上其他縣市（<b>四縣市並列，不單獨突顯高雄</b>）</td>
+<td>高雄「73–131 年」圖置於伍章（預算）內，且整張圖只講高雄一個縣市</td>
+<td>移入壹章，改為<b>四縣市並列圖</b>（同尺度 km/年）：高雄 新增 5–9／桃園 9／臺南 3＋改善 5／新北 2.4–3.6＋改善 12；高雄缺口 656.64 km → 73–131 年降為列內警示標記；圖下註明「其餘 18 縣市無任何量化目標」</td>
+<td>逐份重查 22 縣市健檢報告與建設計畫，僅高雄、新北、臺南、桃園載有分年量化目標（出處：各報告改善方案章節，逐項記錄於資料附件蒐集記錄）</td></tr>
+<tr><td><span class="ok">已完成</span>精簡第二部分：只留「自報排行」＋「落差比較表」，四類口徑改文字</td>
+<td>貳章含捲動式排行圖（口徑上色＋同尺切換）、四種分母口徑大卡片 ×4、新竹縣重點場所與校園兩組捲動圖</td>
+<td>貳章僅剩兩張：①各縣市自報普及率排行（可排序）②「自報 vs 同一把尺」落差比較表（高報幅度以紅字強調，桃園 +42.95pp、臺南 +19.92pp；無法換算者如實標示）；四種口徑收斂為一段文字；重點場所移為章末獨立補充層</td>
+<td>落差表校正值全數出自 17 份健檢報告逐字重核表（報告自載全道路總長才校正、未載不臆測）</td></tr>
+<tr><td><span class="ok">已完成</span>無數據項目（佔用、標線型）獨立 1–2 段文字</td>
+<td>佔用為獨立小節（2 段＋2 則引句）；標線型獨占整個肆章（3 大段＋引句＋2 個補述節）</td>
+<td>合併為「兩件量不到的事：佔用，與標線型」單一短節：各 1 段＋收尾 1 句，章節編號同步重排為壹～伍</td>
+<td>—（純架構調整；「全國無佔用率統計」「圖資無標線型欄位」之查證結論維持原樣）</td></tr>
+</tbody></table>
+
+<h2>三、視覺與圖表呈現優化</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已完成</span>取消動態滾動特效，統一固定圖表</td>
+<td>5 組 scrollytelling（全國曲線／縣市排行／重點場所／校園／寬度），sticky 大圖＋步進文案</td>
+<td>全數移除（HTML 結構、JS 引擎、CSS 共刪逾萬字元），統一改為固定圖表＋排序／切換按鈕，讀者自行檢視</td>
+<td>移除後以殘留參照掃描＋DOM 模擬執行驗證無斷點</td></tr>
+<tr><td><span class="ok">已完成</span>重點場所不只校園，整合其他類別可切換</td>
+<td>「校園周邊」跨縣市與「新竹縣四類」是兩張分開的捲動圖</td>
+<td>同一張圖四類按鈕切換：校園周邊（<b>12 縣市</b>有數字）／醫療院所（<b>3</b>）／大眾運輸場站（<b>1</b>）／政府機關（<b>1</b>），每類並列「未公布縣市」名單——類別越重要、數字越稀少，缺口本身成為訊息</td>
+<td>逐份盤點 22 縣市報告：非校園類分項僅新竹縣（4 類）、臺南（醫療 40%＋商圈/公園/區公所）、苗栗（醫療 11.62%）有數字；臺北僅載平均 64.6%、桃園僅載區間，不列入圖表</td></tr>
+</tbody></table>
+
+<h2>四、數據檢核與清理（國土署 dataset 58791）</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已完成・懷疑證實</span>新竹市／縣數據異常排查（疑某段灌水兩百多公里）</td>
+<td>新竹市帳面總長 537.36 km、「寬度 ≥2.5m 占 72.4%」<b>居全國之冠</b>、淨寬不足僅 19.7%</td>
+<td><b>審閱者懷疑完全命中</b>：中華路六段一段 SW_LENG 登載 274,875 m、幾何實際約 900 m，單筆灌水 274.9 km。剔除後新竹市 262.5 km、≥2.5m 掉到 44.2%、淨寬不足翻倍至 39.9%，「居冠」假象消失。新竹縣檢查無異常（276.05 km 維持）。<br>並延伸鑑識<b>全國全部 14 筆逾 5 km 長段</b>：共剔除 9 筆／352.5 km 虛長（基隆信一路 ×2、連江山線 ×2、臺中霧峰 ×2、花蓮東大門夜市、苗栗經國路亦中招），5 筆幾何合理者保留（臺東馬亨亨大道等）；淨寬不足比例與淨寬累積分布以統一方法重算，22 縣市＋全國恆等收斂（diff＝0.00）；總段數之爭定案 88,677（統計採用 88,668）</td>
+<td>下載 SIDEWALK_202412 原始 GeoJSON 兩檔 → 先<b>逐位重現</b>網站原數字確認同版 → 對每筆長段計算三重幾何指標（bbox 對角線／面積÷寬度等效長／周長之半）→「屬性長度逾 bbox 對角線 5 倍」判定錯誤 → 統一剔除重算。鑑識程式與逐筆證據公開於 repo <span class="num">data/圖資鑑識_202607/</span>，任何人可重跑驗證</td></tr>
+</tbody></table>
+
+<h2>五、預算與執行狀況（400 億）</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已完成</span>刪除官方「預算結構與工程目標」定義，拉回縣市執行狀況</td>
+<td>「400 億的結構」圖：部會分工／內政部逐年預算／至 116 年工程目標三種官方視角切換</td>
+<td>整組刪除；伍章（現肆章）改聚焦「誰拿得多、誰拿得少」的縣市分配</td>
+<td>—</td></tr>
+<tr><td><span class="ok">已完成</span>「各縣市提案數 vs 獲分配金額」統計圖</td>
+<td>無此圖；內文自承「沒有一張乾淨的『各縣市分到多少』總表，得逐案去拼」</td>
+<td>完成第一張完整 22 縣市分配圖：<b>816 案／中央補助 146.0 億</b>（累計至 115.05.05），可切換中央補助／總經費／核定案數，金額條同框標示案數。高雄 106 案 21.5 億居冠、臺南 87 案 17.2 億；連江 5 案 0.83 億、澎湖 8 案 1.33 億；宜蘭前兩批掛零。誠實揭露：落選提案縣市別未公開，以「核定案數」替代「提案數」並於內文說明</td>
+<td>國土署「人本道路資訊網」內政部核定案件專區 7 批核定表 PDF 逐案解析加總；與內政部新聞稿（第 1 批 175 案／27 億）及臺中、新竹縣、嘉義市、苗栗、桃園、屏東 6 縣市新聞稿交叉驗證<b>分毫不差</b>；縣市×批次矩陣 CSV 公開於 repo <span class="num">data/nlma_approvals_by_county.csv</span>。已註記：不含交通部公路局 140 億、112.12.28 批為包裹案、撤案 3 件未扣</td></tr>
+</tbody></table>
+
+<h2>六、確認刪減項目</h2>
+<table>
+<colgroup><col class="c0"><col class="c1"><col class="c2"><col class="c3"></colgroup>
+<thead><tr><th>審閱意見</th><th>修改前（v2.1）</th><th>修改後（v3.3）</th><th>資料查證方式</th></tr></thead>
+<tbody>
+<tr><td><span class="ok">已刪除</span>刪「發包進度」段落（2024 舊資料）</td>
+<td>「12 縣市未發包」縣市格圖＋易肇事路口 601 處／完工 329 處進度條（依 udn 2024 報導與國土署當時說法）</td>
+<td>整段刪除（圖、文、資料、程式碼一併移除）</td>
+<td>重查確認無更新之官方發包統計可替代，依審閱決議刪除不放</td></tr>
+</tbody></table>
+
+<h2>附錄：資料查證方法總表</h2>
+<table class="appendix">
+<colgroup><col style="width:18%"><col style="width:44%"><col style="width:38%"></colgroup>
+<thead><tr><th>查證對象</th><th>方法</th><th>可重現性</th></tr></thead>
+<tbody>
+<tr><td>人行道圖資（dataset 58791）</td><td>下載 SIDEWALK_202412 原始 GeoJSON（Part 1 北北桃＋Part 2 其餘 19 縣市，共 88,677 段）→ 逐位重現網站原統計確認同版 → 全部 14 筆逾 5 km 長段逐筆幾何鑑識（bbox 對角線／面積÷寬度等效長／周長之半三重指標）→ 統一剔除規則（屬性長度逾 bbox 對角線 5 倍）→ 重算三級距、淨寬不足比例、51 值淨寬累積分布，並驗證 net15 ≡ 100−CDF[1.5m] 恆等（23 組全數 diff＝0.00）</td><td>鑑識程式 final.py 與機器可讀輸出 final_out.json 入 repo（data/圖資鑑識_202607/）；資料來源為政府開放資料，任何人可下載重跑</td></tr>
+<tr><td>預算分配（永續提升人行安全計畫）</td><td>國土署人本道路資訊網 7 批核定表 PDF（112.12.28～115.05.05）逐案解析 → 22 縣市 × 7 批次矩陣 → 與內政部新聞稿及 6 縣市政府新聞稿交叉驗證（含批次案數、金額至千元位）→ 口徑衝突（議會報告、彰化新聞稿）並列註記、以官方核定表為準</td><td>逐批矩陣 CSV 入 repo（data/nlma_approvals_by_county.csv）；核定表原始 PDF 均為公開網址</td></tr>
+<tr><td>縣市健檢報告</td><td>22 縣市《行人安全環境總健檢及行動改善方案》等文件逐份重查：全市普及率之分母口徑逐字重核（報告自載全道路總長才校正、未載不臆測）、重點場所類別分項數字盤點、分年建設目標盤點</td><td>逐項出處記錄於 repo 資料附件《00_資料來源與缺口說明_蒐集記錄.md》，各數字均註明報告頁次／節次</td></tr>
+<tr><td>改版品質（本次交付前）</td><td>四維度獨立審查（需求落實／數據一致／程式正確／敘事連貫，共 27 個查核任務）→ 23 項發現逐項反方查證確認 → 全數修正；另以 JS 語法檢查、HTML 標籤平衡、DOM 模擬執行（含回訪者情境）煙霧測試把關</td><td>—</td></tr>
+<tr><td>版本軌跡</td><td>v2.1（1601d65，基準）→ v3.0（a77d8b5，主改版＋圖資勘誤＋分配圖）→ v3.1（b75e709，情境整合進首屏遊戲）→ v3.2（b32ac9b，主數字預設全道路分母）→ v3.3（f3b32d0，四縣市缺口並列）</td><td>GitHub commit 歷史可逐版 diff 檢視</td></tr>
+</tbody></table>
+
+<div class="foot">《每年不到 1%：台灣人行道的緩慢與失真》資料專題 · 改版檢核對照表 · 2026-07-23 · 原始碼與全部查證材料：github.com/guanwei-cmd/sidewalk-report</div>
+
+</body>
+</html>
