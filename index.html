@@ -1658,38 +1658,36 @@ function drawB(){
   const pct=bPct(bCity,need);                                    // 已鋪人行道中走得下的比例
   const natPct=bPct('全國',need);
   const natRoad=10344.2*natPct/100/21666.73*100;                 // 全國：圖資人行道長 ÷ 市區道路總長
-  let roadPct=null, roadLine='', roadCaption='';
+  let roadPct=null;
   if(bCity==='全國'){
     roadPct=natRoad;
-    roadCaption=`的<b>市區道路</b>，這一組真的走得過（有人行道、淨寬也夠；市區道路共 21,667 km）`;
   }else{
     const tName=toT(bCity), wRow=WIDTH.find(d=>d.city===tName), rl=ROADLEN[tName];
     if(wRow&&rl){
       roadPct=wRow.total*pct/100/rl*100;
-      roadCaption=`的<b>所有道路</b>，這一組真的走得過（有人行道、淨寬也夠；全道路 ${rl.toLocaleString()} km，${bCity}報告自載）`;
     }
   }
-  const primary = roadPct!=null ? roadPct : pct;
-  const col=primary>=50?C.teal:(primary>=25?'#9a6a14':C.red);
   const sel=`<select id="bcity" aria-label="選縣市">${Object.keys(SWCDF).map(c=>`<option${c===bCity?' selected':''}>${c}</option>`).join('')}</select>`;
-  const caption = roadPct!=null ? roadCaption : `的<b>已鋪人行道</b>淨寬走得下這一組`;
-  out.innerHTML= need===0 ? `<div class="bnote">按上方情境快捷鍵、或自己把要一起出門的組合加上來，看看需要多寬。</div>` :
-    `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
-     <span class="pass" style="color:${col}">${primary.toFixed(1)}%</span>
-     <div class="bbar"><i style="background:${col}"></i></div>
-     <div class="bnote">${caption}${need>1.5?'':'　·　法定下限 1.5m'}</div>
-     <div class="bnote" id="broad" style="margin-top:9px;max-width:620px;margin-left:auto;margin-right:auto;line-height:1.8"></div>`;
+  if(need===0){
+    out.innerHTML=`<div class="bnote">按上方情境快捷鍵、或自己把要一起出門的組合加上來，看看需要多寬。</div>`;
+  }else if(roadPct!=null){
+    const col=roadPct>=50?C.teal:(roadPct>=25?'#9a6a14':C.red);
+    out.innerHTML=
+      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
+       <span class="pass" style="color:${col}">${roadPct.toFixed(1)}%</span>
+       <div class="bbar"><i style="background:${col}"></i></div>
+       <div class="bnote">${bCity==='全國'?'的市區道路':'的所有道路'}走得下這一組${need>1.5?'':'　·　法定下限 1.5m'}</div>
+       <div class="bnote" id="broad" style="margin-top:9px">只看已鋪人行道：${pct.toFixed(1)}%（易虛高）${bCity!=='全國'?`　·　全國道路口徑 ${natRoad.toFixed(1)}%`:''}</div>`;
+    requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,roadPct)+'%',50);});
+  }else{
+    out.innerHTML=
+      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
+       <span class="pass" style="color:var(--red-d)">算不出來</span>
+       <div class="bnote"><b>${bCity}</b>未公布全道路總長，無法換算「所有道路中走得下的比例」</div>
+       <div class="bnote" id="broad" style="margin-top:9px">全國（市區道路口徑）：${natRoad.toFixed(1)}%</div>`;
+  }
   const selEl=document.getElementById('bcity');
   if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
-  requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,primary)+'%',50);});
-  const rd=document.getElementById('broad');
-  if(rd){
-    if(roadPct!=null){
-      rd.innerHTML=`只看<b>已鋪人行道</b>的部分：${pct.toFixed(1)}% 淨寬走得下${bCity!=='全國'?`（全國 ${natPct.toFixed(1)}%；換算到全國市區道路 ${natRoad.toFixed(1)}%）`:''}——但人行道少的地方，這個數字會好看得騙人。`;
-    }else{
-      rd.innerHTML=`⚠ 上面這個數字的分母<b>只有已鋪人行道</b>——想換算成「在所有道路中有機會這樣走的比例」，${bCity}的健檢報告<b style="color:var(--red-d)">沒有揭露全道路總長，連想算都算不了</b>（全國市區道路口徑為 ${natRoad.toFixed(1)}%）。`;
-    }
-  }
   // 快捷情境按鈕高亮同步
   const pc=document.getElementById('bpresets');
   if(pc)[...pc.querySelectorAll('.pbtn')].forEach(b=>{
