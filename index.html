@@ -468,32 +468,27 @@ footer a{color:#e7b86a;}
   </div>
 </section>
 
-<!-- 縣市自己盤點的缺口（自伍章移入＋跨縣盤點） -->
+<!-- 縣市自己盤點的缺口（四縣市並列） -->
 <section class="wrap part">
-  <h3 class="sub rv">縣市自己盤點的缺口：用一年五公里，去補一百年的債</h3>
-  <p class="rv">全國曲線之外，各縣市的健檢報告裡其實藏著更刺眼的數字。高雄市自己盤點：12 公尺以上的道路，還有 <b>656.64 公里</b>完全沒有人行道；而它設定的新增目標是——114 年 5 公里、115 年 9 公里。</p>
+  <h3 class="sub rv">縣市自己盤點的缺口：用一年幾公里，去補一百年的債</h3>
+  <p class="rv">全國曲線之外，各縣市的健檢報告裡其實藏著更刺眼的數字。本專題逐份重查 22 縣市的健檢報告與建設計畫，交得出「每年打算新增／改善幾公里」量化目標的，<b>只有四個縣市</b>；其中只有高雄同時盤出缺口總量——12 公尺以上道路還有 <b>656.64 公里</b>完全沒有人行道，以它自訂的年增 5～9 公里，補完要 <b>73 到 131 年</b>。</p>
 </section>
 
 <div class="figure rv">
-  <div class="ftitle">高雄市：以現在的速度，補完人行道缺口要 73 到 131 年</div>
-  <div class="fsub">缺口 656.64 公里 ÷ 每年新增 5～9 公里。把整條缺口畫成一條線，每年補上的，只是最左端那一小截。</div>
-  <div class="chartcard"><div id="chart-years"></div></div>
-  <div class="fsrc">資料來源：《高雄市道路新闢人行道分年分期建設計畫》。年數＝缺口里程 ÷ 年新增里程，未計入既有人行道之改善與拓寬。原始檔見文末〔2〕。</div>
+  <div class="ftitle">交得出分年目標的，只有四個縣市</div>
+  <div class="fsub">高雄、新北、臺南、桃園報告中載明的每年人行道目標（km／年），並列比較；其餘 18 縣市連這樣的數字都沒有。</div>
+  <div class="chartcard">
+    <div id="chart-years"></div>
+    <div class="legend" style="margin-top:14px">
+      <span><i style="background:var(--teal)"></i>每年新增目標</span>
+      <span><i style="background:var(--amber)"></i>每年改善・拓寬目標</span>
+      <span><i style="background:var(--red)"></i>高雄自盤缺口換算</span>
+    </div>
+  </div>
+  <div class="fsrc">資料來源：《高雄市道路新闢人行道分年分期建設計畫》、新北市・臺南市・桃園市《行人安全環境總健檢及行動改善方案》。高雄年數＝缺口 656.64 km ÷ 年新增 5～9 km，未計入既有人行道之改善拓寬。原始檔見文末〔2〕。</div>
 </div>
 
 <section class="wrap">
-  <p class="rv">而高雄不是特例，只是<b>少數願意把數字寫出來的縣市之一</b>。本專題逐份重查 22 縣市的健檢報告與建設計畫，交得出「缺口總量」或「分年新增目標」的，只有 4 個：</p>
-  <div class="figure rv" style="margin:26px auto;padding:0">
-    <table class="gaptable">
-      <thead><tr><th>縣市</th><th>報告裡的缺口／目標</th></tr></thead>
-      <tbody>
-        <tr><td>高雄市</td><td>12m 以上道路缺口 <b>656.64 km</b>；114 年新增 5 km、115 年 9 km</td></tr>
-        <tr><td>新北市</td><td>114 年新增 2.4 km、115 年 3.6 km；既有人行道改善拓寬 12 km/年</td></tr>
-        <tr><td>臺南市</td><td>每年改善 5 km、新增 3 km</td></tr>
-        <tr><td>桃園市</td><td>113 年新增 9 km</td></tr>
-      </tbody>
-    </table>
-  </div>
   <p class="rv">其餘 18 個縣市的報告，找不到「還缺多少、每年補多少」的量化目標。<b>連缺口有多大都不願意（或無法）寫出來的縣市，你要怎麼監督它補上？</b>這正是下一章的主題：當每個城市都用自己的尺，數字就失去了問責的力量。</p>
 </section>
 
@@ -1098,21 +1093,37 @@ const CAMPUS=[
 /* 無縣市層級校園數字：新北（僅分年改善校數目標）、臺中、彰化（僅全市值）、高雄（建設計畫無此統計）、雲林、花蓮（綱要）、臺東（報告未完成）、澎湖、金門、連江
    （校園周邊圖表已併入 2c 重點場所類別切換 drawPlaces） */
 
-/* ===================== 5b. YEARS-TO-FILL (高雄) ===================== */
+/* ===================== 1b. 四縣市分年目標並列 ===================== */
+const TARGETS=[
+  {city:'高雄市',add:9,  addLab:'5–9',  fix:null,note:'114 年新增 5 km、115 年 9 km；自盤缺口 656.64 km',gap:'缺口 656.64 km → 補完要 73–131 年'},
+  {city:'桃園市',add:9,  addLab:'9',    fix:null,note:'113 年新增 9 km'},
+  {city:'臺南市',add:3,  addLab:'3',    fix:5,   note:'每年新增 3 km、改善 5 km'},
+  {city:'新北市',add:3.6,addLab:'2.4–3.6',fix:12,note:'114 年新增 2.4 km、115 年 3.6 km；另每年改善拓寬 12 km'},
+];
 function drawYears(){
   const box=document.getElementById('chart-years');if(!box)return;box.innerHTML='';
-  const W=860,H=220,m={l:24,r:24};const s=svg(W,H);const fw=W-m.l-m.r;const gap=656.64;
-  s.appendChild(txt(W/2,56,'73 – 131 年',{'text-anchor':'middle',fill:C.red,'font-weight':900,'font-size':46,'font-family':'"Noto Serif TC",serif'}));
-  s.appendChild(txt(W/2,84,'才能補完高雄市的人行道缺口',{'text-anchor':'middle',fill:C.muted,'font-size':14.5}));
-  const y0=132,bh=46;
-  const full=mk('rect',{x:m.l,y:y0,width:fw,height:bh,fill:'#efeae0',stroke:C.line,rx:4});s.appendChild(full);
-  bind(full,`缺口 <b>656.64 公里</b><br>12 公尺以上道路尚未設置人行道`);
-  s.appendChild(txt(m.l+fw/2,y0+bh/2+5,'缺口 656.64 公里',{'text-anchor':'middle',fill:C.muted,'font-weight':600,'font-size':14}));
-  const w9=Math.max(3,(9/gap)*fw);
-  const sl=mk('rect',{x:m.l,y:y0,width:1,height:bh,fill:C.red,rx:2});s.appendChild(sl);
-  requestAnimationFrame(()=>{sl.style.transition='width 1s ease';sl.setAttribute('width',w9);});
-  bind(sl,`一年新增約 <b>5～9 公里</b>`);
-  s.appendChild(txt(m.l+w9+10,y0-10,'↑ 一年只補這一截（5～9 km）',{'text-anchor':'start',fill:C.red_d,'font-weight':700,'font-size':13}));
+  const W=860,rowH=88,m={t:14,r:240,b:30,l:88};
+  const H=m.t+m.b+TARGETS.length*rowH+40;
+  const s=svg(W,H);const maxV=12;const xw=v=>(v/maxV)*(W-m.l-m.r);
+  for(let g=0;g<=12;g+=3){const gx=m.l+xw(g);
+    s.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b-40,class:'gridline'}));
+    s.appendChild(txt(gx,H-m.b-22,g+' km/年',{'text-anchor':'middle',fill:C.muted,'font-size':11}));}
+  TARGETS.forEach((d,i)=>{
+    const yy=m.t+i*rowH+14;
+    s.appendChild(txt(m.l-12,yy+16,d.city,{'text-anchor':'end',class:'cityname'}));
+    const addBar=mk('rect',{x:m.l,y:yy,width:1,height:20,fill:C.teal,rx:3});s.appendChild(addBar);
+    requestAnimationFrame(()=>{addBar.style.transition='width .8s cubic-bezier(.3,1,.4,1)';addBar.setAttribute('width',Math.max(2,xw(d.add)));});
+    s.appendChild(txt(m.l+xw(d.add)+8,yy+15,'新增 '+d.addLab,{fill:C.teal_d||C.ink,'font-size':12.5,'font-weight':600}));
+    bind(addBar,`<b>${d.city}</b><br>${d.note}`);
+    if(d.fix!=null){
+      const fixBar=mk('rect',{x:m.l,y:yy+26,width:1,height:14,fill:C.amber,rx:3});s.appendChild(fixBar);
+      requestAnimationFrame(()=>{fixBar.style.transition='width .8s ease';fixBar.setAttribute('width',Math.max(2,xw(d.fix)));});
+      s.appendChild(txt(m.l+xw(d.fix)+8,yy+38,'改善 '+d.fix,{fill:'#9a6a14','font-size':12}));
+      bind(fixBar,`<b>${d.city}</b><br>既有人行道改善・拓寬 ${d.fix} km/年`);
+    }
+    if(d.gap)s.appendChild(txt(m.l,yy+(d.fix!=null?58:40),'⚠ '+d.gap,{fill:C.red_d,'font-size':12.5,'font-weight':700}));
+  });
+  s.appendChild(txt(m.l,H-m.b+6,'其餘 18 縣市：報告中無任何「每年補幾公里」的量化目標',{fill:C.muted,'font-size':12.5,'font-style':'italic'}));
   box.appendChild(s);
 }
 
