@@ -382,7 +382,7 @@ footer a{color:#e7b86a;}
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
     <div class="youcard" id="youcard"></div>
-    <div class="bsrc">計算方式與資料來源見文末〔3〕〔6〕</div>
+    <div class="bsrc">計算方式與資料來源見文末〔3〕〔6〕〔7〕</div>
   </div>
   <div class="scrollcue" style="position:static;margin-top:34px">往下捲，看這些數字是怎麼被算出來的</div>
 </header>
@@ -557,7 +557,7 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">參 · 能不能好好走</div>
   <h2 class="sec rv">不是有沒有，而是走不走得了你的日常</h2>
   <p class="rv">普及率回答「有沒有」，但你每天真正的問題是：<b>推著輪椅出得了門嗎？牽著小孩，對向來人時擠得過去嗎？</b>法規寫得清楚：人行道淨寬原則不得小於 1.5 公尺。但 1.5 公尺是什麼意思？是一台輪椅（0.9m）與一個行人（0.6m）剛好交會的寬度。</p>
-  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），它給你的主數字，分母<b>預設就是「所有道路」</b>，因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會好看得騙人；能不能好好走，最終要看你出門會經過的每一條路。而多數縣市連全道路總長都沒揭露，想換算都換算不了，遊戲裡選到這些縣市，你會直接看到這個缺口。</p>
+  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），它給你的主數字，分母<b>預設就是「所有道路」</b>，因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會好看得騙人；能不能好好走，最終要看你出門會經過的每一條路。縣市自己不公布這個分母，我們用公路局與國土署的公開統計逐縣拼了出來；只剩金門、連江因中央統計不含金馬而算不了。</p>
 </section>
 
 <section class="wrap">
@@ -682,6 +682,7 @@ footer a{color:#e7b86a;}
       <li>〔4〕各縣市核定案數與金額：內政部國土管理署「人本道路資訊網」<a href="https://myway.nlma.gov.tw/content/D_business_2-1.php?plan_sid=44">內政部核定案件專區</a>之 7 批核定表 PDF（112.12.28～115.05.05，共 816 案），本專題逐案彙整；縣市×批次矩陣見 repo 內 <code>data/nlma_approvals_by_county.csv</code>。僅涵蓋內政部 260 億部分；112.12.28 批每縣市 1 案包裹多處路口；已確定撤案 3 件未扣除。另：行政院「永續提升人行安全計畫」政策頁、立法院《改善標線型人行道相關法制問題研析》。</li>
       <li>〔5〕社群之聲：本專題於 PTT／Dcard／Threads／Mobile01／新聞媒體等平台蒐集歷年人行道相關公開貼文，作為佐證痛點類型（佔用、缺席、寬度、標線型、制度）之質性引例；文中各引句均附原始連結可自行查核，僅供脈絡參照、不作量化推論。<br>原始檔：<code>data-room/06_彙整與分析產出/人行道社群痛點編碼分析.xlsx</code></li>
       <li>〔6〕圖資異常鑑識：本專題以 dataset 58791 GeoJSON 幾何交叉驗證屬性長度，對全部 14 筆單段逾 5,000 公尺之長段逐筆鑑識（比對 bbox 對角線、面積÷寬度等效長、周長之半），判定 9 筆為屬性登載錯誤並剔除（新竹市中華路六段 274,875m/幾何約 900m、基隆信一路 15,135m×2、連江山線道路 2 筆、臺中霧峰中正路 2 筆、花蓮東大門夜市 10,000m、苗栗經國路 8,080m，共 352.5 km 虛長）；5 筆幾何合理者保留（臺東馬亨亨大道、大學路、苗栗 119 甲線、經國路另段、桃園捷運田園大道）。剔除後統計採用 88,668 段、總長 10,344 km；受影響縣市之修正前後對照見寬度圖游標說明。淨寬比例之分母＝有填淨寬之路段，與淨寬累積分布（首屏遊戲、情境換算）同法計算、數字恆等。</li>
+      <li>〔7〕各縣市全道路總長：省道（含快速）、縣道、鄉道（區道）取自<a href="https://stat.thb.gov.tw/hb01/webMain.aspx?sys=210&kind=21&type=1&funid=5110002">公路局統計查詢網</a>（113 年底）；市區道路取自<a href="https://statis.motc.gov.tw/motc/Statistics/Display?Seq=133">交通部統計查詢網</a>（113 年，原始來源內政部國土管理署）。不含國道與專用公路；金門、連江未納入中央統計。健檢報告自載之「全道路總長」經交叉檢核多為市區道路口徑（宜蘭 465.2、南投 622.9 即國土署市區道路 110 年值）或無法對應官方統計（澎湖 680），故換算一律採官方統計口徑。</li>
     </ol>
     <div class="meta">
       本網頁所有數據可回溯至上述原始檔案，存放於專題 <code>原始資料/</code> 資料夾，並附《資料來源與缺口說明.md》逐項對照。<br>
@@ -788,10 +789,14 @@ const ALLOC=[
   {city:'澎湖縣',cases:8,  central:132737, gross:150840},
   {city:'連江縣',cases:5,  central:83072,  gross:94401},
 ];
-/* 各縣市「全道路總長」（省+縣+鄉+市區，健檢報告自載且內部無矛盾者才列入；
-   彰化 703.373、基隆 207 因報告內部數字兜不攏，不列入換算） */
-const ROADLEN={'臺北市':1421.76,'宜蘭縣':465.206,'南投縣':622.917,'澎湖縣':680,
-  '桃園市':9701,'臺南市':5016,'新竹縣':730.04,'嘉義市':320.102};
+/* 各縣市全道路總長＝省道(含快速)＋縣道＋鄉道(區道)＋市區道路，不含國道。
+   公路局統計查詢網（113 年底）＋國土署市區道路統計（113 年，經交通部統計查詢網）。
+   金門、連江未納入中央統計，無法換算。健檢報告自載值經交叉檢核多為市區道路口徑或無法對應，不採用。 */
+const ROADLEN={'新北市':3582.8,'臺北市':1200.5,'桃園市':3214.8,'臺中市':4137.0,'臺南市':4536.9,
+  '高雄市':4035.8,'宜蘭縣':1286.8,'新竹縣':1104.6,'苗栗縣':1822.5,'彰化縣':2296.7,
+  '南投縣':1938.1,'雲林縣':2439.3,'嘉義縣':2314.5,'屏東縣':2441.0,'臺東縣':1359.9,
+  '花蓮縣':1631.2,'澎湖縣':284.1,'基隆市':614.8,'新竹市':606.2,'嘉義市':361.4};
+const ROADLEN_NAT=41208.8;
 /* 重點場所周邊普及率：類別 → 有數字的縣市（健檢報告逐份盤點，其餘縣市未載） */
 const PLACES={
   campus:{name:'校園周邊',counties:12},
@@ -1657,7 +1662,7 @@ function drawB(){
   const out=document.getElementById('bout');if(!out)return;
   const pct=bPct(bCity,need);                                    // 已鋪人行道中走得下的比例
   const natPct=bPct('全國',need);
-  const natRoad=10344.2*natPct/100/21666.73*100;                 // 全國：圖資人行道長 ÷ 市區道路總長
+  const natRoad=10344.2*natPct/100/ROADLEN_NAT*100;              // 全國：圖資人行道長 ÷ 官方全道路總長
   let roadPct=null;
   if(bCity==='全國'){
     roadPct=natRoad;
@@ -1676,15 +1681,15 @@ function drawB(){
       `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
        <span class="pass" style="color:${col}">${roadPct.toFixed(1)}%</span>
        <div class="bbar"><i style="background:${col}"></i></div>
-       <div class="bnote">${bCity==='全國'?'的市區道路':'的所有道路'}走得下這一組${need>1.5?'':'　·　法定下限 1.5m'}</div>
+       <div class="bnote">的所有道路走得下這一組${need>1.5?'':'　·　法定下限 1.5m'}</div>
        <div class="bnote" id="broad" style="margin-top:9px">只看已鋪人行道　${pct.toFixed(1)}%${bCity!=='全國'?`　·　全國 ${natRoad.toFixed(1)}%`:''}</div>`;
     requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,roadPct)+'%',50);});
   }else{
     out.innerHTML=
       `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
        <span class="pass" style="color:var(--red-d)">算不出來</span>
-       <div class="bnote"><b>${bCity}</b>未公布全道路總長，無法換算「所有道路中走得下的比例」</div>
-       <div class="bnote" id="broad" style="margin-top:9px">全國（市區道路口徑）：${natRoad.toFixed(1)}%</div>`;
+       <div class="bnote">中央公路與市區道路統計不含金馬，無法換算</div>
+       <div class="bnote" id="broad" style="margin-top:9px">全國 ${natRoad.toFixed(1)}%</div>`;
   }
   const selEl=document.getElementById('bcity');
   if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
