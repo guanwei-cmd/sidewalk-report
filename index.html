@@ -327,26 +327,15 @@ details.more .mbody b{color:var(--ink-soft)}
 .method-box p{font-size:15px;line-height:1.85;color:var(--ink-soft);margin:0 0 10px}
 .method-box p:last-child{margin-bottom:0}
 .method-box .mb-note{font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:12px}
-/* 三口徑對照表 */
-.basiswrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table.basis{width:100%;border-collapse:collapse;font-size:14.5px;min-width:430px}
-table.basis th,table.basis td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-table.basis th:first-child,table.basis td:first-child{text-align:left;font-weight:700;position:sticky;left:0;background:var(--surface)}
-table.basis thead th{font-size:12px;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--ink);vertical-align:bottom;line-height:1.5}
-table.basis thead th i{display:block;font-style:normal;font-size:10.5px;color:var(--faint);font-weight:500;letter-spacing:0}
-table.basis thead th.ba{color:var(--red-d)}
-table.basis thead th.bb{color:#9a6a14}
-table.basis thead th.bc{color:var(--muted)}
-table.basis tbody tr:hover{background:rgba(207,70,54,.045)}
-table.basis .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700}
-table.basis .va{color:var(--red-d);font-size:15.5px}
-table.basis .vb{color:#9a6a14}
-table.basis .vc{color:var(--ink)}
-table.basis .none{color:var(--faint);font-weight:500;font-family:var(--sans);font-size:12.5px}
-table.basis .warn{color:var(--red-d);font-size:11px;margin-left:2px}
-table.basis tr.natl{background:#f3efe4}
-table.basis tr.natl td{font-weight:800;border-bottom:1.5px solid var(--ink)}
+/* 三口徑對照圖 */
+.blegend{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 14px;font-size:12.5px;color:var(--muted);font-weight:600}
+.blegend span{display:inline-flex;align-items:center;gap:6px}
+.blegend .d{width:11px;height:11px;border-radius:50%;display:inline-block}
+.blegend .da{background:var(--red)}
+.blegend .db{background:#c9a227}
+.blegend .dc{background:#b3a894}
 .basisnote{font-size:11.5px;color:var(--faint);line-height:1.8;margin:12px 0 0}
+@media(max-width:640px){.blegend{gap:10px;font-size:11.5px}}
 /* gap table */
 .gaptable{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:8px;}
 .gaptable th,.gaptable td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
@@ -386,6 +375,16 @@ footer ol{font-size:13.5px;line-height:1.9;padding-left:1.3em;color:#bdb6a7;}
 footer ol li{margin:7px 0;}
 footer .meta{font-size:12.5px;color:#8d8576;margin-top:30px;line-height:1.8;border-top:1px solid #3a382f;padding-top:22px;letter-spacing:.03em;}
 footer a{color:#e7b86a;}
+.srcfold summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  border:1px solid #3a382f;border-radius:10px;padding:14px 18px;transition:border-color .2s,background .2s;}
+.srcfold summary::-webkit-details-marker{display:none}
+.srcfold summary:hover{border-color:#5a5749;background:rgba(255,255,255,.03)}
+.srcfold summary h4{margin:0}
+.srcfold .scount{font-size:12.5px;color:#8d8576;letter-spacing:.03em;}
+.srcfold .scount::after{content:" ▾"}
+.srcfold[open] .scount::after{content:" ▴"}
+.srcfold[open] summary{margin-bottom:18px;border-color:#4a4739}
+.srcfold ol{animation:diIn .3s ease}
 
 ::selection{background:var(--red);color:#fff;}
 @media(max-width:560px){
@@ -553,18 +552,8 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">貳 · 每縣一種分母</div>
   <h2 class="sec rv">18 個縣市自報的普及率，從 7.7% 到 72.1%</h2>
   <p class="rv">如果把十八個公布了「全市人行道普及率」的縣市攤在一起，你會看到一條從不到 8% 一路拉到超過 72% 的巨大落差。臺北、臺中、宜蘭、桃園都在五成以上，澎湖縣卻連一成都不到。</p>
-  <p class="rv">但先別急著替臺中鼓掌、替澎湖搖頭。因為，<b>這些數字，根本不是用同一把尺量出來的</b>。下面這張表把同一個縣市的三種算法並排：我們用所有道路算的、官方市區道路口徑、以及縣市自己報的。</p>
+  <p class="rv">但先別急著替臺中鼓掌、替澎湖搖頭。因為，<b>這些數字，根本不是用同一把尺量出來的</b>。</p>
 </section>
-
-<div class="figure rv">
-  <div class="ftitle">各縣市「自報」人行道普及率排行</div>
-  <div class="fsub">先看各縣市自己公布的數字。⚠ 者原始資料有疑義（游標可見說明）；下一張表會告訴你，這些數字為什麼不能直接比。</div>
-  <div class="chartcard">
-    <div class="controls" id="ctl-city"></div>
-    <div id="chart-city"></div>
-  </div>
-  <div class="fsrc">資料來源：各縣市行人安全總健檢報告〔2〕</div>
-</div>
 
 <section class="wrap">
   <div class="method-box rv">
@@ -585,84 +574,18 @@ footer a{color:#e7b86a;}
 
 <div class="figure rv">
   <div class="ftitle" id="basisTitle">同一個縣市，三種算法，三個答案</div>
-  <div class="fsub">三欄分子相同，差別只在分母。<b>越往右，分母越窄，數字越漂亮。</b></div>
-  <div class="chartcard" style="padding:14px 16px 18px">
+  <div class="fsub">三個點的分子相同，差別只在分母。<b>越往右，分母越窄，數字越漂亮。</b></div>
+  <div class="chartcard">
     <div class="controls" id="ctl-basis"></div>
-    <div class="basiswrap"><table class="basis" id="basisTable">
-      <thead><tr>
-        <th>縣市</th>
-        <th class="ba">所有道路<i>省縣鄉道＋市區道路</i></th>
-        <th class="bb">市區道路<i>官方口徑</i></th>
-        <th class="bc">縣市自報<i>各自訂分母</i></th>
-      </tr></thead>
-      <tbody></tbody>
-    </table></div>
-    <p class="basisnote">分母不含國道與專用公路（行人禁行）。⚠ 該縣市圖資把同一條路兩側分開建檔的方式不一致，去重估算偏寬鬆，實際普及率可能更低；新北市則相反，方向欄位異常導致可能過度去重。◆ 該縣市的市區道路長度本身偏離常理（新竹縣 273 km、澎湖 88 km），中欄數字不可信；金門、連江全境列市區道路，兩欄相同。可安全單獨引用的是臺北、新北、基隆、屏東、宜蘭、臺東與全國合計。</p>
+    <div class="blegend">
+      <span><i class="d da"></i>所有道路</span>
+      <span><i class="d db"></i>市區道路（官方口徑）</span>
+      <span><i class="d dc"></i>縣市自報</span>
+    </div>
+    <div id="chart-basis"></div>
+    <p class="basisnote">分母不含國道與專用公路（行人禁行）。⚠ 去重估算誤差較大，◆ 市區道路分母本身偏離常理。可安全單獨引用的是臺北、基隆、屏東、宜蘭、臺東與全國合計。<b>點任一列</b>可看該縣市完整說明。</p>
   </div>
   <div class="fsrc">分子為圖資去重後之道路覆蓋長度〔3〕〔6〕，分母為公路局與國土署統計（113 年底）〔7〕，自報值出自健檢報告〔2〕。</div>
-</div>
-
-<section class="wrap part">
-  <h3 class="sub rv">新北全市有 6,902 公里路，普及率的分母只放了 2,214 公里</h3>
-  <p class="rv">2025 年市議會質詢，新北市府的算式是 <b>1,632 ÷ 2,214 ＝ 73.73%</b>。同一份回覆裡，工務局也承認全市道路其實有 <b>6,902 公里</b>，但那些路「包含山區道路或無人居住地區，故不納入普及率計算」。</p>
-  <p class="rv">被排除的 4,688 公里裡，最大宗是<b>路寬不到 6 公尺的巷弄</b>，那正是最沒有人行道、行人也最常走的路。</p>
-  <details class="more rv">
-    <summary>6 公尺這個門檻，法律裡其實沒有</summary>
-    <div class="mbody">
-      <p>交通部統計表的說明欄寫著：「本表所稱市區道路係指都市計畫區域內路面寬度 <b>6 米以上</b>之道路。」除了巷弄，非都市計畫區的道路、以及新北自己管的村里道路、既成道路、農路與水防道路，也全部不算。</p>
-      <p>但《市區道路條例》第 2 條對市區道路的法定定義是「都市計畫區域內<b>所有</b>道路」，並沒有 6 公尺門檻。這個門檻是統計作業自己加上去的。</p>
-      <p>另外兩個細節：市府算式 1,632÷2,214 實得 73.71%，並非其公布的 73.73%；媒體報導議員採用的分母 6,029 公里應為 6,902 之誤植（1,629÷6,902 才等於報導的 23.6%），議員與市府用的其實是同一個分母。</p>
-    </div>
-  </details>
-</section>
-
-<section class="wrap part">
-  <h3 class="sub rv">連政府自己都算出兩個答案</h3>
-  <p class="rv">同樣是 111 年底，審計部說人行道普及率 <b>34.91%</b>，營建署說 <b>44.01%</b>。兩組數字的<b>分母差了 6,517 公里</b>。審計部已經要求國土署查明原因。</p>
-  <details class="more rv">
-    <summary>差在哪裡，以及這個數字是誰算的</summary>
-    <div class="mbody">
-      <p>審計部的版本是市區道路 28,398.83 公里、人行道 9,914.59 公里，還比前一年倒退 8.25 個百分點；營建署回應的版本是市區道路 21,881.76 公里、人行道 9,629.7 公里，並自承該值取自主計總處年報，「非採用該署建置之市區道路人行安全地理資訊系統資料」。</p>
-      <p>人行道普及率不是法定指標，法規資料庫查不到計算公式。它出現在國土署的考評計畫，而那本 113 頁的手冊裡，這個項目<b>只有評分級距沒有公式</b>：61% 以上得 81 到 100 分，未達 10% 只有 40 分，比去年提升 11 個百分點以上再加 15 分。</p>
-      <p>評分方式那欄寫的是「執行單位依據市區道路人行安全地理資訊系統之統計數據評分」，而系統裡的數據由各縣市自己填報。<b>自己填數字，自己拿分數。</b></p>
-      <p>官方對這個指標本身也有兩種說法：內政部新聞稿寫「有人行道的<b>道路</b>長度占道路總長度比率」，立法院預算中心報告寫「人行道總長 ÷ 市區道路總長」。前者一條路兩側都有也只算一次，後者會算兩次，兩者差距接近兩倍。</p>
-    </div>
-  </details>
-</section>
-
-<section class="wrap">
-  <p class="rv">這不是誰造假，而是<b>當沒有統一定義，每個城市都會找到對自己最有利的算法</b>。</p>
-  <details class="more rv">
-    <summary>各縣市分別用了什麼分母</summary>
-    <div class="mbody">
-      <p>老實用全道路總長的：臺北、宜蘭、南投、澎湖，數字最難看卻最接近事實。</p>
-      <p>只算都市計畫區或市區道路，把省縣鄉道移出分母的：臺中、苗栗、屏東、花蓮、雲林。</p>
-      <p>用自訂標準的：桃園只算「可施作人行道」的路（分母只剩全市道路五分之一）、新竹市只算 15 條重點路廊、新竹縣把分母乘二、嘉義縣用縣道加鄉道的組合。</p>
-      <p>同一份報告前後兩組數字兜不攏的：嘉義市、基隆、彰化。</p>
-    </div>
-  </details>
-  <div class="voice rv">
-    <p>為什麼只有台北市有完整的人行道？</p>
-    <div class="vmeta"><span class="tag">Dcard · 約2022</span><a href="https://www.dcard.tw/f/freshman/p/239233088" target="_blank" rel="noopener">原文</a></div>
-  </div>
-</section>
-
-<!-- 補充層：重點場所（跨縣市＋類別切換，獨立於貳章兩張主圖之外） -->
-<section class="wrap part" id="places">
-  <div class="divider"></div>
-  <h3 class="sub rv" style="margin-top:0">新竹縣的學校門口，10 所有 9 所沒有完整人行道</h3>
-  <p class="rv">22 縣市裡，只有 12 個交得出校園周邊的數字。醫院、運輸場站等類別，交得出來的更少。<b>類別越重要，數字越稀少。</b></p>
-</section>
-
-<div class="figure rv">
-  <div class="ftitle">交得出重點場所數字的縣市，全在這裡</div>
-  <div class="fsub">切換類別。沒出現的縣市，就是連這個數字都沒有。</div>
-  <div class="chartcard">
-    <div class="controls" id="ctl-places"></div>
-    <div id="chart-places"></div>
-    <div class="fsub" id="places-note" style="margin:14px 0 0"></div>
-  </div>
-  <div class="fsrc">資料來源：各縣市健檢報告〔2〕，口徑差異見游標說明</div>
 </div>
 
 <section class="wrap">
@@ -692,8 +615,15 @@ footer a{color:#e7b86a;}
 </div>
 
 <section class="wrap">
-  <p class="rv">值得記下的是：這份同一把尺的比較，是在<b>剔除了 9 筆、共 352.5 公里的長度登載錯誤</b>之後才成立的。最誇張的一筆在新竹市：中華路六段一段人行道被登載為 274,875 公尺，幾何實際只有約 900 公尺。修正前，新竹市曾以 72% 的寬幅比例高居全國之冠，修正後掉到 44%、淨寬不足比例從兩成翻倍成近四成。基隆（虛長 30 公里）、連江（16 公里）、臺中、花蓮、苗栗也各有錯誤段，本專題以幾何逐筆鑑識後剔除。<b>連國家的基礎圖資都需要公民逐段檢核</b>，這件事本身，就是本專題想說的資料治理問題。</p>
-  <p class="rv">還有一個差一倍的落差：立法院預算中心引官方統計稱約<b>兩成</b>人行道淨寬不足最低標準（本文開頭統計帶所引），但本專題以同一個國家的全國圖資逐段計算，比例約為<b>四成</b>。官方未公開其分母與最低標準的認定方式，外界無從還原差異從何而來。同一件事，官方數字與官方圖資可以差一倍，這也是資料治理問題的一部分。</p>
+  <h3 class="sub rv">政府圖資有 9 筆長度登載錯誤，虛長 352.5 公里</h3>
+  <p class="rv">最誇張的一筆在新竹市：中華路六段一段人行道登載為 <b>274,875 公尺</b>，幾何實際約 900 公尺。剔除後，新竹市的寬幅比例從全國之冠的 72% 掉到 44%。<b>連國家的基礎圖資都需要公民逐段檢核</b>，這件事本身就是本專題想說的問題。</p>
+  <details class="more rv">
+    <summary>還有哪些錯誤段，以及一個差一倍的落差</summary>
+    <div class="mbody">
+      <p>基隆（虛長 30 公里）、連江（16 公里）、臺中、花蓮、苗栗也各有錯誤段。本專題以幾何逐筆鑑識（比對 bbox 對角線、面積÷寬度等效長、周長之半）後剔除，修正後新竹市淨寬不足比例從兩成翻倍成近四成。</p>
+      <p>另一個落差是：立法院預算中心引官方統計稱約<b>兩成</b>人行道淨寬不足最低標準，但本專題以同一個國家的全國圖資逐段計算，比例約為<b>四成</b>。官方未公開其分母與最低標準的認定方式，外界無從還原差異從何而來。同一件事，官方數字與官方圖資可以差一倍。</p>
+    </div>
+  </details>
   <div class="voice rv">
     <p>電線桿就長在人行道正中央，我們缺的是把管線、電箱整合進「設施帶」的設計。</p>
     <div class="vmeta"><span class="tag">Threads · 零死亡願景台南 · 2025-02</span><a href="https://www.threads.com/@vision.zero.tainan/post/DGTXRpKyIH5" target="_blank" rel="noopener">原文</a></div>
@@ -797,7 +727,8 @@ footer a{color:#e7b86a;}
 <!-- ============ FOOTER：資料來源 ============ -->
 <footer>
   <div class="wrap2">
-    <h4>資料來源與原始檔案</h4>
+    <details class="srcfold">
+    <summary><h4>資料來源與原始檔案</h4><span class="scount">10 項｜點開查看</span></summary>
     <ol>
       <li>〔1〕立法院預算中心《內政部所屬（國土管理署及所屬等）115 年度預算評估報告》，「賡續辦理永續提升人行安全計畫」乙節，表 1「110 年至 114 年 7 月底我國市區道路及人行道長度一覽表」。資料來源國土管理署。<br>原始檔：<code>原始資料/全國普及率/立法院預算中心_115年度永續提升人行安全計畫預算評估報告.pdf</code></li>
       <li>〔2〕各縣市《行人安全環境總健檢及行動改善方案》（臺北、新北、桃園、臺中、臺南、新竹縣、新竹市、彰化、苗栗、南投、基隆、宜蘭、嘉義市、嘉義縣、屏東、花蓮、金門，113–114 年，共 17 份）、《高雄市道路新闢人行道分年分期建設計畫》、雲林縣交通工務局「市區道路人行道普及率」開放資料、《114 年澎湖縣道路交通安全執行計畫》。臺東縣報告尚未完成（預計 115/3）、連江縣未尋獲公開文件。<br>原始檔：<code>原始資料/縣市健檢報告/</code>、<code>原始資料/預算與改善方案/</code></li>
@@ -810,6 +741,7 @@ footer a{color:#e7b86a;}
       <li>〔6〕圖資異常鑑識：本專題以 dataset 58791 GeoJSON 幾何交叉驗證屬性長度，對全部 14 筆單段逾 5,000 公尺之長段逐筆鑑識（比對 bbox 對角線、面積÷寬度等效長、周長之半），判定 9 筆為屬性登載錯誤並剔除（新竹市中華路六段 274,875m/幾何約 900m、基隆信一路 15,135m×2、連江山線道路 2 筆、臺中霧峰中正路 2 筆、花蓮東大門夜市 10,000m、苗栗經國路 8,080m，共 352.5 km 虛長）；5 筆幾何合理者保留（臺東馬亨亨大道、大學路、苗栗 119 甲線、經國路另段、桃園捷運田園大道）。剔除後統計採用 88,668 段、總長 10,344 km；受影響縣市之修正前後對照見寬度圖游標說明。淨寬比例之分母＝有填淨寬之路段，與淨寬累積分布（首屏遊戲、情境換算）同法計算、數字恆等。</li>
       <li>〔7〕各縣市全道路總長：省道（含快速）、縣道、鄉道（區道）取自<a href="https://stat.thb.gov.tw/hb01/webMain.aspx?sys=210&kind=21&type=1&funid=5110002">公路局統計查詢網</a>（113 年底）；市區道路取自<a href="https://statis.motc.gov.tw/motc/Statistics/Display?Seq=133">交通部統計查詢網</a>（113 年，原始來源內政部國土管理署）。不含國道與專用公路；金門、連江未納入中央統計。健檢報告自載之「全道路總長」經交叉檢核多為市區道路口徑（宜蘭 465.2、南投 622.9 即國土署市區道路 110 年值）或無法對應官方統計（澎湖 680），故換算一律採官方統計口徑。</li>
     </ol>
+    </details>
     <div class="meta">
       本網頁所有數據可回溯至上述原始檔案，存放於專題 <code>原始資料/</code> 資料夾，並附《資料來源與缺口說明.md》逐項對照。<br>
       圖表為互動式，由原始數據即時繪製；非經設計加工之示意圖。資料整理：2026 年 6 月，v3 改版與資料勘誤：2026 年 7 月 · 視覺與敘事仿《報導者》長文形式製作，僅供研究與檢驗用途。
@@ -1048,42 +980,6 @@ function drawNational(){
   box.appendChild(s);
 }
 
-/* ===================== 2. CITY rate（自報排行，靜態） ===================== */
-let citySort='desc';
-function drawCity(){
-  const box=document.getElementById('chart-city');box.innerHTML='';
-  const dir=citySort==='desc'?1:-1;
-  const data=[...CITY].sort((a,b)=> dir*(b.off-a.off));
-  const W=860,rowH=50,m={t:14,r:30,b:24,l:88};
-  const H=m.t+m.b+data.length*rowH;
-  const s=svg(W,H);
-  const maxV=80;
-  const xw=v=>(v/maxV)*(W-m.l-m.r);
-  for(let g=0;g<=80;g+=20){const gx=m.l+xw(g);
-    s.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b,class:'gridline'}));
-    s.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11.5}));}
-  data.forEach((d,i)=>{
-    const yy=m.t+i*rowH+10;
-    const isYou=!!(userCity&&d.city===userCity);
-    const name=txt(m.l-12,yy+18,d.city+(d.flag?' ⚠':''),{'text-anchor':'end',class:'cityname'});
-    if(d.flag){name.setAttribute('fill',C.red_d);bind(name,`<b>${d.city} ⚠ 資料有疑義</b><br>${d.flag}`);}
-    if(isYou)name.setAttribute('font-weight',700);
-    s.appendChild(name);
-    if(isYou){s.appendChild(mk('circle',{cx:m.l-72,cy:yy+13,r:5,fill:C.red}));
-      s.appendChild(txt(m.l-72,yy+4,'你',{'text-anchor':'middle',fill:C.red_d,'font-size':10,'font-weight':700}));}
-    const bar=mk('rect',{x:m.l,y:yy,width:1,height:26,fill:isYou?C.red:C.teal,rx:3});
-    s.appendChild(bar);
-    requestAnimationFrame(()=>{bar.style.transition='width .7s cubic-bezier(.3,1,.4,1)';bar.setAttribute('width',Math.max(2,xw(d.off)));});
-    s.appendChild(txt(m.l+xw(d.off)+10,yy+18,d.off.toFixed(2)+'%',{'font-weight':700,fill:C.ink,'font-size':14,class:'barlabel'}));
-    bind(bar,`<b>${d.city}</b><br>官方公布 ${d.off}%<br>分母：${d.base}<br>${d.flag?'⚠ '+d.flag+'<br>':''}<span style="opacity:.8">${d.note}</span>`);
-  });
-  box.appendChild(s);
-}
-function buildCityCtl(){
-  const c=document.getElementById('ctl-city');if(!c)return;c.innerHTML='';
-  addSortBtns(c,citySort,k=>{citySort=k;buildCityCtl();drawCity();});
-}
-
 /* ===================== 2b. 三口徑對照表 ===================== */
 let basisSort='all';
 function pct(a,b){return b>0?a/b*100:null;}
@@ -1095,7 +991,7 @@ function buildBasisCtl(){
   });
 }
 function drawBasis(){
-  const tb=document.querySelector('#basisTable tbody');if(!tb)return;tb.innerHTML='';
+  const box=document.getElementById('chart-basis');if(!box)return;box.innerHTML='';
   const rows=BASIS.map(d=>({...d,pa:pct(d.sw,d.allRd),pb:pct(d.sw,d.urbanRd)}));
   rows.sort((x,y)=>{
     if(basisSort==='self')return (y.self??-1)-(x.self??-1);
@@ -1105,23 +1001,53 @@ function drawBasis(){
     }
     return y.pa-x.pa;
   });
-  const cell=(v,cls)=>v==null?'<td class="none">未公布</td>':`<td class="v ${cls}">${v.toFixed(1)}%</td>`;
-  rows.forEach(d=>{
-    const tr=document.createElement('tr');
-    const tip=[d.note,d.warn?'圖資兩側建檔不一致，去重偏寬鬆，實際可能更低':'',d.dm?'市區道路分母本身偏離常理，中欄數字不可信':''].filter(Boolean).join('；');
-    tr.innerHTML=`<td>${d.city}${d.warn?'<span class="warn">⚠</span>':''}${d.dm?'<span class="warn">◆</span>':''}</td>`+
-      cell(d.pa,'va')+cell(d.pb,'vb')+cell(d.self,'vc');
-    if(tip){tr.title=tip;bind(tr,`<b>${d.city}</b><br>人行道 ${d.sw.toLocaleString()} km（去重後）<br>全道路 ${d.allRd.toLocaleString()} km｜市區道路 ${d.urbanRd.toLocaleString()} km<br><span style="opacity:.85">${tip}</span>`);}
-    else bind(tr,`<b>${d.city}</b><br>人行道 ${d.sw.toLocaleString()} km（去重後）<br>全道路 ${d.allRd.toLocaleString()} km｜市區道路 ${d.urbanRd.toLocaleString()} km`);
-    tb.appendChild(tr);
+  const natl={city:'全國',sw:BASIS_NATL.sw,allRd:BASIS_NATL.allRd,urbanRd:BASIS_NATL.urbanRd,
+    pa:pct(BASIS_NATL.sw,BASIS_NATL.allRd),pb:pct(BASIS_NATL.sw,BASIS_NATL.urbanRd),self:null,natl:1};
+  const list=[natl].concat(rows);
+  const narrow=innerWidth<560;
+  const W=860,rowH=narrow?34:30,m={t:8,r:narrow?18:34,b:26,l:narrow?66:78};
+  const H=m.t+m.b+list.length*rowH;
+  const sv=svg(W,H);const maxV=90;const xw=v=>(v/maxV)*(W-m.l-m.r);
+  for(let g=0;g<=maxV;g+=20){const gx=m.l+xw(g);
+    sv.appendChild(mk('line',{x1:gx,x2:gx,y1:m.t,y2:H-m.b,class:'gridline'}));
+    sv.appendChild(txt(gx,H-8,g+'%',{'text-anchor':'middle',fill:C.muted,'font-size':11}));}
+  list.forEach((d,i)=>{
+    const yy=m.t+i*rowH+rowH/2;
+    const isYou=!!(userCity&&d.city===userCity);
+    const mark=(d.warn?'⚠':'')+(d.dm?'◆':'');
+    const nm=txt(m.l-9,yy+4,d.city+mark,{'text-anchor':'end',class:'cityname','font-size':narrow?12:13});
+    if(d.natl){nm.setAttribute('font-weight',800);nm.setAttribute('fill',C.ink);}
+    if(isYou){nm.setAttribute('fill',C.red_d);nm.setAttribute('font-weight',800);}
+    sv.appendChild(nm);
+    if(d.natl)sv.appendChild(mk('line',{x1:m.l-62,x2:W-m.r,y1:yy+rowH/2,y2:yy+rowH/2,stroke:C.ink,'stroke-width':1.2}));
+    if(isYou)sv.appendChild(mk('rect',{x:m.l-64,y:yy-rowH/2+2,width:W-m.l-m.r+64,height:rowH-4,rx:5,fill:'rgba(207,70,54,.07)'}));
+    /* 連線：從所有道路到最右的點 */
+    const pts=[d.pa,d.pb,d.self].filter(v=>v!=null);
+    const lo=Math.min(...pts),hi=Math.max(...pts);
+    sv.appendChild(mk('line',{x1:m.l+xw(lo),x2:m.l+xw(hi),y1:yy,y2:yy,stroke:'#c9c0ad','stroke-width':2.5,'stroke-linecap':'round'}));
+    const dot=(v,fill,r)=>{
+      if(v==null)return;
+      const cc=mk('circle',{cx:m.l+xw(v),cy:yy,r:r,fill:fill,stroke:'#fffdf8','stroke-width':1.6});
+      sv.appendChild(cc);
+    };
+    dot(d.self,'#b3a894',4.5);
+    dot(d.pb,'#c9a227',5);
+    dot(d.pa,C.red,6);
+    /* 數值標籤：只標所有道路（主口徑） */
+    /* 標籤固定放在整列最左點的左側，避開所有圓點 */
+    sv.appendChild(txt(m.l+xw(lo)-11,yy+4,d.pa.toFixed(0)+(d.natl?'%':''),
+      {'text-anchor':'end',fill:C.red_d,'font-size':narrow?10.5:11.5,'font-weight':800}));
+    const tip=[d.note,d.warn?'圖資兩側建檔不一致，去重估算誤差較大':'',d.dm?'市區道路分母本身偏離常理':''].filter(Boolean).join('；');
+    const hit=mk('rect',{x:m.l-64,y:yy-rowH/2,width:W-m.l-m.r+64,height:rowH,fill:'transparent'});
+    bind(hit,`<b>${d.city}</b><br>所有道路 <b>${d.pa.toFixed(1)}%</b>　市區道路 ${d.pb.toFixed(1)}%　${d.self!=null?'自報 '+d.self+'%':'未自報'}`+
+      `<br>人行道 ${d.sw.toLocaleString()} km ÷ 全道路 ${d.allRd.toLocaleString()} km`+
+      (d.natl?'<br>官方公布 '+BASIS_NATL.official+'%（只算市區道路）':'')+
+      (tip?'<br><span style="opacity:.85">'+tip+'</span>':''));
+    sv.appendChild(hit);
   });
-  const n=BASIS_NATL, tr=document.createElement('tr');tr.className='natl';
-  tr.innerHTML=`<td>全國</td><td class="v va">${pct(n.sw,n.allRd).toFixed(1)}%</td>`+
-    `<td class="v vb">${pct(n.sw,n.urbanRd).toFixed(1)}%</td>`+
-    `<td class="v vc" style="font-size:12.5px;color:var(--muted)">官方 ${n.official}%</td>`;
-  bind(tr,`<b>全國</b><br>人行道 ${n.sw.toLocaleString()} km（去重後）<br>全道路 ${n.allRd.toLocaleString()} km｜市區道路 ${n.urbanRd.toLocaleString()} km<br>官方公布 ${n.official}%（8,511.95 ÷ 21,666.73）`);
-  tb.appendChild(tr);
+  box.appendChild(sv);
 }
+
 /* ===================== 2c. 重點場所（類別切換） ===================== */
 let placesCat='campus';
 function placesRows(cat){
@@ -1619,7 +1545,6 @@ function personalize(){
   const tc=document.getElementById('topCity');
   if(tc&&userCity&&SWCDF[toG(userCity)])tc.value=toG(userCity);
   // 重繪各圖以顯示「你」標記
-  if(document.getElementById('chart-city')&&document.getElementById('chart-city').childNodes.length)drawCity();
   if(document.getElementById('chart-alloc')&&document.getElementById('chart-alloc').childNodes.length)drawAlloc();
 }
 /* 「補到八成，你幾歲」，身份定錨即時推估（往前放進速覽卡） */
@@ -1931,7 +1856,7 @@ function init(){
   initGame();initTopCity();initCalc();
   drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
   drawNational();
-  buildCityCtl();drawCity();buildBasisCtl();drawBasis();
+  buildBasisCtl();drawBasis();
   buildPlacesCtl();drawPlaces();
   buildWidthCtl();drawWidth();
   drawYears();
