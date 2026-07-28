@@ -291,6 +291,36 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
 .chip.rep.gis{background:var(--teal);color:#fff;}
 .chip.none{background:#faf7f0;color:var(--faint);border-style:dashed;}
 
+/* 首屏縣市選擇器 */
+.citypick{display:flex;align-items:center;justify-content:center;gap:10px;margin:2px 0 18px;font-size:16px;font-weight:700;color:var(--ink)}
+.citypick select{font-family:inherit;font-size:19px;font-weight:800;padding:9px 15px;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 rgba(122,96,58,.18)}
+/* 延伸補充摺疊 */
+details.more{background:#fffdf8;border:1px solid var(--line);border-radius:12px;margin:16px auto;max-width:var(--maxread)}
+details.more>summary{list-style:none;cursor:pointer;padding:13px 18px;font-size:14.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:9px}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"＋";color:var(--red);font-weight:900;font-size:16px;flex:none}
+details.more[open]>summary::before{content:"−"}
+details.more>summary:hover{color:var(--red-d)}
+details.more .mbody{padding:0 18px 16px;border-top:1px dashed var(--line);margin-top:2px;padding-top:12px}
+details.more .mbody p{font-size:14.5px;line-height:1.85;color:var(--muted);margin:0 0 9px}
+details.more .mbody p:last-child{margin-bottom:0}
+details.more .mbody b{color:var(--ink-soft)}
+/* 手機閱讀優化 */
+@media(max-width:640px){
+  .wrap{padding:0 18px}
+  p{font-size:16px;line-height:1.85}
+  p.lead{font-size:17px}
+  .part{padding-top:44px}
+  .figure{margin:32px auto;padding:0 12px}
+  .chartcard{padding:16px 12px 14px}
+  .citypick{font-size:15px}
+  .citypick select{font-size:17px;padding:9px 13px}
+  details.more>summary{font-size:14px;padding:12px 15px}
+  .method-box{padding:16px 18px}
+  table.basis th,table.basis td{padding:8px 5px;font-size:13.5px}
+  table.basis thead th{font-size:11px}
+  table.basis thead th i{font-size:9.5px}
+}
 /* 方法論說明卡 */
 .method-box{background:#fffdf8;border:1px solid var(--line);border-left:5px solid var(--ink);border-radius:0 12px 12px 0;padding:20px 24px;margin:8px 0 30px}
 .method-box h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;margin:0 0 10px;color:var(--ink)}
@@ -401,7 +431,8 @@ footer a{color:#e7b86a;}
 <header class="hero" id="top" style="min-height:auto;padding-bottom:40px">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
   <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">這條人行道，<br>裝得下<span class="hl">你的家人</span>嗎？</h1>
-  <p class="dek">把要一起出門的人放上人行道橫斷面，<br>看看你住的縣市，有幾成<b>道路</b>真的走得下這一組。</p>
+  <p class="dek">選你住的縣市，看有幾成<b>道路</b>真的走得下。</p>
+  <div class="citypick"><label for="topCity">我住在</label><select id="topCity" aria-label="選擇縣市"></select></div>
   <div class="builder">
     <div class="bpresets" id="bpresets"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
@@ -409,7 +440,7 @@ footer a{color:#e7b86a;}
     <div class="youcard" id="youcard"></div>
     <div class="bsrc">計算方式與資料來源見文末〔3〕〔6〕〔7〕</div>
   </div>
-  <div class="scrollcue" style="position:static;margin-top:34px">往下捲，看這些數字是怎麼被算出來的</div>
+  <div class="scrollcue" style="position:static;margin-top:20px">往下捲，看這個數字怎麼來的</div>
 </header>
 
 <main>
@@ -465,9 +496,7 @@ footer a{color:#e7b86a;}
 <section class="wrap">
   <p class="dropcap">官方公布的人行道普及率是 <b>39.29%</b>。但這個數字的分母，只算「市區道路」，也就是<b>都市計畫區內、路面寬度 6 公尺以上</b>的道路。都市計畫區外的路不算，巷弄不算。</p>
   <p>把省道、縣道、鄉道和市區道路全部放進分母，全國 <b>41,731 公里</b>道路裡，有人行道的是 <b>8,800 公里</b>，普及率 <b>21.1%</b>。同一份政府資料，換一個分母，數字掉了快一半。</p>
-  <p>而且連 41,731 公里這個分母都還不含巷弄，因為官方的道路統計本來就不收。所以真實的比例，只會比 21% 更低。</p>
-  <p>照官方這三年的速度，每年新增約 <b>103 公里</b>人行道。要讓全國八成道路都有人行道，還要 <b class="nb">238 年</b>。就算只求一半，也要 117 年。</p>
-  <p>這篇報導，從一張表開始，最後停在一個關於「資料齊全度」的提問。所有數字都附上原始檔案，邀請你一起檢驗。</p>
+  <p>而且這個分母還不含巷弄，真實比例只會更低。照官方這三年的速度，要讓八成道路都有人行道，還要 <b class="nb">238 年</b>。</p>
 </section>
 
 <!-- 三大數字 band -->
@@ -482,7 +511,7 @@ footer a{color:#e7b86a;}
 <!-- 全國趨勢（靜態圖） -->
 <div class="figure rv">
   <div class="ftitle">官方只算市區道路，三年也只多 2.61 個百分點</div>
-  <div class="fsub">這條線是官方口徑（只算市區道路），民國 110 年底 36.68% 到 113 年底 39.29%。若把所有道路放進分母，同一時點只有 21.1%。虛線為「一半道路都有人行道」的 50% 目標。</div>
+  <div class="fsub">官方口徑（只算市區道路）三年從 36.68% 到 39.29%。同一時點若放進所有道路，只有 21.1%。</div>
   <div class="chartcard"><div id="chart-national"></div></div>
   <div class="fsrc">資料來源：內政部國土管理署、立法院預算中心〔1〕</div>
 </div>
@@ -503,7 +532,7 @@ footer a{color:#e7b86a;}
 
 <div class="figure rv">
   <div class="ftitle">22 個縣市，只有 4 個說得出一年要鋪幾公里</div>
-  <div class="fsub">高雄、新北、臺南、桃園報告中載明的每年人行道目標（km／年），並列比較；其餘 18 縣市連這樣的數字都沒有。</div>
+  <div class="fsub">四個縣市報告中載明的每年目標（km／年），其餘 18 縣市沒有這個數字。</div>
   <div class="chartcard">
     <div id="chart-years"></div>
     <div class="legend" style="margin-top:14px">
@@ -540,17 +569,23 @@ footer a{color:#e7b86a;}
 <section class="wrap">
   <div class="method-box rv">
     <h3>分子要算「有人行道的路」，不是「人行道」</h3>
-    <p>人行道普及率要問的是「<b>多少比例的路，走得到人行道</b>」。所以分子必須是<b>「有人行道的道路長度」</b>，不是「人行道的長度」。</p>
-    <p>這兩件事差很多。一條路兩側都鋪了人行道，人行道長度是路長的兩倍，但這條路仍然只是「一條有人行道的路」。把人行道長度直接除以道路長度，雙側路段就被算了兩次，比例會被灌水到接近兩倍。國土署的圖資正是逐「側」建檔的，直接加總臺北市會算出 <b>116%</b>，人行道比道路還長。</p>
-    <p>所以本專題先把同一條路的兩側合併，還原成「有人行道的道路長度」，再去除以道路總長。全國還原後是 <b class="nb">8,800 公里</b>，與官方公布的 8,511.95 公里相差 3.4%；臺北市還原後 919.7 公里，是北市府自報單側值的 0.897 倍，方向偏保守。</p>
-    <p>方法本身也對得上官方：臺中市府自報人行道 1,932 公里，我們從開放圖資逐段加總得 1,937 公里，幾乎一致。<b>唯一對不上的是新北市</b>，市府說 1,632 公里，圖資只有 1,055 公里，差 577 公里，原因至今無法從公開資料確認。</p>
-    <p class="mb-note">中央的定義也是這樣寫的，普及率＝<b>有人行道之道路長度 ÷ 都市計畫區內道路總長</b>（新北市工務局 2025 年答詢原文）。爭議從來不在分子怎麼算，而在分母要放哪些路。</p>
+    <p>一條路兩側都鋪了人行道，人行道長度是路長的兩倍，但它仍然只是<b>一條</b>有人行道的路。直接相除，雙側路段就被算了兩次。國土署圖資正是逐「側」建檔的，直接加總臺北市會算出 <b>116%</b>。</p>
+    <p>所以本專題先把兩側合併，還原成「有人行道的道路長度」，再除以道路總長。</p>
   </div>
-</section>
+  <details class="more rv">
+    <summary>這樣還原，準嗎</summary>
+    <div class="mbody">
+      <p>三個交叉驗證。全國還原後 <b>8,800 公里</b>，與官方公布的 8,511.95 公里相差 3.4%。臺北市還原後 919.7 公里，是北市府自報單側值 1,025.37 公里的 0.897 倍，方向偏保守。</p>
+      <p>臺中市府自報人行道 1,932 公里，我們從開放圖資逐段加總得 1,937 公里，幾乎一致，證明方法對得上官方。</p>
+      <p>唯一對不上的是新北市，市府說 1,632 公里，圖資只有 1,055 公里。新北市自己的計畫書載明，人行道調查到 113 年底只完成五個區約 380 公里，外圍行政區覆蓋明顯不足（三峽 11.9 公里、深坑 3.4 公里、石碇 0.5 公里），且該市 98.5% 的圖資把方向欄填成同一側。</p>
+      <p>中央的定義也是這樣寫的，普及率＝<b>有人行道之道路長度 ÷ 都市計畫區內道路總長</b>（新北市工務局 2025 年答詢原文）。爭議從來不在分子怎麼算，而在分母要放哪些路。</p>
+    </div>
+  </details>
+  </section>
 
 <div class="figure rv">
   <div class="ftitle" id="basisTitle">同一個縣市，三種算法，三個答案</div>
-  <div class="fsub">三欄的分子相同，都是還原後的「<b>有人行道的道路長度</b>」；差別只在分母。左欄放所有道路，中欄只放市區道路（官方口徑），右欄是縣市自己選的分母。<b>越往右，分母越窄，數字越漂亮。</b></div>
+  <div class="fsub">三欄分子相同，差別只在分母。<b>越往右，分母越窄，數字越漂亮。</b></div>
   <div class="chartcard" style="padding:14px 16px 18px">
     <div class="controls" id="ctl-basis"></div>
     <div class="basiswrap"><table class="basis" id="basisTable">
@@ -564,35 +599,48 @@ footer a{color:#e7b86a;}
     </table></div>
     <p class="basisnote">分母不含國道與專用公路（行人禁行）。⚠ 該縣市圖資把同一條路兩側分開建檔的方式不一致，去重估算偏寬鬆，實際普及率可能更低；新北市則相反，方向欄位異常導致可能過度去重。◆ 該縣市的市區道路長度本身偏離常理（新竹縣 273 km、澎湖 88 km），中欄數字不可信；金門、連江全境列市區道路，兩欄相同。可安全單獨引用的是臺北、新北、基隆、屏東、宜蘭、臺東與全國合計。</p>
   </div>
-  <div class="fsrc">分子：國土署人行道圖資（2024-12）逐段去重後之道路覆蓋長度〔3〕〔6〕。分母：公路局公路里程與國土署市區道路長度（113 年底）〔7〕。自報值出自各縣市健檢報告〔2〕。金門、連江全境道路皆列為市區道路，故兩欄相同。</div>
+  <div class="fsrc">分子為圖資去重後之道路覆蓋長度〔3〕〔6〕，分母為公路局與國土署統計（113 年底）〔7〕，自報值出自健檢報告〔2〕。</div>
 </div>
 
 <section class="wrap part">
   <h3 class="sub rv">新北全市有 6,902 公里路，普及率的分母只放了 2,214 公里</h3>
-  <p class="rv">2025 年 6 月，新北市議員質疑市府公布的人行道普及率。市府回覆的算式是 <b>1,632 ÷ 2,214 ＝ 73.73%</b>，並說明「中央規定之普及率計算方式，為有人行道道路長除以都市計畫內道路總長」。同一份回覆裡，工務局也承認<b>全市道路總長其實是 6,902 公里</b>，但那些路「包含山區道路或無人居住地區，故不納入普及率計算」。</p>
-  <p class="rv">被排除的 4,688 公里是什麼？交通部統計表的說明欄寫得很清楚：「本表所稱市區道路係指都市計畫區域內路面寬度 <b>6 米以上</b>之道路。」也就是說，<b>6 公尺以下的巷弄，從一開始就不在分母裡</b>。加上非都市計畫區的道路、以及新北自己管的村里道路、既成道路、農路與水防道路，全部不算。</p>
-  <p class="rv">值得追問的是，《市區道路條例》第 2 條對市區道路的法定定義是「都市計畫區域內所有道路」，<b>並沒有 6 公尺這個門檻</b>。這個門檻是統計作業自己加上去的。而 6 公尺以下的巷弄，恰恰是最沒有人行道、行人也最常走的那些路。</p>
-  <p class="src rv" style="margin-top:14px">來源：自由時報 2025.06.12 新北市議會質詢報導（市府與工務局回覆原文）、交通部《臺灣地區道路長度及橋梁座數概況》統計表說明、《市區道路條例》第 2 條、新北市工務局道路養護標準作業程序（轄內道路權責分類）。註：市府算式 1,632÷2,214 實得 73.71%，非其公布之 73.73%。</p>
+  <p class="rv">2025 年市議會質詢，新北市府的算式是 <b>1,632 ÷ 2,214 ＝ 73.73%</b>。同一份回覆裡，工務局也承認全市道路其實有 <b>6,902 公里</b>，但那些路「包含山區道路或無人居住地區，故不納入普及率計算」。</p>
+  <p class="rv">被排除的 4,688 公里裡，最大宗是<b>路寬不到 6 公尺的巷弄</b>，那正是最沒有人行道、行人也最常走的路。</p>
+  <details class="more rv">
+    <summary>6 公尺這個門檻，法律裡其實沒有</summary>
+    <div class="mbody">
+      <p>交通部統計表的說明欄寫著：「本表所稱市區道路係指都市計畫區域內路面寬度 <b>6 米以上</b>之道路。」除了巷弄，非都市計畫區的道路、以及新北自己管的村里道路、既成道路、農路與水防道路，也全部不算。</p>
+      <p>但《市區道路條例》第 2 條對市區道路的法定定義是「都市計畫區域內<b>所有</b>道路」，並沒有 6 公尺門檻。這個門檻是統計作業自己加上去的。</p>
+      <p>另外兩個細節：市府算式 1,632÷2,214 實得 73.71%，並非其公布的 73.73%；媒體報導議員採用的分母 6,029 公里應為 6,902 之誤植（1,629÷6,902 才等於報導的 23.6%），議員與市府用的其實是同一個分母。</p>
+    </div>
+  </details>
 </section>
 
 <section class="wrap part">
-  <h3 class="sub rv">同一年、同一個署，審計部算出 34.91%，營建署說 44.01%</h3>
-  <p class="rv">這不是我們發現的問題。審計部在對立法院的書面報告裡就寫過：截至 111 年底，全國市區道路總長 <b>28,398.83 公里</b>、人行道 <b>9,914.59 公里</b>，普及率 <b>34.91%</b>，還比前一年的 43.16% <b>倒退了 8.25 個百分點</b>。</p>
-  <p class="rv">營建署的回應是：普及率其實是 <b>44.01%</b>，因為它用的分母是 <b>21,881.76 公里</b>。同一年、同一個機關，兩組數字的<b>分母差了 6,517 公里</b>。營建署自己解釋，44.01% 是拿主計總處年報算的，「非採用該署建置之市區道路人行安全地理資訊系統資料」。</p>
-  <p class="rv">審計部因此要求國土署「瞭解市區道路人行安全地理資訊系統資料與行政院主計總處統計資料差異原因，以確保該署系統數據完善」。<b>連政府自己都還沒對齊這個指標該怎麼算。</b></p>
-  <p class="src rv" style="margin-top:14px">來源：審計部書面報告（立法院議事系統，111 年度中央政府總決算審核報告相關）。</p>
-</section>
-
-<section class="wrap part">
-  <h3 class="sub rv">縣市自己填進系統的數字，直接變成考評分數</h3>
-  <p class="rv">人行道普及率不是法定指標，全國法規資料庫裡查不到它的計算公式。它出現在國土署的「市區道路養護管理暨人行環境無障礙考評計畫」，而那本 113 頁的考評手冊裡，這個項目<b>只有評分級距，沒有計算公式</b>：普及率 61% 以上得 81 到 100 分，31% 到 60% 得 61 到 80 分，未達 10% 只有 40 分；比去年提升 11 個百分點以上，還能加 15 分。</p>
-  <p class="rv">評分方式那一欄寫的是：「執行單位依據『市區道路人行安全地理資訊系統』之統計數據評分」。而那套系統裡的數據，是各縣市自己填報上去的。<b>自己填數字，自己拿分數，中間沒有一條公式可以被外界檢驗。</b></p>
-  <p class="rv">更根本的是，官方對這個指標本身就有兩種說法。內政部新聞稿寫的是「<b>有人行道的道路長度</b>占道路總長度比率」，立法院預算中心報告寫的卻是「人行道總長 ÷ 市區道路總長」。前者一條路兩側都有也只算一次，後者逐側加總會算兩次。<b>兩種算法差距接近兩倍，而官方兩種說法同時流通。</b></p>
-  <p class="src rv" style="margin-top:14px">來源：內政部國土管理署 113 年度市區道路養護管理暨人行環境無障礙考評計畫手冊（A3-5 人行道設置情形普及率）、內政部 2020.05.27 新聞稿、立法院預算中心《115 年度預算評估報告》。</p>
+  <h3 class="sub rv">連政府自己都算出兩個答案</h3>
+  <p class="rv">同樣是 111 年底，審計部說人行道普及率 <b>34.91%</b>，營建署說 <b>44.01%</b>。兩組數字的<b>分母差了 6,517 公里</b>。審計部已經要求國土署查明原因。</p>
+  <details class="more rv">
+    <summary>差在哪裡，以及這個數字是誰算的</summary>
+    <div class="mbody">
+      <p>審計部的版本是市區道路 28,398.83 公里、人行道 9,914.59 公里，還比前一年倒退 8.25 個百分點；營建署回應的版本是市區道路 21,881.76 公里、人行道 9,629.7 公里，並自承該值取自主計總處年報，「非採用該署建置之市區道路人行安全地理資訊系統資料」。</p>
+      <p>人行道普及率不是法定指標，法規資料庫查不到計算公式。它出現在國土署的考評計畫，而那本 113 頁的手冊裡，這個項目<b>只有評分級距沒有公式</b>：61% 以上得 81 到 100 分，未達 10% 只有 40 分，比去年提升 11 個百分點以上再加 15 分。</p>
+      <p>評分方式那欄寫的是「執行單位依據市區道路人行安全地理資訊系統之統計數據評分」，而系統裡的數據由各縣市自己填報。<b>自己填數字，自己拿分數。</b></p>
+      <p>官方對這個指標本身也有兩種說法：內政部新聞稿寫「有人行道的<b>道路</b>長度占道路總長度比率」，立法院預算中心報告寫「人行道總長 ÷ 市區道路總長」。前者一條路兩側都有也只算一次，後者會算兩次，兩者差距接近兩倍。</p>
+    </div>
+  </details>
 </section>
 
 <section class="wrap">
-  <p class="rv">落差是怎麼來的？秘密全在<b>分母</b>。有的縣市老老實實用「全道路總長」當分母（臺北、宜蘭、南投、澎湖），數字通常最難看，卻最接近事實；有的只算都市計畫區或市區道路，先把省縣鄉道移出分母，數字自然變好看（臺中、苗栗、屏東、花蓮、雲林）；還有的用自己發明的標準，桃園只算「可施作人行道」的路（分母只剩全市道路的五分之一）、新竹市只算 15 條重點路廊、新竹縣把分母乘二、嘉義縣用縣道加鄉道的任意組合；更有同一份報告前後兩組數字兜不攏的（嘉義市、基隆、彰化）。<b>這不是誰造假，而是當沒有統一定義，每個城市都會找到對自己最有利的算法。</b>細節與逐縣計算式，都在文末的原始檔對照表裡。</p>
+  <p class="rv">這不是誰造假，而是<b>當沒有統一定義，每個城市都會找到對自己最有利的算法</b>。</p>
+  <details class="more rv">
+    <summary>各縣市分別用了什麼分母</summary>
+    <div class="mbody">
+      <p>老實用全道路總長的：臺北、宜蘭、南投、澎湖，數字最難看卻最接近事實。</p>
+      <p>只算都市計畫區或市區道路，把省縣鄉道移出分母的：臺中、苗栗、屏東、花蓮、雲林。</p>
+      <p>用自訂標準的：桃園只算「可施作人行道」的路（分母只剩全市道路五分之一）、新竹市只算 15 條重點路廊、新竹縣把分母乘二、嘉義縣用縣道加鄉道的組合。</p>
+      <p>同一份報告前後兩組數字兜不攏的：嘉義市、基隆、彰化。</p>
+    </div>
+  </details>
   <div class="voice rv">
     <p>為什麼只有台北市有完整的人行道？</p>
     <div class="vmeta"><span class="tag">Dcard · 約2022</span><a href="https://www.dcard.tw/f/freshman/p/239233088" target="_blank" rel="noopener">原文</a></div>
@@ -603,12 +651,12 @@ footer a{color:#e7b86a;}
 <section class="wrap part" id="places">
   <div class="divider"></div>
   <h3 class="sub rv" style="margin-top:0">新竹縣的學校門口，10 所有 9 所沒有完整人行道</h3>
-  <p class="rv">健檢報告還有一層更細的數字：學校、醫院、運輸場站等「重點場所」周邊的普及率。落差同樣驚人，新竹縣的校園周邊人行道普及率只有 <b>10.73%</b>，十所學校門口，九所沒有完整的人行道。本專題逐份重查 22 縣市報告，<b>只有 12 個縣市交得出「校園周邊」數字</b>；醫院、運輸場站等其他類別，交得出來的縣市更少。用下方按鈕切換類別，你會看到：類別越重要，數字越稀少。</p>
+  <p class="rv">22 縣市裡，只有 12 個交得出校園周邊的數字。醫院、運輸場站等類別，交得出來的更少。<b>類別越重要，數字越稀少。</b></p>
 </section>
 
 <div class="figure rv">
   <div class="ftitle">交得出重點場所數字的縣市，全在這裡</div>
-  <div class="fsub">切換類別檢視。每個類別只列出報告有載的縣市，沒出現的縣市，就是連這個數字都沒有。⚠ 者口徑特殊（游標可見說明）。</div>
+  <div class="fsub">切換類別。沒出現的縣市，就是連這個數字都沒有。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-places"></div>
     <div id="chart-places"></div>
@@ -625,17 +673,16 @@ footer a{color:#e7b86a;}
 <section class="wrap part" id="ch3">
   <div class="chapnum rv">參 · 四成太窄</div>
   <h2 class="sec rv">全國 4 成人行道，容不下輪椅和行人錯身</h2>
-  <p class="rv">普及率回答「有沒有」，但你每天真正的問題是：<b>推著輪椅出得了門嗎？牽著小孩，對向來人時擠得過去嗎？</b>法規寫得清楚：人行道淨寬原則不得小於 1.5 公尺。但 1.5 公尺是什麼意思？是一台輪椅（0.9m）與一個行人（0.6m）剛好交會的寬度。</p>
-  <p class="rv">內政部國土管理署的全國人行道圖資逐段記錄了每條人行道的淨寬。<b>首屏的互動遊戲</b>就是用這份 <b>88,677 段</b>的資料算的：按情境快捷鍵（一個人走、輪椅與行人交會、牽小孩對向有人……），它給你的主數字，分母<b>預設就是「所有道路」</b>，因為一個縣市可能人行道很少但剛好都很寬，只看「人行道中的比例」會好看得騙人；能不能好好走，最終要看你出門會經過的每一條路。縣市自己不公布這個分母，我們用公路局與國土署的公開統計逐縣拼了出來；只剩金門、連江因中央統計不含金馬而算不了。</p>
+  <p class="rv">法規寫的 1.5 公尺淨寬，剛好是<b>一台輪椅（0.9m）與一個行人（0.6m）交會</b>的寬度。首屏那個遊戲算的就是這件事。</p>
 </section>
 
 <section class="wrap">
-  <p class="rv">再把鏡頭拉遠，看整體寬度分布。這是同一份資料、同一把尺量出來的全國比較：最繁華的臺北，反而是最窄的都會之一，<b>33.0%</b> 的人行道寬度不足法定下限、超過半數（54.2%）的淨寬不到 1.5 公尺；新北市淨寬不足的比例更高達 <b>64.6%</b>。對照之下，臺南、臺中、高雄有六成五上下的人行道寬在 2.5 公尺以上。同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南卻可能寬到種得下一排行道樹。</p>
+  <p class="rv">同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南可能寬到種得下一排行道樹。</p>
 </section>
 
 <div class="figure rv">
   <div class="ftitle">新北 64.6% 的人行道淨寬不到 1.5 公尺，全國最高</div>
-  <div class="fsub">切換「寬度三級距」與「淨寬不足比例」。＊為段數較少縣市，覆蓋可能不完整。</div>
+  <div class="fsub">切換寬度級距與淨寬不足比例。＊為段數較少、覆蓋可能不完整的縣市。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-width"></div>
     <div id="chart-width"></div>
@@ -656,14 +703,14 @@ footer a{color:#e7b86a;}
 <!-- ============ 兩件量不到的事（獨立短段） ============ -->
 <section class="wrap part" id="unmeasured">
   <h3 class="sub rv">人行道被佔用多少、標線型鋪了幾公里，全國都沒有統計</h3>
-  <p class="rv"><b>佔用。</b>翻過這些年的社群討論，關於人行道最常見的抱怨其實不是「沒有」，而是「有，但被佔走了」，機車騎上來、汽車停上來、騎樓被攤販雜物堵死。但一條被機車停滿的人行道，在統計上仍然算「有人行道」；<b>「被佔用的比例」，全國沒有任何統計</b>。當「被佔用」連一個數字都不是，它就永遠不會成為必須改善的 KPI。</p>
-  <p class="rv"><b>標線型。</b>只用油漆畫在路邊的「人行道」，最便宜（每平方公尺約 1,650 元，實體的是 4,200 元）也最有爭議，立法院研析直言它常被當成永久解方，沿線卻電桿林立如障礙賽道。本專題原想從國土署圖資把它單獨抓出來，<b>但抓不到</b>：全國圖資沒有任何欄位區分實體與標線型，連欄位最詳盡（41 欄、連鋪面材質都記）的新竹市開放資料也沒有；立法院研析亦確認全國並無各縣市標線型里程的公開統計。一種被大量鋪設、被高度質疑的設施，在國家的資料裡，從被定義的那一刻起就是隱形的。</p>
-  <p class="rv">這兩個缺口指向同一件事：<b>國家手上從來不是沒有資料，缺的是一套讓資料對得起來、能拿來問責的共同定義與標準</b>，看不見的，就無法治理。</p>
-  <details class="npp rv">
-    <summary><span class="dot"></span>延伸閱讀：治理與課責<span class="caret">▾</span></summary>
-    <div class="npp-menu">
-      <a href="https://npp-traffic-safety.vercel.app/blog/6" target="_blank" rel="noopener">交通部該為「行人地獄」負責，回應國際對台灣行人環境的警告</a>
-      <div class="src">時代力量・交通安全專題</div>
+  <p class="rv">關於人行道最常見的抱怨不是「沒有」，而是「有，但被佔走了」。但一條被機車停滿的人行道，在統計上仍然算「有人行道」。</p>
+  <p class="rv">而只用油漆畫在路邊的標線型人行道，在圖資裡連一個欄位都沒有，<b>從被定義的那一刻起就是隱形的</b>。</p>
+  <details class="more rv">
+    <summary>為什麼這兩件事量不到</summary>
+    <div class="mbody">
+      <p>「被佔用的比例」全國沒有任何統計。當它連一個數字都不是，就永遠不會成為必須改善的 KPI。</p>
+      <p>標線型人行道每平方公尺約 1,650 元，實體的是 4,200 元。立法院研析直言它常被當成永久解方，沿線卻電桿林立如障礙賽道。但全國圖資沒有任何欄位區分實體與標線型，連欄位最詳盡的新竹市開放資料（41 欄、連鋪面材質都記）也沒有。</p>
+      <p>這兩個缺口指向同一件事：國家手上從來不是沒有資料，缺的是一套讓資料對得起來、能拿來問責的共同定義。</p>
     </div>
   </details>
 </section>
@@ -672,13 +719,13 @@ footer a{color:#e7b86a;}
 <section class="wrap part" id="ch4">
   <div class="chapnum rv">肆 · 四百億，怎麼分</div>
   <h2 class="sec rv">400 億不按人口和里程分，由縣市自己提案競爭</h2>
-  <p class="rv">為了擺脫「行人地獄」之名，行政院 112 年通過「行人優先交通安全行動綱領」，核定「永續提升人行安全計畫」：113 至 116 年總經費 <b>400 億元</b>（內政部 260 億、交通部 140 億）。但這筆錢不是按人口或道路里程「分配」給縣市，而是「<b>競爭型評選</b>」，縣市自己提案、中央逐案核定。</p>
-  <p class="rv">也因為這樣，官方從來沒有公布過一張乾淨的縣市分配總表。本專題把國土署人本道路資訊網上的<b>七批核定表、816 個案子逐案拆開加總</b>，這是目前公開資料裡，第一張完整的 22 縣市分配圖。落選提案的縣市別資料並未公開，下圖只能以核定案數呈現，看不到誰提了案卻沒拿到。</p>
+  <p class="rv">113 到 116 年總經費 <b>400 億元</b>，但不按人口或道路里程分配，而是<b>競爭型評選</b>，縣市自己提案、中央逐案核定。</p>
+  <p class="rv">官方從沒公布過縣市分配總表。我們把七批核定表、<b>816 個案子逐案拆開加總</b>，這是公開資料裡第一張完整的分配圖。</p>
 </section>
 
 <div class="figure rv">
   <div class="ftitle">高雄 106 案拿 21.5 億，連江 5 案拿 0.8 億</div>
-  <div class="fsub">內政部（國土署）260 億元部分，累計至 115 年 5 月第四次評選核定，共 816 案、中央補助 146.0 億。切換檢視案數與金額。</div>
+  <div class="fsub">內政部 260 億部分，累計至 115 年 5 月共 816 案、補助 146.0 億。可切換案數與金額。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-alloc"></div>
     <div id="chart-alloc"></div>
@@ -687,7 +734,14 @@ footer a{color:#e7b86a;}
 </div>
 
 <section class="wrap">
-  <p class="rv">攤開這張圖，競爭型評選的效果一目了然：<b>高雄 106 案、中央補助 21.5 億居冠</b>，臺南 87 案 17.2 億、臺中 93 案 11.0 億緊追；而同樣是縣，<b>連江 5 案 0.8 億、澎湖 8 案 1.3 億、南投 15 案 2.1 億</b>。宜蘭在前兩批競爭型評選中甚至<b>掛零</b>，到後期才追上。競爭型的邏輯是「會寫提案的拿得多」，但人行道最破的地方，未必是行政量能最強的地方。當分配機制獎勵的是提案能力而非需求急迫性，城鄉的人行道差距，就可能在這 400 億裡被進一步放大。</p>
+  <p class="rv">競爭型的邏輯是「<b>會寫提案的拿得多</b>」。但人行道最破的地方，未必是行政量能最強的地方。</p>
+  <details class="more rv">
+    <summary>誰拿得多，誰幾乎沒拿到</summary>
+    <div class="mbody">
+      <p>高雄 106 案、中央補助 21.5 億居冠，臺南 87 案 17.2 億、臺中 93 案 11.0 億緊追。同樣是縣，連江 5 案 0.8 億、澎湖 8 案 1.3 億、南投 15 案 2.1 億。宜蘭在前兩批評選中掛零，到後期才追上。</p>
+      <p>另外，落選提案的縣市別資料並未公開，全國僅知第一次評選有 262 案申請、175 案核定，所以圖上只能呈現核定案數。</p>
+    </div>
+  </details>
   <details class="npp rv">
     <summary><span class="dot"></span>延伸閱讀：投入不等於成果<span class="caret">▾</span></summary>
     <div class="npp-menu">
@@ -1562,6 +1616,8 @@ function personalize(){
   if(sel&&userCity){const o=[...sel.options].find(o=>o.textContent===userCity);if(o)sel.value=o.value;}
   const ag=document.getElementById('hc-age');
   if(ag&&userAge)ag.value=userAge;
+  const tc=document.getElementById('topCity');
+  if(tc&&userCity&&SWCDF[toG(userCity)])tc.value=toG(userCity);
   // 重繪各圖以顯示「你」標記
   if(document.getElementById('chart-city')&&document.getElementById('chart-city').childNodes.length)drawCity();
   if(document.getElementById('chart-alloc')&&document.getElementById('chart-alloc').childNodes.length)drawAlloc();
@@ -1792,7 +1848,7 @@ function drawB(){
       roadPct=wRow.total*pct/100/rl*100;
     }
   }
-  const sel=`<select id="bcity" aria-label="選縣市">${Object.keys(SWCDF).map(c=>`<option${c===bCity?' selected':''}>${c}</option>`).join('')}</select>`;
+  const sel=`<b style="color:var(--red-d)">${bCity}</b>`;
   if(need===0){
     out.innerHTML=`<div class="bnote">選上方一種日常情境，看看需要多寬。</div>`;
   }else if(roadPct!=null){
@@ -1811,8 +1867,7 @@ function drawB(){
        <div class="bnote">中央公路與市區道路統計不含金馬，無法換算</div>
        <div class="bnote" id="broad" style="margin-top:9px">全國 ${natRoad.toFixed(1)}%</div>`;
   }
-  const selEl=document.getElementById('bcity');
-  if(selEl)selEl.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
+
   // 快捷情境按鈕高亮同步
   const pc=document.getElementById('bpresets');
   if(pc)[...pc.querySelectorAll('.pbtn')].forEach(b=>{
@@ -1821,6 +1876,13 @@ function drawB(){
     const match=B_ITEMS.every(it=>(bCounts[it.k]||0)===(sc.counts[it.k]||0));
     b.classList.toggle('on',match);
   });
+}
+function initTopCity(){
+  const sel=document.getElementById('topCity');if(!sel)return;
+  sel.innerHTML='';
+  Object.keys(SWCDF).forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sel.appendChild(o);});
+  sel.value=bCity;
+  sel.onchange=e=>{bCity=e.target.value;setUserCity(bCity);drawB();};
 }
 function initGame(){
   const pc=document.getElementById('bpresets');if(!pc)return;
@@ -1866,7 +1928,7 @@ function initCalc(){
 /* （scrollytelling 引擎與逐步渲染器已移除，全站改為靜態圖表） */
 
 function init(){
-  initGame();initCalc();
+  initGame();initTopCity();initCalc();
   drawGuess();buildGuessCtl();diBindGlobal();bindShareCard();
   drawNational();
   buildCityCtl();drawCity();buildBasisCtl();drawBasis();
