@@ -378,7 +378,6 @@ footer a{color:#e7b86a;}
   <p class="dek">把要一起出門的人放上人行道橫斷面，<br>看看你住的縣市，有幾成<b>道路</b>真的走得下這一組。</p>
   <div class="builder">
     <div class="bpresets" id="bpresets"></div>
-    <div class="bshelf" id="bshelf"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
     <div class="youcard" id="youcard"></div>
@@ -1674,7 +1673,7 @@ function drawB(){
   }
   const sel=`<select id="bcity" aria-label="選縣市">${Object.keys(SWCDF).map(c=>`<option${c===bCity?' selected':''}>${c}</option>`).join('')}</select>`;
   if(need===0){
-    out.innerHTML=`<div class="bnote">按上方情境快捷鍵、或自己把要一起出門的組合加上來，看看需要多寬。</div>`;
+    out.innerHTML=`<div class="bnote">選上方一種日常情境，看看需要多寬。</div>`;
   }else if(roadPct!=null){
     const col=roadPct>=50?C.teal:(roadPct>=25?'#9a6a14':C.red);
     out.innerHTML=
@@ -1703,34 +1702,20 @@ function drawB(){
   });
 }
 function initGame(){
-  const shelf=document.getElementById('bshelf');if(!shelf)return;
+  const pc=document.getElementById('bpresets');if(!pc)return;
   if(userCity&&SWCDF[toG(userCity)])bCity=toG(userCity);   // 回訪者：還原上次縣市
   personalize();
-  // 情境快捷鍵：一鍵擺好預設組合
-  const pc=document.getElementById('bpresets');
-  if(pc){
-    pc.innerHTML='';
-    const lab=document.createElement('span');lab.className='plabel';lab.textContent='試試日常情境：';pc.appendChild(lab);
-    SCEN.forEach(sc=>{
-      const b=document.createElement('button');b.className='pbtn';b.dataset.k=sc.k;
-      const w=B_ITEMS.reduce((s,it)=>s+(sc.counts[it.k]||0)*it.w,0);
-      b.textContent=`${sc.icon} ${sc.name}`;b.title=`${sc.mix}｜需求淨寬 ${w.toFixed(2)}m`;
-      b.onclick=()=>{bCounts={...sc.counts};render();drawB();collect('preset',{preset:sc.k});};
-      pc.appendChild(b);
-    });
-  }
-  const render=()=>{shelf.innerHTML='';
-    B_ITEMS.forEach(it=>{
-      const n=bCounts[it.k]||0;
-      const d=document.createElement('div');d.className='bitem'+(n>0?' active':'');
-      d.innerHTML=`<span class="bi">${it.icon}</span>${it.name}<span class="bw">${it.w.toFixed(2)}m</span>
-        <button aria-label="減少${it.name}">−</button><span class="bn">${n}</span><button aria-label="增加${it.name}">＋</button>`;
-      const [minus,plus]=d.querySelectorAll('button');
-      minus.onclick=()=>{if(bCounts[it.k]>0){bCounts[it.k]--;render();drawB();}};
-      plus.onclick=()=>{bCounts[it.k]=(bCounts[it.k]||0)+1;if(bNeed()<=5){render();drawB();}else bCounts[it.k]--;};
-      shelf.appendChild(d);
-    });};
-  render();drawB();
+  // 情境快捷鍵：選一種日常情境（唯一選法）
+  pc.innerHTML='';
+  const lab=document.createElement('span');lab.className='plabel';lab.textContent='選一種日常情境：';pc.appendChild(lab);
+  SCEN.forEach(sc=>{
+    const b=document.createElement('button');b.className='pbtn';b.dataset.k=sc.k;
+    const w=B_ITEMS.reduce((s,it)=>s+(sc.counts[it.k]||0)*it.w,0);
+    b.textContent=`${sc.icon} ${sc.name}`;b.title=`${sc.mix}｜需求淨寬 ${w.toFixed(2)}m`;
+    b.onclick=()=>{bCounts={...sc.counts};drawB();collect('preset',{preset:sc.k});};
+    pc.appendChild(b);
+  });
+  drawB();
 }
 
 /* ===== age calculator (hero) ===== */
