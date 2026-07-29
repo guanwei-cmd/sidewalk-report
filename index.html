@@ -430,7 +430,7 @@ footer a{color:#e7b86a;}
 <header class="hero" id="top" style="min-height:auto;padding-bottom:40px">
   <div class="tag">等不到的人行道</div>
   <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">你住的城市，<br>能夠<span class="hl">好好走路</span>嗎？</h1>
-  <p class="dek">選你住的縣市，看有幾成<b>道路</b><span style="white-space:nowrap">真的走得下。</span></p>
+  <p class="dek">選你住的縣市，看有幾成<b>道路</b><span style="white-space:nowrap">鋪了走得下的人行道。</span></p>
   <div class="citypick"><label for="topCity">我住在</label><select id="topCity" aria-label="選擇縣市"></select></div>
   <div class="builder">
     <div class="bpresets" id="bpresets"></div>
@@ -1731,9 +1731,10 @@ function drawB(){
   const x0=(W-slabW*pxm)/2, x1=x0+slabW*pxm;
   // 車道兩側示意
   s.appendChild(mk('rect',{x:0,y:base+4,width:W,height:26,fill:'#2c2a26'}));
-  s.appendChild(txt(W-10,base+22,'車道',{'text-anchor':'end',fill:'#cfc8b8','font-size':11}));
+  s.appendChild(txt(W-12,base+23,'車道',{'text-anchor':'end',fill:'#cfc8b8','font-size':14,'font-weight':600}));
   // 人行道版
   s.appendChild(mk('rect',{x:x0,y:base-6,width:slabW*pxm,height:10,fill:'#d9d2c2'}));
+  s.appendChild(txt(x0-12,base+3,'人行道',{'text-anchor':'end',fill:C.red_d,'font-size':15,'font-weight':700}));
   s.appendChild(mk('rect',{x:x0,y:base-6,width:slabW*pxm,height:4,fill:'#efeae0'}));
   s.appendChild(mk('line',{x1:x0,x2:x0,y1:base-6,y2:base+30,stroke:C.line2,'stroke-width':3}));
   s.appendChild(mk('line',{x1:x1,x2:x1,y1:base-6,y2:base+30,stroke:C.ink,'stroke-width':3}));
@@ -1771,21 +1772,21 @@ function drawB(){
   }
   const sel=`<b style="color:var(--red-d)">${bCity}</b>`;
   if(need===0){
-    out.innerHTML=`<div class="bnote">選上方一種日常情境，看看需要多寬。</div>`;
+    out.innerHTML=`<div class="bnote">選上方一種日常情境，看看人行道要多寬才走得下。</div>`;
   }else if(roadPct!=null){
     const col=roadPct>=50?C.teal:(roadPct>=25?'#9a6a14':C.red);
     out.innerHTML=
-      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
+      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b> 的人行道淨寬</div>
        <span class="pass" style="color:${col}">${roadPct.toFixed(1)}%</span>
        <div class="bbar"><i style="background:${col}"></i></div>
-       <div class="bnote">的所有道路走得下這一組${need>1.5?'':'　·　法定下限 1.5m'}</div>
-       <div class="bnote" id="broad" style="margin-top:9px">只看已鋪人行道　${pct.toFixed(1)}%${bCity!=='全國'?`　·　全國 ${natRoad.toFixed(1)}%`:''}</div>`;
+       <div class="bnote">${sel}的道路，人行道走得下這一組${need>1.5?'':'　·　法定下限 1.5m'}</div>
+       <div class="bnote" id="broad" style="margin-top:9px">只看已鋪人行道的路　${pct.toFixed(1)}%${bCity!=='全國'?`　·　全國 ${natRoad.toFixed(1)}%`:''}</div>`;
     requestAnimationFrame(()=>{const bar=out.querySelector('.bbar i');if(bar)setTimeout(()=>bar.style.width=Math.max(2,roadPct)+'%',50);});
   }else{
     out.innerHTML=
-      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b>，在 ${sel}</div>
+      `<div class="need">這一組需要 <b>${need.toFixed(2)} m</b> 的人行道淨寬</div>
        <span class="pass" style="color:var(--red-d)">算不出來</span>
-       <div class="bnote">中央公路與市區道路統計不含金馬，無法換算</div>
+       <div class="bnote">${sel}：中央公路與市區道路統計不含金馬，無法換算</div>
        <div class="bnote" id="broad" style="margin-top:9px">全國 ${natRoad.toFixed(1)}%</div>`;
   }
 
