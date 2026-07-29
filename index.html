@@ -435,7 +435,7 @@ footer a{color:#e7b86a;}
 
 <!-- ====== YOU DRAW IT ====== -->
 <div class="figure rv drawit">
-  <div class="ftitle">先別往下讀，這條線，你來畫</div>
+  <div class="ftitle">你來畫：全國市區人行道普及率，110 → 113 年</div>
   <div class="fsub">如果這四百億有好好花，三年下來，全國市區人行道普及率<b>「應該」</b>長到哪裡？<br>從 110 年底的起點（36.68%）開始，按住滑鼠或手指，往右畫出你心目中的那條線。</div>
   <div class="chartcard drawit-wrap">
     <div class="di-hint" id="di-hint">↘ 按住圖中的紅點，往右拖曳，一路畫到民國 113 年。</div>
@@ -489,10 +489,14 @@ footer a{color:#e7b86a;}
   </div>
 </section>
 
+<section class="wrap">
+  <p class="rv">官方公布的那條曲線，三年從 36.68% 走到 39.29%，只多了 <b>2.61 個百分點</b>，平均一年不到 1%。而且它只算市區道路；同一個時點，把省道、縣道、鄉道也放進分母，數字是 <b>21.1%</b>。</p>
+</section>
+
 <!-- 全國趨勢（靜態圖） -->
 <div class="figure rv">
-  <div class="ftitle">官方只算市區道路，三年也只多 2.61 個百分點</div>
-  <div class="fsub">官方口徑（只算市區道路）三年從 36.68% 到 39.29%。同一時點若放進所有道路，只有 21.1%。</div>
+  <div class="ftitle">全國市區人行道普及率，民國 110 至 113 年</div>
+  <div class="fsub">單位 %。分母為市區道路，即官方口徑。</div>
   <div class="chartcard"><div id="chart-national"></div></div>
   <div class="fsrc">資料來源：內政部國土管理署、立法院預算中心〔1〕</div>
 </div>
@@ -556,11 +560,12 @@ footer a{color:#e7b86a;}
 <section class="wrap">
   <h3 class="sub rv">校園周邊 12 個縣市交得出數字，醫院門口只有 3 個</h3>
   <p class="rv">最該替孩子鋪好上學路的地方，全國沒有一條共同的底線；醫院門口，高齡者與行動不便者最需要人行道的地方，22 縣市只有 3 個交得出數字。<b>重點場所的「重點」，在大多數縣市的統計裡並不存在。</b></p>
+  <p class="rv">而且交得出來的那 12 個縣市，數字也不能直接比。桃園 76%、新竹縣 10.73%，看似天差地遠，但各縣市自訂周邊範圍（200 或 300 公尺）、自訂算法，苗栗甚至是以「校數」而非道路長度計。<b>差距未必是工程差距，而是尺的差距。</b></p>
 </section>
 
 <div class="figure rv">
-  <div class="ftitle">同樣叫「校園周邊」，桃園 76%、新竹縣 10.7%</div>
-  <div class="fsub">差距未必是工程差距。各縣市自訂周邊範圍（200m 或 300m）、自訂算法（長度比或校數比），數字之間不可直接相比。</div>
+  <div class="ftitle">重點場所周邊人行道普及率：校園、醫療、運輸、政府機關</div>
+  <div class="fsub">單位 %。僅列健檢報告載有數字的縣市，可切換四類場所。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-places"></div>
     <div id="chart-places"></div>
@@ -577,12 +582,12 @@ footer a{color:#e7b86a;}
 </section>
 
 <section class="wrap">
-  <p class="rv">同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南可能寬到種得下一排行道樹。</p>
+  <p class="rv">同樣叫「人行道」，在臺北是側身而過的窄帶，在臺南可能寬到種得下一排行道樹。逐段實算下來，<b>新北市 64.6% 的人行道淨寬不到 1.5 公尺</b>，是全國最高；連江 59.1%、基隆 56.9% 緊追在後。</p>
 </section>
 
 <div class="figure rv">
-  <div class="ftitle">新北 64.6% 的人行道淨寬不到 1.5 公尺，全國最高</div>
-  <div class="fsub">切換寬度級距與淨寬不足比例。＊為段數較少、覆蓋可能不完整的縣市。</div>
+  <div class="ftitle">各縣市人行道寬度組成與淨寬不足 1.5 公尺的比例</div>
+  <div class="fsub">單位為長度占比。可切換寬度級距與淨寬不足比例。＊為段數較少、覆蓋可能不完整的縣市。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-width"></div>
     <div id="chart-width"></div>
@@ -627,11 +632,11 @@ footer a{color:#e7b86a;}
   <div class="chapnum rv">肆 · 四百億，怎麼分</div>
   <h2 class="sec rv">400 億不按人口和里程分，由縣市自己提案競爭</h2>
   <p class="rv">113 到 116 年總經費 <b>400 億元</b>，但不按人口或道路里程分配，而是<b>競爭型評選</b>，縣市自己提案、中央逐案核定。</p>
-  <p class="rv">官方從沒公布過縣市分配總表。我們把七批核定表、<b>816 個案子逐案拆開加總</b>，這是公開資料裡第一張完整的分配圖。</p>
+  <p class="rv">官方從沒公布過縣市分配總表。我們把七批核定表、<b>816 個案子逐案拆開加總</b>，這是公開資料裡第一張完整的分配圖。拿最多的是高雄市，106 案、<b>21.5 億</b>；最少的連江縣 5 案、0.8 億。</p>
 </section>
 
 <div class="figure rv">
-  <div class="ftitle">高雄 106 案拿 21.5 億，連江 5 案拿 0.8 億</div>
+  <div class="ftitle">四百億計畫的縣市分配：核定案數與中央補助金額</div>
   <div class="fsub">內政部 260 億部分，累計至 115 年 5 月共 816 案、補助 146.0 億。可切換案數與金額。</div>
   <div class="chartcard">
     <div class="controls" id="ctl-alloc"></div>
