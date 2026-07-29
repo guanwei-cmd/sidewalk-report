@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>官方說 39%，把所有道路算進來只有 21%｜台灣人行道資料專題</title>
+<title>等不到的人行道｜官方說 39%，把所有道路算進來只有 21%</title>
 <meta name="description" content="官方公布的人行道普及率 39.29%，只算都市計畫區內、路寬 6 公尺以上的市區道路。把省道、縣道、鄉道一起放進分母，全國 41,731 公里道路裡只有 8,800 公里有人行道，普及率 21.1%。同一個縣市，三種算法三個答案，所有數字附原始檔案。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -398,7 +398,7 @@ footer a{color:#e7b86a;}
 <div id="progress"></div>
 <div class="topbar">
   <div class="brand">資料專題 · <b>人本交通</b></div>
-  <div class="tt">人行道</div>
+  <div class="tt">等不到的人行道</div>
 </div>
 <div class="tip" id="tip"></div>
 <button class="totop" id="totop" aria-label="回到頂部" title="回到頂部">↑</button>
@@ -429,8 +429,8 @@ footer a{color:#e7b86a;}
 <!-- ============ HERO：組隊過人行道（橫斷面遊戲） ============ -->
 <header class="hero" id="top" style="min-height:auto;padding-bottom:40px">
   <div class="tag">DATA REPORT · 行人地獄裡的數字</div>
-  <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">這條人行道，<br>裝得下<span class="hl">你的家人</span>嗎？</h1>
-  <p class="dek">選你住的縣市，看有幾成<b>道路</b>真的走得下。</p>
+  <h1 class="serif" style="font-size:clamp(28px,5.2vw,52px);max-width:24ch">你住的城市，<br>能夠<span class="hl">好好走路</span>嗎？</h1>
+  <p class="dek">選你住的縣市，看有幾成<b>道路</b><span style="white-space:nowrap">真的走得下。</span></p>
   <div class="citypick"><label for="topCity">我住在</label><select id="topCity" aria-label="選擇縣市"></select></div>
   <div class="builder">
     <div class="bpresets" id="bpresets"></div>
@@ -1352,7 +1352,7 @@ function drawShareCard(){
   g.fillStyle=ink;g.font='900 100px '+serif;g.fillText('每年不到 ',P,270);
   const hw=g.measureText('每年不到 ').width;g.fillStyle=red;g.fillText('1%',P+hw,270);
   g.fillStyle=ink;g.font='700 50px '+serif;
-  g.fillText('台灣人行道的緩慢與失真',P,350);
+  g.fillText('等不到的人行道',P,350);
   // subhead
   g.font='400 31px '+sans;g.fillStyle='#2c2a26';
   g.fillText('全國市區人行道普及率，三年只增加 2.61 個百分點。',P,420);
@@ -1456,7 +1456,7 @@ function bindShareCard(){
   q('share-native').onclick=async()=>{
     try{
       const f=await shareCardFile();
-      const data={files:[f],title:'台灣人行道資料專題',text:getShareText(),url:SHARE_URL};
+      const data={files:[f],title:'等不到的人行道',text:getShareText(),url:SHARE_URL};
       if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share(data);
       else await navigator.share({title:data.title,text:getShareText(),url:SHARE_URL});
     }catch(e){/* 使用者取消 */}
