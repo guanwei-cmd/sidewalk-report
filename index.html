@@ -153,23 +153,6 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .bout .bnote{font-size:13px;color:var(--muted);}
 .bsrc{margin-top:14px;text-align:center;font-size:11.5px;color:var(--faint);line-height:1.7;max-width:640px;margin-left:auto;margin-right:auto;}
 
-/* ---------- 你的縣市速覽卡 ---------- */
-.youcard{max-width:640px;margin:22px auto 0;background:#fffdf8;border:1px solid var(--line);border-left:4px solid var(--red);
-  border-radius:0 10px 10px 0;padding:16px 20px 14px;text-align:left;
-  opacity:0;transform:translateY(8px);transition:.45s;display:none;}
-.youcard.show{display:block;opacity:1;transform:none;}
-.youcard .yh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
-.youcard .yh b{font-family:"Noto Serif TC",serif;font-size:19px;color:var(--ink);}
-.youcard .yh .ytag{font-size:11.5px;color:#fff;border-radius:99px;padding:2px 10px;}
-.youcard .ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;}
-.youcard .yi .yl{font-size:11.5px;color:var(--muted);letter-spacing:.04em;}
-.youcard .yi .yv{font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;color:var(--ink);line-height:1.3;}
-.youcard .yi .yv small{font-size:11px;color:var(--muted);font-family:"Noto Sans TC";font-weight:400;}
-.youcard .yyears{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);font-size:14.5px;line-height:1.85;color:var(--ink-soft);}
-.youcard .yyears input{width:58px;font-family:inherit;font-size:14.5px;padding:3px 8px;border:1px solid var(--line2);border-radius:7px;background:#fff;color:var(--ink);text-align:center;}
-.youcard .yfoot{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted);
-  display:flex;gap:14px;flex-wrap:wrap;}
-.youcard .yfoot a{color:var(--red-d);text-decoration:none;border-bottom:1px dotted var(--red-d);}
 
 @media(max-width:560px){.bitem{padding:5px 6px 5px 10px;font-size:13px;}.bitem .bw{display:none;}}
 
@@ -436,7 +419,6 @@ footer a{color:#e7b86a;}
     <div class="bpresets" id="bpresets"></div>
     <div class="bstage"><div id="bcanvas"></div></div>
     <div class="bout" id="bout"></div>
-    <div class="youcard" id="youcard"></div>
     <div class="bsrc">計算方式與資料來源見文末〔3〕〔6〕〔7〕</div>
   </div>
   <div class="scrollcue" style="position:static;margin-top:20px">往下捲，看這個數字怎麼來的</div>
@@ -1532,7 +1514,6 @@ function setUserAge(a){
   collect('age');
 }
 function personalize(){
-  renderYouCard();
   // 年齡計算機預選（縣市＋年齡）
   const sel=document.getElementById('hc-city');
   if(sel&&userCity){const o=[...sel.options].find(o=>o.textContent===userCity);if(o)sel.value=o.value;}
@@ -1542,45 +1523,6 @@ function personalize(){
   if(tc&&userCity&&SWCDF[toG(userCity)])tc.value=toG(userCity);
   // 重繪各圖以顯示「你」標記
   if(document.getElementById('chart-alloc')&&document.getElementById('chart-alloc').childNodes.length)drawAlloc();
-}
-/* 「補到八成，你幾歲」，身份定錨即時推估（往前放進速覽卡） */
-function yearsHTML(cRow){
-  const bR=BASIS.find(d=>d.city===userCity);
-  if(!bR)return `<span style="color:var(--red-d)">查不到你的縣市資料。</span>`;
-  const cur=+(bR.sw/bR.allRd*100).toFixed(1);
-  if(cur>=80)return `帳面上已達八成（${cur}%），但這個數字用的是哪一把尺，本身就是問題（見口徑標籤）。`;
-  const roc80=Math.round(CALC_BASE+(80-cur)/CALC_PACE), wait=Math.max(0,roc80-CALC_NOW);
-  const who=userAge?`，那年你 <b style="color:var(--red-d)">${userAge+wait} 歲</b>`:'';
-  return `照現在的速度（每年新增約 103 公里），補到「八成道路有人行道」還要 <b style="color:var(--red-d)">${wait} 年</b>，民國 <b>${roc80}</b> 年${who}。`;
-}
-function renderYouCard(){
-  const el=document.getElementById('youcard');if(!el)return;
-  if(!userCity){el.classList.remove('show');el.innerHTML='';return;}
-  const cRow=CITY.find(c=>c.city===userCity);
-  const bRow=BASIS.find(d=>d.city===userCity);
-  const wRow=WIDTH.find(d=>toT(d.city)===userCity);
-  const kRow=CAMPUS.find(d=>d.city===userCity);
-  const cat=cRow?CAT_INFO[cRow.cat]:null;
-  const fmt=(v,u='%')=>v==null?'—':v+u;
-  el.innerHTML=`
-    <div class="yh"><b>你的縣市：${userCity}</b>${cat?`<span class="ytag" style="background:${cat.color}">${cat.name}</span>`:''}</div>
-    <div class="ygrid">
-      <div class="yi"><div class="yl">所有道路口徑</div><div class="yv">${bRow?fmt(+(bRow.sw/bRow.allRd*100).toFixed(1)):'—'}<small>　本專題實算</small></div></div>
-      <div class="yi"><div class="yl">縣市自報</div><div class="yv">${cRow?fmt(cRow.off):'未公布'}<small>${cRow?'　'+cRow.base:''}</small></div></div>
-      <div class="yi"><div class="yl">寬度不足 1.5m</div><div class="yv">${wRow?fmt(wRow.w[0]):'—'}<small>　占人行道長</small></div></div>
-      <div class="yi"><div class="yl">淨寬不足 1.5m</div><div class="yv">${wRow?fmt(wRow.net15):'—'}</div></div>
-      <div class="yi"><div class="yl">校園周邊普及率</div><div class="yv">${kRow?fmt(kRow.v):'未公布'}${kRow&&kRow.flag?'<small> ⚠</small>':''}</div></div>
-    </div>
-    <div class="yyears">我今年 <input type="number" id="you-age" min="1" max="99" value="${userAge||''}" placeholder="歲數" aria-label="你的年齡"> 歲。
-      <span id="you-years">${yearsHTML(cRow)}</span></div>
-    <div class="yfoot">後文圖表將標出你的縣市　<a href="#ch2">口徑怎麼算 ↓</a><a href="#ch3">寬度與情境 ↓</a><a href="#ch4">你的縣市分到多少 ↓</a><a href="javascript:void(0)" id="you-share" style="margin-left:auto;font-weight:600">做成圖卡分享 ↗</a></div>`;
-  el.classList.add('show');
-  const ai=document.getElementById('you-age');
-  if(ai)ai.oninput=e=>{const v=parseInt(e.target.value);setUserAge(v);
-    const yl=document.getElementById('you-years');if(yl)yl.innerHTML=yearsHTML(cRow);
-    const ag=document.getElementById('hc-age');if(ag&&userAge)ag.value=userAge;};
-  const sh=document.getElementById('you-share');
-  if(sh)sh.onclick=()=>{collect('share');if(typeof openShareCard==='function')openShareCard();};
 }
 function bNeed(){let s=0;for(const it of B_ITEMS)s+=(bCounts[it.k]||0)*it.w;return Math.round(s*100)/100;}
 function bPct(city,w){const a=SWCDF[city];if(!a)return null;if(w<=0)return 100;
