@@ -81,7 +81,7 @@ a{color:var(--red-d);text-underline-offset:3px;}
 .herocalc .tag{font-size:12.5px;letter-spacing:.36em;color:var(--red);font-weight:700;margin-bottom:22px;}
 .herocalc h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(29px,5.8vw,56px);line-height:1.2;margin:0 0 14px;max-width:18ch;}
 .herocalc h1 .hl{color:var(--red);}
-.herocalc .dek{font-size:clamp(15px,2.2vw,19px);color:var(--ink-soft);max-width:34ch;line-height:1.85;margin:0 auto 32px;}
+.herocalc .dek{font-size:clamp(15px,2.2vw,19px);color:var(--ink-soft);max-width:27em;line-height:1.85;margin:0 auto 32px;}
 .calcbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:16.5px;color:var(--ink-soft);}
 .calcbar select,.calcbar input{font-family:inherit;font-size:16px;padding:9px 13px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);}
 .calcbar select{cursor:pointer;}
@@ -454,7 +454,7 @@ footer a{color:#e7b86a;}
 <section class="herocalc">
   <div class="tag">現實 · 輪到你家要等多久</div>
   <h1 class="serif">你剛畫的是理想。<br>照<span class="hl">真實速度</span>，你家補到八成，你幾歲？</h1>
-  <p class="dek">先進城市的人行道普及率多在<b>八成</b>以上。台灣每年新增約 <b>103 公里</b>人行道，攤到全國 41,731 公里道路上，等於每年多 0.25 個百分點。</p>
+  <p class="dek">先進城市的人行道普及率多在<b>八成</b>以上。台灣每年新增約 <b>103 公里</b>人行道，攤到全國 41,731 公里道路上是每年 <b>+0.25</b> 個百分點，只攤到官方口徑的市區道路則是 <b>+0.48</b>。同一個速度，兩個答案。</p>
   <div class="calcbar">
     <span>我住在</span>
     <select id="hc-city" aria-label="選擇縣市"></select>
@@ -571,8 +571,20 @@ footer a{color:#e7b86a;}
 </div>
 
 <section class="wrap">
-  <p class="rv">最該替孩子鋪好上學路的地方，全國沒有一條共同的底線；醫院門口，高齡者與行動不便者最需要人行道的地方，全國 22 縣市只有 3 個交得出數字。<b>重點場所的「重點」，在大多數縣市的統計裡並不存在。</b></p>
+  <h3 class="sub rv">校園周邊 12 個縣市交得出數字，醫院門口只有 3 個</h3>
+  <p class="rv">最該替孩子鋪好上學路的地方，全國沒有一條共同的底線；醫院門口，高齡者與行動不便者最需要人行道的地方，22 縣市只有 3 個交得出數字。<b>重點場所的「重點」，在大多數縣市的統計裡並不存在。</b></p>
 </section>
+
+<div class="figure rv">
+  <div class="ftitle">同樣叫「校園周邊」，桃園 76%、新竹縣 10.7%</div>
+  <div class="fsub">差距未必是工程差距。各縣市自訂周邊範圍（200m 或 300m）、自訂算法（長度比或校數比），數字之間不可直接相比。</div>
+  <div class="chartcard">
+    <div class="controls" id="ctl-places"></div>
+    <div id="chart-places"></div>
+    <p class="basisnote" id="places-note"></p>
+  </div>
+  <div class="fsrc">各縣市《行人安全環境總健檢及行動改善方案》逐份盤點〔2〕。⚠ 為口徑與他縣不可直接比較者，<b>點任一條</b>可看該縣市的計算方式。</div>
+</div>
 
 <!-- ============ PART 3：能不能好好走（情境換算＋寬度） ============ -->
 <section class="wrap part" id="ch3">
@@ -1766,24 +1778,40 @@ function initGame(){
 }
 
 /* ===== age calculator (hero) ===== */
-/* 全道路口徑（BASIS 之 sw÷allRd）。CALC_PACE＝官方年均新增人行道 103.29 km ÷ 全道路 41,730.7 km */
-const CALC_CITY=[['全國平均',21.1],['臺北市',76.6],['臺中市',44.0],['嘉義市',40.2],['連江縣',39.6],['新竹市',37.9],['高雄市',32.4],['桃園市',28.9],['新北市',25.4],['澎湖縣',18.1],['基隆市',16.3],['新竹縣',15.6],['宜蘭縣',15.0],['臺南市',13.0],['彰化縣',10.7],['花蓮縣',10.0],['金門縣',9.7],['嘉義縣',9.4],['雲林縣',9.3],['南投縣',7.8],['屏東縣',7.5],['臺東縣',5.0],['苗栗縣',4.8]];
-const CALC_PACE=0.2475, CALC_BASE=113, CALC_NOW=115;
+/* 年齡計算機：兩種口徑並列，數值一律由 BASIS 現算，不另存表
+   pa＝全部道路（省道＋縣道＋鄉道＋市區道路，本專題主口徑）
+   pb＝市區道路（官方口徑，都市計畫區內路寬 6 公尺以上）
+   兩種速度皆為官方年均新增人行道 103.29 km ÷ 各自分母：
+     全部道路 103.29 ÷ 41,730.7 = 每年 +0.2475 個百分點
+     市區道路 103.29 ÷ 21,370.9 = 每年 +0.4833 個百分點 */
+const CALC_PACE=0.2475, CALC_PACE_U=0.4833, CALC_BASE=113, CALC_NOW=115;
+let CALC_ROWS=[];
 function initCalc(){
   const sel=document.getElementById('hc-city');if(!sel)return;
-  CALC_CITY.forEach(([n,v])=>{const o=document.createElement('option');o.value=v;o.textContent=n;sel.appendChild(o);});
+  const p1=d=>+(d.sw/d.allRd*100).toFixed(1), p2=d=>+(d.sw/d.urbanRd*100).toFixed(1);
+  CALC_ROWS=[{name:'全國平均',pa:p1(BASIS_NATL),pb:p2(BASIS_NATL)}]
+    .concat(BASIS.map(d=>({name:d.city,pa:p1(d),pb:p2(d)})).sort((x,y)=>y.pa-x.pa));
+  CALC_ROWS.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.name;sel.appendChild(o);});
+  const until80=(cur,pace)=>{const roc=Math.round(CALC_BASE+(80-cur)/pace);return {roc,w:Math.max(0,roc-CALC_NOW)};};
   const go=()=>{
-    const cur=parseFloat(sel.value),age=parseInt(document.getElementById('hc-age').value)||0;
-    const name=sel.options[sel.selectedIndex].textContent;
-    if(age)setUserAge(age);collect('calc',{calcCity:name});
+    const row=CALC_ROWS[+sel.value]||CALC_ROWS[0];
+    const age=parseInt(document.getElementById('hc-age').value)||0;
+    if(age)setUserAge(age);collect('calc',{calcCity:row.name});
     const out=document.getElementById('hc-out');out.classList.add('show');
-    if(cur>=80){out.innerHTML=`<b>${name}</b> 帳面上已達八成（${cur}%），但別忘了，這個數字用的是哪一把尺，本身就是問題。`;return;}
-    const roc80=Math.round(CALC_BASE+(80-cur)/CALC_PACE),roc50=Math.round(CALC_BASE+(50-cur)/CALC_PACE);
-    const w80=Math.max(0,roc80-CALC_NOW),w50=Math.max(0,roc50-CALC_NOW);
-    const sec = cur>=50
-      ? `<span class="sub">你的城市連一半都過了（${cur}%），但要邁向八成，仍是 ${w80} 年後的事。</span>`
-      : `<span class="sub">就算只求「一半」，也要等到民國 ${roc50} 年${age?`（你 ${age+w50} 歲）`:''}。</span>`;
-    out.innerHTML=`在 <b>${name}</b>（目前 ${cur}%），補到「八成道路有人行道」還要<span class="k">${w80} 年</span>那是民國 <b>${roc80}</b> 年${age?`，你會是 <b>${age+w80} 歲</b>`:''}。${sec}`;
+    if(row.pa>=80){out.innerHTML=`<b>${row.name}</b> 帳面上已達八成（${row.pa}%），但別忘了，這個數字用的是哪一把尺，本身就是問題。`;return;}
+    const A=until80(row.pa,CALC_PACE);
+    let sub;
+    if(Math.abs(row.pa-row.pb)<0.05){
+      sub=`${row.name}未納入中央的市區道路統計，兩種口徑同一個分母，只有這一個答案。`;
+    }else if(row.pb>=80){
+      sub=`換成官方口徑<b>只算市區道路</b>（目前 ${row.pb}%），帳面上已經達標。同一個縣市，換一把尺，一邊是 ${A.w} 年，一邊是零。`;
+    }else{
+      const B=until80(row.pb,CALC_PACE_U);
+      sub=`換成官方口徑<b>只算市區道路</b>（目前 ${row.pb}%），只要 <b>${B.w} 年</b>、民國 <b>${B.roc}</b> 年${age?`，你 ${age+B.w} 歲`:''}。同一個縣市，兩把尺差 <b>${Math.abs(A.w-B.w)} 年</b>。`;
+    }
+    out.innerHTML=`在 <b>${row.name}</b>，把省道、縣道、鄉道都算進來（目前 ${row.pa}%），`+
+      `補到「八成道路有人行道」還要<span class="k">${A.w} 年</span>那是民國 <b>${A.roc}</b> 年`+
+      `${age?`，你會是 <b>${age+A.w} 歲</b>`:''}。<span class="sub">${sub}</span>`;
   };
   document.getElementById('hc-go').onclick=go;
   document.getElementById('hc-age').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
